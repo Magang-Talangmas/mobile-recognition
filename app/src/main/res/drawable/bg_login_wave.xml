@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1440dp"
+    android:height="600dp"
+    android:viewportWidth="1440"
+    android:viewportHeight="600">
+  <!-- Latar belakang ombak semi-transparan untuk efek kedalaman -->
+  <path
+      android:fillColor="#33003399"
+      android:pathData="M0,0L1440,0L1440,400C1080,550 720,400 360,480C150,520 0,400 0,400L0,0Z" />
+  <!-- Ombak utama warna solid -->
+  <path
+      android:fillColor="#003399"
+      android:pathData="M0,0L1440,0L1440,320C1080,480 720,480 360,480C150,480 0,320 0,320L0,0Z" />
+</vector>

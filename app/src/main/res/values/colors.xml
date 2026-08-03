@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors (Figma Reskin) -->
+    <color name="colorPrimary">#23395d</color>
+    <color name="colorPrimaryDark">#152238</color>
+    <color name="colorAccent">#F59E0B</color>
+    <color name="colorWave">#2B487A</color>
+    
+    <!-- Light Theme Colors -->
+    <color name="backgroundLight">#F4F6F9</color>
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="cardStroke">#E2E8F0</color>
+    <color name="textPrimary">#1E293B</color>
+    <color name="textSecondary">#64748B</color>
+    <color name="textWhite">#FFFFFF</color>
+    <color name="inputBackground">#FFFFFF</color>
+    
+    <!-- Status Colors -->
+    <color name="statusPresent">#10B981</color>
+    <color name="statusLate">#F59E0B</color>
+    <color name="statusAbsent">#EF4444</color>
+</resources>
