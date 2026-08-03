@@ -3,221 +3,592 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundLight"
+    android:background="@color/dash_bg"
+    android:paddingBottom="80dp"
+    android:clipToPadding="false"
     android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Top Blue Header Background -->
-        <View
-            android:id="@+id/headerBg"
+        <!-- HEADER -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- User Profile -->
-        <ImageView
-            android:id="@+id/ivAvatar"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_avatar"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="24dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mohamad Ridwan"
-            android:textColor="@color/textWhite"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="@id/ivAvatar"
-            app:layout_constraintBottom_toTopOf="@id/tvUserRole"
-            app:layout_constraintStart_toEndOf="@id/ivAvatar"
-            app:layout_constraintVertical_chainStyle="packed"/>
+            android:layout_marginBottom="24dp">
 
-        <TextView
-            android:id="@+id/tvUserRole"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Front End Dev"
-            android:textColor="@color/textSecondary"
-            android:textSize="14sp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvUserName"
-            app:layout_constraintBottom_toBottomOf="@id/ivAvatar"
-            app:layout_constraintStart_toEndOf="@id/ivAvatar"/>
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_badge"
+                android:padding="8dp"
+                android:src="@drawable/logo_face_recognition" />
 
-        <!-- Overlapping Card -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@id/ivLogo"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selamat pagi,"
+                    android:textColor="@color/dash_text_light_blue"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Admin HR \uD83D\uDC4B"
+                    android:textColor="@color/dash_text_white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_avatar_circle"
+                android:backgroundTint="@color/dash_card_bg">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_bell" />
+
+                <!-- Badge -->
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:backgroundTint="@color/dash_icon_red"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/dash_text_white"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+        </RelativeLayout>
+
+        <!-- LIVE TIME CARD -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/dash_card_bg"
             app:cardCornerRadius="16dp"
-            app:cardBackgroundColor="@color/cardBackground"
-            app:cardElevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/ivAvatar"
-            app:layout_constraintBottom_toBottomOf="@id/headerBg">
+            app:cardElevation="0dp"
+            app:strokeColor="#2B52AB"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvCurrentTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="08 : 00 AM"
-                    android:textSize="32sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/textPrimary" />
-
-                <TextView
-                    android:id="@+id/tvStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Belum Hadir"
-                    android:textSize="14sp"
-                    android:textColor="@color/textSecondary"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="24dp"/>
+                android:padding="20dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <!-- Check In Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnManualCheckIn"
-                        style="@style/Widget.App.Button"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="Masuk"
-                        app:icon="@drawable/ic_scan"
-                        app:iconGravity="textTop"
-                        app:backgroundTint="@color/colorPrimary"
-                        app:cornerRadius="16dp"/>
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="@color/dash_icon_green" />
 
-                    <!-- Check Out Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCheckOut"
-                        style="@style/Widget.App.Button"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Keluar"
-                        app:icon="@drawable/ic_exit"
-                        app:iconGravity="textTop"
-                        app:backgroundTint="@color/statusAbsent"
-                        app:cornerRadius="16dp"/>
+                        android:text="LIVE"
+                        android:textColor="@color/dash_icon_green"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tvLiveTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="16.38"
+                    android:textColor="@color/dash_text_white"
+                    android:textSize="48sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@android:drawable/ic_menu_agenda"
+                        app:tint="@color/dash_text_light_blue" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Senin, 3 Agustus 2026"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@android:drawable/ic_menu_mylocation"
+                        app:tint="@color/dash_text_light_blue" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Kantor Talangmas, Jakarta"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Riwayat Absen Section -->
-        <TextView
-            android:id="@+id/tvHistoryLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Riwayat Absen"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="24dp"
-            app:layout_constraintTop_toBottomOf="@id/cardActions"
-            app:layout_constraintStart_toStartOf="parent"/>
-            
-        <!-- Dummy Calendar Strip -->
-        <HorizontalScrollView
-            android:id="@+id/svCalendar"
+        <!-- STATS GRID -->
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:scrollbars="none"
-            android:paddingHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/tvHistoryLabel">
-            
-            <LinearLayout
+            android:layout_marginBottom="24dp"
+            android:columnCount="2"
+            android:rowCount="2">
+
+            <!-- Card 1: Hadir -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/dash_card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#2B52AB"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#065F46">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_check_circle_outline"
+                            app:tint="@color/dash_icon_green" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="42"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hadir Hari Ini"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="dari 48 karyawan"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 2: Tidak Hadir -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/dash_card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#2B52AB"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#7F1D1D">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_cancel_outline"
+                            app:tint="@color/dash_icon_red" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="6"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tidak Hadir"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3 izin \u2022 3 alpha"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 3: Terlambat -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/dash_card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#2B52AB"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#78350F">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_schedule"
+                            app:tint="@color/dash_icon_yellow" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="5"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Terlambat"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="dari yang hadir"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 4: Kehadiran -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/dash_card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#2B52AB"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#1E3A8A">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_trending_up"
+                            app:tint="@color/dash_icon_blue" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="87.5%"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kehadiran"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="bulan ini"
+                        android:textColor="@color/dash_text_light_blue"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+        <!-- SCAN ABSENSI CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardScanAbsensi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="@color/dash_accent_orange"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scan Absensi"
+                        android:textColor="@color/dash_text_white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gunakan face recognition"
+                        android:textColor="#FFF3E0"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_face_scan"
+                    app:tint="@color/dash_text_white" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- AKTIVITAS TERKINI HEADER -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="1" android:gravity="center" android:textColor="@color/textSecondary" />
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="2" android:gravity="center" android:textColor="@color/textSecondary" />
-                
-                <!-- Selected Day -->
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="3" android:gravity="center" android:textColor="@color/textWhite" android:textStyle="bold" android:background="@drawable/bg_circle_blue" android:layout_marginHorizontal="8dp"/>
-                
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="4" android:gravity="center" android:textColor="@color/textSecondary" />
-                <TextView android:layout_width="40dp" android:layout_height="40dp" android:text="5" android:gravity="center" android:textColor="@color/textSecondary" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                android:layout_centerVertical="true"
+                android:text="Aktivitas Terkini"
+                android:textColor="@color/dash_text_white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <!-- Dummy History List -->
-        <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="Lihat semua >"
+                android:textColor="@color/dash_accent_orange"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <!-- RECENT ACTIVITY LIST -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecentActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:layout_marginTop="16dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="24dp" />
+
+        <!-- PER DEPARTEMEN HEADER -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Per Departemen"
+                android:textColor="@color/dash_text_white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="Detail >"
+                android:textColor="@color/dash_accent_orange"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <!-- DEPT STATS CARD (Dummy Progress Bars) -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            app:layout_constraintTop_toBottomOf="@id/svCalendar"
-            app:layout_constraintBottom_toBottomOf="parent">
-            
-            <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/dash_card_bg"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#2B52AB"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/cardBackground">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                    <ImageView android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/ic_scan" app:tint="@color/statusPresent"/>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="16dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Masuk" android:textStyle="bold" android:textColor="@color/textPrimary"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="08:00 AM" android:textColor="@color/textSecondary"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:orientation="vertical"
+                android:padding="20dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/cardBackground">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                    <ImageView android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/ic_exit" app:tint="@color/statusAbsent"/>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="16dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Keluar" android:textStyle="bold" android:textColor="@color/textPrimary"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="17:00 PM" android:textColor="@color/textSecondary"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <!-- Eng -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Engineering" android:textColor="@color/dash_text_white" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="12/14" android:textColor="@color/dash_text_light_blue" />
+                    <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="24dp" android:progressDrawable="@drawable/bg_badge" android:progressTint="@color/dash_accent_orange" android:max="14" android:progress="12" />
+                </RelativeLayout>
 
-        </LinearLayout>
+                <!-- Marketing -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marketing" android:textColor="@color/dash_text_white" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="8/9" android:textColor="@color/dash_text_light_blue" />
+                    <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="24dp" android:progressDrawable="@drawable/bg_badge" android:progressTint="@color/dash_accent_orange" android:max="9" android:progress="8" />
+                </RelativeLayout>
+                
+                <!-- Finance -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Finance" android:textColor="@color/dash_text_white" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="10/11" android:textColor="@color/dash_text_light_blue" />
+                    <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="24dp" android:progressDrawable="@drawable/bg_badge" android:progressTint="@color/dash_accent_orange" android:max="11" android:progress="10" />
+                </RelativeLayout>
+                
+                <!-- HR -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HR" android:textColor="@color/dash_text_white" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="7/7" android:textColor="@color/dash_text_light_blue" />
+                    <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="24dp" android:progressDrawable="@drawable/bg_badge" android:progressTint="@color/dash_icon_green" android:max="7" android:progress="7" />
+                </RelativeLayout>
+                
+                <!-- Ops -->
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Operations" android:textColor="@color/dash_text_white" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="5/7" android:textColor="@color/dash_text_light_blue" />
+                    <ProgressBar style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="24dp" android:progressDrawable="@drawable/bg_badge" android:progressTint="@color/dash_icon_red" android:max="7" android:progress="5" />
+                </RelativeLayout>
+                
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>

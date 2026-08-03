@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new HomeFragment();
             } else if (itemId == R.id.navigation_history) {
                 selectedFragment = new HistoryFragment();
-            } else if (itemId == R.id.navigation_request) {
-                selectedFragment = new RequestFragment();
+            } else if (itemId == R.id.navigation_employees) {
+                selectedFragment = new RequestFragment(); // Placeholder
             } else if (itemId == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
             }
@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        binding.fabScan.setOnClickListener(v -> {
+            android.widget.Toast.makeText(MainActivity.this, "Buka kamera untuk Face Recognition...", android.widget.Toast.LENGTH_SHORT).show();
         });
 
         // Set initial fragment
