@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Absensi &amp; Kehadiran"
-        android:textColor="@color/textSecondary"
+        android:textColor="#666666"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
