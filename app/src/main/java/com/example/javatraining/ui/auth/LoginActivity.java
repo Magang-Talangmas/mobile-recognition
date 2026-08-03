@@ -42,5 +42,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         });
+
+        binding.tvForgotPassword.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+        });
     }
 }
