@@ -4,94 +4,43 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javatraining.R;
-import com.example.javatraining.data.local.AttendanceEntity;
-import com.example.javatraining.databinding.FragmentHistoryBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryFragment extends Fragment {
 
-    private FragmentHistoryBinding binding;
-    private HistoryViewModel viewModel;
-    private HistoryAdapter adapter;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHistoryBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
-        
-        adapter = new HistoryAdapter(new ArrayList<>());
-        binding.rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rvHistory.setAdapter(adapter);
+        RecyclerView rvHistoryDays = view.findViewById(R.id.rvHistoryDays);
+        rvHistoryDays.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        viewModel.getHistory().observe(getViewLifecycleOwner(), historyList -> {
-            if (historyList != null) {
-                adapter.updateData(historyList);
-            }
-        });
-    }
+        // Setup dummy data
+        List<HistoryEmployeeAdapter.HistoryEmployee> day1Employees = new ArrayList<>();
+        day1Employees.add(new HistoryEmployeeAdapter.HistoryEmployee("Budi Santoso", "07:58", "17:02", "BS", "Tepat Waktu", "#F59E0B"));
+        day1Employees.add(new HistoryEmployeeAdapter.HistoryEmployee("Sari Dewi", "08:20", "17:15", "SD", "Terlambat", "#FB7185"));
+        day1Employees.add(new HistoryEmployeeAdapter.HistoryEmployee("Andi Pratama", "07:45", "17:00", "AP", "Tepat Waktu", "#34D399"));
+        day1Employees.add(new HistoryEmployeeAdapter.HistoryEmployee("Rina Wahyu", "08:00", "-", "RW", "Belum CO", "#38BDF8"));
+        day1Employees.add(new HistoryEmployeeAdapter.HistoryEmployee("Doni Kusuma", "-", "-", "DK", "Izin", "#F59E0B"));
 
-    // Inner adapter for brevity in MVP
-    private static class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-        private List<AttendanceEntity> data;
+        List<HistoryDayAdapter.HistoryDay> daysList = new ArrayList<>();
+        daysList.add(new HistoryDayAdapter.HistoryDay("Senin, 3 Agu 2026", "4/5 hadir", day1Employees));
+        daysList.add(new HistoryDayAdapter.HistoryDay("Jumat, 31 Jul 2026", "5/5 hadir", day1Employees));
 
-        public HistoryAdapter(List<AttendanceEntity> data) {
-            this.data = data;
-        }
+        HistoryDayAdapter adapter = new HistoryDayAdapter(daysList);
+        rvHistoryDays.setAdapter(adapter);
 
-        public void updateData(List<AttendanceEntity> newData) {
-            this.data = newData;
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            AttendanceEntity entity = data.get(position);
-            holder.tvDate.setText(entity.date);
-            holder.tvCheckIn.setText("In: " + entity.checkInTime);
-            holder.tvCheckOut.setText("Out: " + entity.checkOutTime);
-            holder.tvStatus.setText(entity.status);
-        }
-
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
-
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView tvDate, tvCheckIn, tvCheckOut, tvStatus;
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                tvDate = itemView.findViewById(R.id.tvDate);
-                tvCheckIn = itemView.findViewById(R.id.tvCheckIn);
-                tvCheckOut = itemView.findViewById(R.id.tvCheckOut);
-                tvStatus = itemView.findViewById(R.id.tvStatus);
-            }
-        }
+        return view;
     }
 }

@@ -9,7 +9,7 @@ import com.example.javatraining.databinding.ActivityMainBinding;
 import com.example.javatraining.ui.main.history.HistoryFragment;
 import com.example.javatraining.ui.main.home.HomeFragment;
 import com.example.javatraining.ui.main.profile.ProfileFragment;
-import com.example.javatraining.ui.main.request.RequestFragment;
+import com.example.javatraining.ui.main.employees.EmployeesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.navigation_history) {
                 selectedFragment = new HistoryFragment();
             } else if (itemId == R.id.navigation_employees) {
-                selectedFragment = new RequestFragment(); // Placeholder
+                selectedFragment = new EmployeesFragment();
             } else if (itemId == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
             }
