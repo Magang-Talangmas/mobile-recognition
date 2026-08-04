@@ -17,7 +17,7 @@
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="Riwayat" />
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Profil" />
+        android:id="@+id/navigation_manual"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Manual" />
 </menu>
