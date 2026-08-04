@@ -1,103 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/dash_card_bg"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeColor="#2B52AB"
-    app:strokeWidth="1dp">
+    android:background="@drawable/bg_input_rounded"
+    android:backgroundTint="@color/html_surface_container_lowest"
+    android:elevation="2dp"
+    android:padding="16dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+    <!-- Avatar / Initials Container -->
+    <FrameLayout
+        android:id="@+id/flAvatarContainer"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Avatar -->
+        <!-- For Initials -->
         <FrameLayout
-            android:id="@+id/flAvatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
+            android:id="@+id/flAvatarInitials"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/bg_avatar_circle"
-            android:backgroundTint="#F59E0B">
+            android:backgroundTint="@color/html_secondary_container"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tvInitials"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="BS"
-                android:textColor="@color/dash_text_white"
-                android:textSize="16sp"
+                android:text="EL"
+                android:textColor="@color/html_on_secondary_container"
+                android:textSize="18sp"
                 android:textStyle="bold" />
         </FrameLayout>
 
-        <!-- Info -->
-        <LinearLayout
+        <!-- For Image Avatar (Placeholder for now) -->
+        <ImageView
+            android:id="@+id/ivAvatarImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_avatar_circle"
+            android:backgroundTint="#E0E0E0"
+            android:padding="4dp"
+            android:src="@drawable/ic_avatar" />
+
+        <!-- Status Dot -->
+        <View
+            android:id="@+id/vStatusDot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/bg_avatar_circle"
+            android:backgroundTint="@color/html_primary"
+            android:elevation="4dp" />
+    </FrameLayout>
+
+    <!-- Name and Department/Role -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/llRightStatus"
+        app:layout_constraintStart_toEndOf="@id/flAvatarContainer"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/flAvatar"
-            android:layout_toStartOf="@id/llStatus"
-            android:orientation="vertical">
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Sarah Jenkins"
+            android:textColor="@color/html_on_surface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Budi Santoso"
-                android:textColor="@color/dash_text_white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/tvRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Senior Developer · Engineering"
-                android:textColor="@color/dash_text_light_blue"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:ellipsize="end" />
-        </LinearLayout>
-
-        <!-- Right Side: Status Badge and Arrow -->
-        <LinearLayout
-            android:id="@+id/llStatus"
+        <TextView
+            android:id="@+id/tvRoleDept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Engineering • ENG-402"
+            android:textColor="@color/html_on_surface_variant"
+            android:textSize="14sp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_badge"
-                android:backgroundTint="#065F46"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Hadir"
-                android:textColor="@color/dash_icon_green"
-                android:textSize="12sp"
-                android:layout_marginEnd="8dp" />
+    <!-- Right Side: Status Badge and Arrow -->
+    <LinearLayout
+        android:id="@+id/llRightStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_arrow_forward"
-                app:tint="@color/dash_text_light_blue" />
-        </LinearLayout>
-    </RelativeLayout>
-</com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/tvStatusBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge"
+            android:backgroundTint="@color/html_primary"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="IN OFFICE"
+            android:textColor="@color/html_on_primary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:src="@android:drawable/ic_media_next"
+            app:tint="@color/html_outline" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

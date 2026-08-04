@@ -31,6 +31,8 @@
     <color name="html_surface">#f8f9ff</color>
     <color name="html_surface_container_lowest">#ffffff</color>
     <color name="html_surface_container">#e5eeff</color>
+    <color name="html_surface_container_high">#dce9ff</color>
+    <color name="html_surface_variant">#d3e4fe</color>
     <color name="html_primary">#001456</color>
     <color name="html_primary_container">#1a2b6d</color>
     <color name="html_on_primary">#ffffff</color>

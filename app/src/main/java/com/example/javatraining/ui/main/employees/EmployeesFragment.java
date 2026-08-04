@@ -27,10 +27,10 @@ public class EmployeesFragment extends Fragment {
         rvEmployees.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<EmployeeAdapter.Employee> dummyData = new ArrayList<>();
-        dummyData.add(new EmployeeAdapter.Employee("Budi Santoso", "Senior Developer", "Engineering", "BS", "Hadir", "#F59E0B"));
-        dummyData.add(new EmployeeAdapter.Employee("Sari Dewi", "Marketing Manager", "Marketing", "SD", "Hadir", "#FB7185"));
-        dummyData.add(new EmployeeAdapter.Employee("Andi Pratama", "Financial Analyst", "Finance", "AP", "Terlambat", "#34D399"));
-        dummyData.add(new EmployeeAdapter.Employee("Rina Wahyu", "HR Specialist", "HR", "RW", "Hadir", "#38BDF8"));
+        dummyData.add(new EmployeeAdapter.Employee("Sarah Jenkins", "Engineering", "ENG-402", null, EmployeeAdapter.StatusType.IN_OFFICE));
+        dummyData.add(new EmployeeAdapter.Employee("Marcus Chen", "Product", "PRD-118", null, EmployeeAdapter.StatusType.ON_BREAK));
+        dummyData.add(new EmployeeAdapter.Employee("Elena Rodriguez", "Design", "DES-892", "EL", EmployeeAdapter.StatusType.REMOTE));
+        dummyData.add(new EmployeeAdapter.Employee("David Kim", "Marketing", "MKT-204", null, EmployeeAdapter.StatusType.OFFLINE));
 
         EmployeeAdapter adapter = new EmployeeAdapter(dummyData);
         rvEmployees.setAdapter(adapter);

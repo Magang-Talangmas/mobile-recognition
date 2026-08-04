@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,24 +34,50 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     @Override
     public void onBindViewHolder(@NonNull EmployeeViewHolder holder, int position) {
         Employee employee = employeeList.get(position);
-        
+
         holder.tvName.setText(employee.name);
-        holder.tvRole.setText(employee.role + " · " + employee.department);
-        holder.tvInitials.setText(employee.initials);
-        holder.tvStatus.setText(employee.status);
-        
-        // Dynamic colors for avatar background
-        GradientDrawable bgShape = (GradientDrawable) holder.flAvatar.getBackground();
-        bgShape.setColor(Color.parseColor(employee.avatarColor));
-        
-        // Dynamic status badge color
-        GradientDrawable statusBg = (GradientDrawable) holder.tvStatus.getBackground();
-        if (employee.status.equalsIgnoreCase("Hadir")) {
-            statusBg.setColor(Color.parseColor("#065F46")); // Dark green background
-            holder.tvStatus.setTextColor(Color.parseColor("#10B981")); // Green text
-        } else if (employee.status.equalsIgnoreCase("Terlambat")) {
-            statusBg.setColor(Color.parseColor("#78350F")); // Dark yellow/orange background
-            holder.tvStatus.setTextColor(Color.parseColor("#F59E0B")); // Yellow text
+        holder.tvRoleDept.setText(employee.role + " • " + employee.idCode);
+        holder.tvStatusBadge.setText(employee.statusType.name().replace("_", " "));
+
+        // Initials vs Avatar Image
+        if (employee.initials != null && !employee.initials.isEmpty()) {
+            holder.ivAvatarImage.setVisibility(View.GONE);
+            holder.flAvatarInitials.setVisibility(View.VISIBLE);
+            holder.tvInitials.setText(employee.initials);
+        } else {
+            holder.ivAvatarImage.setVisibility(View.VISIBLE);
+            holder.flAvatarInitials.setVisibility(View.GONE);
+        }
+
+        // Apply status colors
+        GradientDrawable badgeBg = (GradientDrawable) holder.tvStatusBadge.getBackground();
+        GradientDrawable dotBg = (GradientDrawable) holder.vStatusDot.getBackground();
+
+        switch (employee.statusType) {
+            case IN_OFFICE:
+                badgeBg.setColor(Color.parseColor("#001456")); // html_primary
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#ffffff")); // html_on_primary
+                dotBg.setColor(Color.parseColor("#001456"));
+                holder.itemView.setAlpha(1.0f);
+                break;
+            case ON_BREAK:
+                badgeBg.setColor(Color.parseColor("#feb31b")); // html_secondary_container
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#6b4800")); // html_on_secondary_container
+                dotBg.setColor(Color.parseColor("#feb31b"));
+                holder.itemView.setAlpha(1.0f);
+                break;
+            case REMOTE:
+                badgeBg.setColor(Color.parseColor("#dde1ff")); // html_primary_fixed
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#001355")); // html_on_primary_fixed
+                dotBg.setColor(Color.parseColor("#dde1ff"));
+                holder.itemView.setAlpha(1.0f);
+                break;
+            case OFFLINE:
+                badgeBg.setColor(Color.parseColor("#d3e4fe")); // html_surface_variant
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#454650")); // html_on_surface_variant
+                dotBg.setColor(Color.parseColor("#767681")); // html_outline
+                holder.itemView.setAlpha(0.6f);
+                break;
         }
     }
 
@@ -60,29 +87,40 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     }
 
     public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvRole, tvInitials, tvStatus;
-        FrameLayout flAvatar;
+        TextView tvName, tvRoleDept, tvInitials, tvStatusBadge;
+        FrameLayout flAvatarInitials;
+        ImageView ivAvatarImage;
+        View vStatusDot;
 
         public EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
-            tvRole = itemView.findViewById(R.id.tvRole);
+            tvRoleDept = itemView.findViewById(R.id.tvRoleDept);
             tvInitials = itemView.findViewById(R.id.tvInitials);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            flAvatar = itemView.findViewById(R.id.flAvatar);
+            tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
+            flAvatarInitials = itemView.findViewById(R.id.flAvatarInitials);
+            ivAvatarImage = itemView.findViewById(R.id.ivAvatarImage);
+            vStatusDot = itemView.findViewById(R.id.vStatusDot);
         }
     }
 
-    public static class Employee {
-        public String name, role, department, initials, status, avatarColor;
+    public enum StatusType {
+        IN_OFFICE, ON_BREAK, REMOTE, OFFLINE
+    }
 
-        public Employee(String name, String role, String department, String initials, String status, String avatarColor) {
+    public static class Employee {
+        public String name;
+        public String role;
+        public String idCode;
+        public String initials;
+        public StatusType statusType;
+
+        public Employee(String name, String role, String idCode, String initials, StatusType statusType) {
             this.name = name;
             this.role = role;
-            this.department = department;
+            this.idCode = idCode;
             this.initials = initials;
-            this.status = status;
-            this.avatarColor = avatarColor;
+            this.statusType = statusType;
         }
     }
 }
