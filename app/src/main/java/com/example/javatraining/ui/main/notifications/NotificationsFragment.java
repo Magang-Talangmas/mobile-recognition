@@ -1,4 +1,4 @@
-package com.example.javatraining.ui.main.profile;
+package com.example.javatraining.ui.main.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,16 +7,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.javatraining.databinding.FragmentProfileBinding;
+import com.example.javatraining.databinding.FragmentNotificationsBinding;
 
-public class ProfileFragment extends Fragment {
+public class NotificationsFragment extends Fragment {
 
-    private FragmentProfileBinding binding;
+    private FragmentNotificationsBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

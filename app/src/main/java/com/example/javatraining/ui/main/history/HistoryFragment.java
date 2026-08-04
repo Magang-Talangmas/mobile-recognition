@@ -20,14 +20,24 @@ import com.example.javatraining.data.repository.MockDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Collections;
+
 public class HistoryFragment extends Fragment {
 
     private HistoryLogAdapter adapter;
     private List<Presensi> allLogs;
     private List<Presensi> filteredLogs;
-    private String currentFilter = "Semua";
 
-    private TextView chipSemua, chipKehadiran, chipUnknown;
+    private Date selectedDate = new Date();
+    private TextView tvSelectedDate;
+    private TextView tvActivityLogTitle;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+    private SimpleDateFormat titleDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     @Nullable
     @Override
@@ -36,31 +46,57 @@ public class HistoryFragment extends Fragment {
 
         RecyclerView rvHistory = view.findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        tvSelectedDate = view.findViewById(R.id.tvSelectedDate);
+        tvActivityLogTitle = view.findViewById(R.id.tvActivityLogTitle);
+        View btnPickDate = view.findViewById(R.id.btnPickDate);
+        
+        if (btnPickDate != null) {
+            btnPickDate.setOnClickListener(v -> showDatePicker());
+        }
 
         allLogs = MockDatabase.getInstance().getAttendanceHistory();
-        filteredLogs = new ArrayList<>(allLogs);
+        filteredLogs = new ArrayList<>();
+        
         adapter = new HistoryLogAdapter(filteredLogs);
         rvHistory.setAdapter(adapter);
 
-        // Filter Chips
-        chipSemua = view.findViewById(R.id.chipSemua);
-        chipKehadiran = view.findViewById(R.id.chipKehadiran);
-        chipUnknown = view.findViewById(R.id.chipUnknown);
-
-        View.OnClickListener chipListener = v -> {
-            String tag = ((TextView) v).getText().toString();
-            currentFilter = tag;
-            resetChipStyles();
-            v.setBackgroundResource(R.drawable.bg_chip_active);
-            ((TextView) v).setTextColor(getResources().getColor(R.color.html_on_primary));
-            applyFilter();
-        };
-
-        chipSemua.setOnClickListener(chipListener);
-        chipKehadiran.setOnClickListener(chipListener);
-        chipUnknown.setOnClickListener(chipListener);
+        updateDateLabels();
+        applyFilter();
 
         return view;
+    }
+    
+    private void showDatePicker() {
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Date")
+                .setSelection(selectedDate.getTime())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            selectedDate = new Date(selection);
+            updateDateLabels();
+            applyFilter();
+        });
+        
+        datePicker.show(getParentFragmentManager(), "DATE_PICKER");
+    }
+    
+    private void updateDateLabels() {
+        if (tvSelectedDate != null) {
+            tvSelectedDate.setText(dateFormat.format(selectedDate));
+        }
+        if (tvActivityLogTitle != null) {
+            Calendar today = Calendar.getInstance();
+            Calendar selected = Calendar.getInstance();
+            selected.setTime(selectedDate);
+            if (today.get(Calendar.YEAR) == selected.get(Calendar.YEAR) &&
+                today.get(Calendar.DAY_OF_YEAR) == selected.get(Calendar.DAY_OF_YEAR)) {
+                tvActivityLogTitle.setText("Activity Log");
+            } else {
+                tvActivityLogTitle.setText(titleDateFormat.format(selectedDate) + " Activity");
+            }
+        }
     }
 
     @Override
@@ -71,30 +107,28 @@ public class HistoryFragment extends Fragment {
         applyFilter();
     }
 
-    private void resetChipStyles() {
-        chipSemua.setBackgroundResource(R.drawable.bg_chip_inactive);
-        chipKehadiran.setBackgroundResource(R.drawable.bg_chip_inactive);
-        chipUnknown.setBackgroundResource(R.drawable.bg_chip_inactive);
-        chipSemua.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
-        chipKehadiran.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
-        chipUnknown.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
-    }
-
     private void applyFilter() {
         filteredLogs.clear();
+        String currentKaryawanId = MockDatabase.getInstance().getCurrentKaryawan().getId();
+        Calendar selectedCal = Calendar.getInstance();
+        selectedCal.setTime(selectedDate);
+        
         for (Presensi p : allLogs) {
-            if (currentFilter.equals("Semua")) {
-                filteredLogs.add(p);
-            } else if (currentFilter.equals("Kehadiran")) {
-                if (p.getTipeLog() == LogType.CHECK_IN || p.getTipeLog() == LogType.CHECK_OUT || p.getTipeLog() == LogType.FACE_DETECTED) {
-                    filteredLogs.add(p);
-                }
-            } else if (currentFilter.equals("Unknown Person")) {
-                if (p.getTipeLog() == LogType.UNKNOWN_DETECTED) {
-                    filteredLogs.add(p);
+            if (p.getKaryawanId() != null && p.getKaryawanId().equals(currentKaryawanId)) {
+                if (p.getTanggal() != null) {
+                    Calendar pCal = Calendar.getInstance();
+                    pCal.setTime(p.getTanggal());
+                    if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
+                        pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { // Note: changed to month filter based on UI (Oct 2023)
+                        filteredLogs.add(p);
+                    }
                 }
             }
         }
+        
+        // Sort newest first
+        Collections.sort(filteredLogs, (p1, p2) -> p2.getTanggal().compareTo(p1.getTanggal()));
+        
         adapter.notifyDataSetChanged();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.javatraining.ui.main.home;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,17 +9,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.javatraining.R;
-import com.example.javatraining.data.model.ActivityLog;
-import java.util.ArrayList;
+import com.example.javatraining.data.model.Presensi;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAdapter.ViewHolder> {
 
-    private List<ActivityLog> items = new ArrayList<>();
+    private List<Presensi> presensiList;
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public void submitList(List<ActivityLog> newItems) {
-        items.clear();
-        items.addAll(newItems);
+    public RecentActivityAdapter(List<Presensi> presensiList) {
+        this.presensiList = presensiList;
+    }
+
+    public void updateData(List<Presensi> newList) {
+        this.presensiList = newList;
         notifyDataSetChanged();
     }
 
@@ -31,45 +38,57 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ActivityLog log = items.get(position);
-        holder.tvInitials.setText(log.getInitials());
-        holder.tvName.setText(log.getName());
-        holder.tvStatus.setText(log.getStatusText());
-        holder.tvTime.setText(log.getTime());
-        holder.tvBadge.setText(log.getStatusBadgeText());
-
-        // Parse colors safely
-        try {
-            holder.tvInitials.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor(log.getInitialsColor())));
-        } catch (Exception e) {}
-
-        if ("green".equals(log.getStatusBadgeColor())) {
-            holder.tvBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#065F46")));
-            holder.tvBadge.setTextColor(Color.parseColor("#34D399"));
-        } else if ("yellow".equals(log.getStatusBadgeColor())) {
-            holder.tvBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#78350F")));
-            holder.tvBadge.setTextColor(Color.parseColor("#FBBF24"));
+        Presensi presensi = presensiList.get(position);
+        
+        // Icon Text
+        holder.tvIconText.setText("C"); // 'C' for Clock
+        
+        // Action & Time
+        boolean isCheckIn = presensi.getCheckInTime() != null;
+        boolean isCheckOut = presensi.getCheckOutTime() != null;
+        
+        if (isCheckIn && !isCheckOut) {
+            holder.tvAction.setText("Clocked In");
+            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getCheckInTime()));
+        } else if (isCheckOut) {
+            holder.tvAction.setText("Clocked Out");
+            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getCheckOutTime()));
         } else {
-            // Default styling
-            holder.tvBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#1E3A8A")));
-            holder.tvBadge.setTextColor(Color.parseColor("#60A5FA"));
+            holder.tvAction.setText("Detected");
+            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getWaktuTerdeteksi() != null ? presensi.getWaktuTerdeteksi() : new java.util.Date()));
+        }
+        
+        // Badge
+        String status = "On Time";
+        if (isCheckIn && presensi.getCheckInTime().getHours() >= 9) {
+            status = "Late";
+        }
+        
+        holder.tvStatusBadge.setText(status);
+        
+        if (status.equalsIgnoreCase("Late") || status.equalsIgnoreCase("Terlambat")) {
+            holder.tvStatusBadge.setTextColor(Color.parseColor("#BA1A1A"));
+            holder.tvStatusBadge.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFDAD6")));
+        } else {
+            holder.tvStatusBadge.setTextColor(Color.parseColor("#1A2D72"));
+            holder.tvStatusBadge.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E4EFFF")));
         }
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return Math.min(presensiList.size(), 3); // Max 3 items for Recent Activity
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvInitials, tvName, tvStatus, tvTime, tvBadge;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvIconText, tvAction, tvTime, tvStatusBadge;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvInitials = itemView.findViewById(R.id.tvInitials);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
+            tvIconText = itemView.findViewById(R.id.tvIconText);
+            tvAction = itemView.findViewById(R.id.tvAction);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvBadge = itemView.findViewById(R.id.tvBadge);
+            tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
         }
     }
 }

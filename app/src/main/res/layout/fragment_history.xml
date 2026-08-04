@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,80 +6,59 @@
     android:background="@color/html_background"
     android:fitsSystemWindows="true">
 
-    <!-- AppBar containing Header to hide on scroll -->
+    <!-- AppBar containing Header -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         app:elevation="0dp">
 
-        <LinearLayout
+        <!-- Top Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            
-            <!-- Top Header -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:paddingHorizontal="16dp">
+            android:layout_height="72dp"
+            android:paddingHorizontal="16dp">
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/logo_face_recognition" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:text="History"
+                    android:textColor="@color/html_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/logo_face_recognition" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="History"
-                        android:textColor="@color/html_primary"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageButton
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/html_on_surface_variant_new" />
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/ivProfile"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_avatar"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                        app:strokeColor="@color/html_primary_container_new"
-                        app:strokeWidth="2dp" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_avatar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:strokeColor="#E5E7EB"
+                app:strokeWidth="1dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -94,119 +73,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingTop="24dp">
-
-            <!-- Month Selector -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_input_rounded"
-                android:backgroundTint="@color/html_surface_container"
-                android:elevation="1dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="12dp">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/html_primary" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="October 2023"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4 Weeks"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/html_primary" />
-            </LinearLayout>
-
-            <!-- Filter Chips -->
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/chipSemua"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_active"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Semua"
-                        android:textColor="@color/html_on_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/chipKehadiran"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_inactive"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Kehadiran"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/chipUnknown"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_inactive"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Unknown Person"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </HorizontalScrollView>
+            android:paddingTop="16dp">
 
             <!-- Weekly Summary Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@color/history_card_bg"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -214,207 +91,128 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="This Week"
+                        android:textColor="#011D35"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"/>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="THIS WEEK"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="42.5 hrs"
-                                android:textColor="#FFFFFF"
-                                android:textSize="28sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Trending Badge -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/bg_badge"
-                            android:backgroundTint="#FFFFFF"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_trending_up"
-                                app:tint="@color/history_card_bg" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:text="+2.5h"
-                                android:textColor="@color/history_card_bg"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </RelativeLayout>
-
-                    <!-- Mini Bar Chart -->
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="24dp"
-                        android:baselineAligned="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="5">
+                        android:gravity="bottom"
+                        android:layout_marginBottom="8dp">
 
-                        <!-- Mon -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="bottom|center_horizontal"
-                            android:orientation="vertical">
-
-                            <View
-                                android:layout_width="32dp"
-                                android:layout_height="60dp"
-                                android:background="@drawable/bg_input_rounded"
-                                android:backgroundTint="@color/history_chart_bar" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="Mon"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <!-- Tue -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="bottom|center_horizontal"
-                            android:orientation="vertical">
-
-                            <View
-                                android:layout_width="32dp"
-                                android:layout_height="75dp"
-                                android:background="@drawable/bg_input_rounded"
-                                android:backgroundTint="@color/history_chart_bar" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="Tue"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <!-- Wed -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="bottom|center_horizontal"
-                            android:orientation="vertical">
-
-                            <View
-                                android:layout_width="32dp"
-                                android:layout_height="85dp"
-                                android:background="@drawable/bg_input_rounded"
-                                android:backgroundTint="@color/history_chart_bar" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="Wed"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <!-- Thu (Active) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="bottom|center_horizontal"
-                            android:orientation="vertical">
-
-                            <View
-                                android:layout_width="32dp"
-                                android:layout_height="95dp"
-                                android:background="@drawable/bg_input_rounded"
-                                android:backgroundTint="@color/history_chart_bar_active" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="Thu"
-                                android:textColor="#FFFFFF"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Fri -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="bottom|center_horizontal"
-                            android:orientation="vertical">
-
-                            <View
-                                android:layout_width="32dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/bg_input_rounded"
-                                android:backgroundTint="@color/history_chart_bar" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="Fri"
-                                android:textColor="#80FFFFFF"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="32.5"
+                            android:textColor="#003D9B"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" / 40 hours"
+                            android:textColor="#434654"
+                            android:textSize="16sp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="4dp"/>
                     </LinearLayout>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:max="100"
+                        android:progress="81"
+                        android:progressTint="#003D9B"
+                        android:progressBackgroundTint="#E4EFFF"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="On track. Keep it up!"
+                        android:textColor="#434654"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Today's Activity -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:text="Today's Activity"
-                android:textColor="@color/html_on_surface"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/tvActivityLogTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="History"
+                    android:textColor="#011D35"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- Date Picker Button -->
+                <LinearLayout
+                    android:id="@+id/btnPickDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge_light_primary"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="#001D32" />
+
+                    <TextView
+                        android:id="@+id/tvSelectedDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="Oct 2023"
+                        android:textColor="#001D32"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_nav_dashboard"
+                        android:rotation="180"
+                        app:tint="#001D32" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Timeline Recycler View -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:paddingTop="4dp"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -85,4 +85,9 @@
     <color name="history_manual_bg">#E1E2E4</color>
 
     <color name="statusLate">#F59E0B</color>
+
+    <!-- Custom Bottom Navigation Colors -->
+    <color name="nav_active_icon">#1A2D72</color>
+    <color name="nav_inactive_gray">#9CA3AF</color>
+    <color name="nav_bg_white">#FFFFFF</color>
 </resources>

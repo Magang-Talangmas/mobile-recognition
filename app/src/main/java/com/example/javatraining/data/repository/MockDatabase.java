@@ -62,21 +62,27 @@ public class MockDatabase {
         karyawans.add(new Karyawan("k5", "u6", "James Wilson", "Marketing Specialist", "enc5", StatusTracking.BREAK));
         // Initial history: populate with varied logs
         long now = System.currentTimeMillis();
-        long oneHourAgo = now - 3600000;
-        long twoHoursAgo = now - 7200000;
-        long threeHoursAgo = now - 10800000;
-        long fourHoursAgo = now - 14400000;
+        long oneDayAgo = now - 86400000L;
+        long twoDaysAgo = now - (86400000L * 2);
         
-        // Sarah Check In
+        long oneHourAgo = now - 3600000L;
+        long twoHoursAgo = now - 7200000L;
+        long threeHoursAgo = now - 10800000L;
+        long fourHoursAgo = now - 14400000L;
+        
+        // TODAY
         presensis.add(new Presensi(UUID.randomUUID().toString(), "k1", new Date(), new Date(fourHoursAgo), null, new Date(fourHoursAgo), LogType.CHECK_IN, null));
-        // Marcus Check In
         presensis.add(new Presensi(UUID.randomUUID().toString(), "k2", new Date(), new Date(threeHoursAgo), null, new Date(threeHoursAgo), LogType.CHECK_IN, null));
-        // Elena Face Detected
         presensis.add(new Presensi(UUID.randomUUID().toString(), "k3", new Date(), null, null, new Date(twoHoursAgo), LogType.FACE_DETECTED, null));
-        // Unknown Person Detected
         presensis.add(new Presensi(UUID.randomUUID().toString(), null, new Date(), null, null, new Date(oneHourAgo), LogType.UNKNOWN_DETECTED, "snapshot_unknown_01.jpg"));
-        // James Tracking Running
         presensis.add(new Presensi(UUID.randomUUID().toString(), "k5", new Date(), new Date(twoHoursAgo), null, new Date(twoHoursAgo), LogType.TRACKING_RUNNING, null));
+
+        // YESTERDAY
+        presensis.add(new Presensi(UUID.randomUUID().toString(), "k1", new Date(oneDayAgo), new Date(oneDayAgo - 14400000L), new Date(oneDayAgo + 3600000L), new Date(oneDayAgo - 14400000L), LogType.CHECK_OUT, null));
+        presensis.add(new Presensi(UUID.randomUUID().toString(), "k2", new Date(oneDayAgo), new Date(oneDayAgo - 10800000L), new Date(oneDayAgo + 7200000L), new Date(oneDayAgo - 10800000L), LogType.CHECK_OUT, null));
+        
+        // TWO DAYS AGO
+        presensis.add(new Presensi(UUID.randomUUID().toString(), "k1", new Date(twoDaysAgo), new Date(twoDaysAgo - 14400000L), new Date(twoDaysAgo + 3600000L), new Date(twoDaysAgo - 14400000L), LogType.CHECK_OUT, null));
     }
     
     public User getCurrentUser() {

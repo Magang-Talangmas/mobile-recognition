@@ -1,92 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/dash_card_bg"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="#2B52AB">
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp">
 
-        <TextView
-            android:id="@+id/tvInitials"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+        <!-- Avatar/Icon -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_avatar_circle"
-            android:backgroundTint="@color/dash_accent_orange"
-            android:gravity="center"
-            android:text="BS"
-            android:textColor="@color/dash_text_white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:backgroundTint="#E4EFFF">
+            <TextView
+                android:id="@+id/tvIconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text="C"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvName"
+        <!-- Details -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Budi Santoso"
-            android:textColor="@color/dash_text_white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tvStatus"
-            app:layout_constraintEnd_toStartOf="@+id/tvTime"
-            app:layout_constraintStart_toEndOf="@+id/tvInitials"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
 
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Check In"
-            android:textColor="@color/dash_text_light_blue"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvBadge"
-            app:layout_constraintStart_toEndOf="@+id/tvInitials"
-            app:layout_constraintTop_toBottomOf="@+id/tvName" />
+            <TextView
+                android:id="@+id/tvAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Clocked In"
+                android:textColor="#011D35"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Today at 08:42 AM"
+                android:textColor="#434654"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Status Badge -->
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvStatusBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="08:02"
-            android:textColor="@color/dash_text_white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tvBadge"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/tvBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            tools:text="On Time"
+            tools:textColor="#003D9B"
+            tools:backgroundTint="#E4EFFF"
             android:background="@drawable/bg_badge"
-            android:backgroundTint="#065F46"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:text="Tepat"
-            android:textColor="#34D399"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+            android:textSize="10sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E5E7EB"
+        android:layout_marginStart="52dp" />
+</LinearLayout>

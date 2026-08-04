@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.example.javatraining.data.model.Presensi;
 import com.example.javatraining.data.repository.MockDatabase;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +29,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
 
     private List<Presensi> logs;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd", Locale.getDefault());
 
     public HistoryLogAdapter(List<Presensi> logs) {
         this.logs = logs;
@@ -42,105 +46,87 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Presensi p = logs.get(position);
 
-        // Set time
-        if (p.getWaktuTerdeteksi() != null) {
-            holder.tvTime.setText(timeFormat.format(p.getWaktuTerdeteksi()));
-        } else if (p.getCheckInTime() != null) {
-            holder.tvTime.setText(timeFormat.format(p.getCheckInTime()));
+        // Timeline line visibility
+        holder.vLineTop.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
+        holder.vLineBottom.setVisibility(position == getItemCount() - 1 ? View.INVISIBLE : View.VISIBLE);
+
+        if (p.getTanggal() != null) {
+            // Set Date Text
+            holder.tvDate.setText(dateFormat.format(p.getTanggal()));
+            
+            // Set Relative Date Text
+            Calendar today = Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(p.getTanggal());
+            
+            long diffInMillis = today.getTimeInMillis() - cal.getTimeInMillis();
+            long diffDays = diffInMillis / (24 * 60 * 60 * 1000);
+            
+            if (today.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
+                holder.tvRelativeDate.setText("Today");
+            } else if (diffDays == 1 || (today.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR) == 1)) {
+                holder.tvRelativeDate.setText("Yesterday");
+            } else {
+                SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.getDefault());
+                holder.tvRelativeDate.setText(dayFormat.format(p.getTanggal()));
+            }
         }
 
-        // Set icon background color and content based on LogType
-        GradientDrawable iconBg = (GradientDrawable) holder.flIcon.getBackground().mutate();
+        // Times
+        if (p.getCheckInTime() != null) {
+            holder.tvCheckInTime.setText(timeFormat.format(p.getCheckInTime()));
+        } else {
+            holder.tvCheckInTime.setText("--:--");
+        }
+        
+        if (p.getCheckOutTime() != null) {
+            holder.tvCheckOutTime.setText(timeFormat.format(p.getCheckOutTime()));
+            
+            // Calculate Total Hours
+            if (p.getCheckInTime() != null) {
+                long duration = p.getCheckOutTime().getTime() - p.getCheckInTime().getTime();
+                long hours = duration / (1000 * 60 * 60);
+                long minutes = (duration / (1000 * 60)) % 60;
+                holder.tvTotalHours.setText(hours + "h " + minutes + "m");
+                holder.tvTotalHours.setTextColor(Color.parseColor("#0052CC"));
+            } else {
+                holder.tvTotalHours.setText("N/A");
+            }
+        } else {
+            holder.tvCheckOutTime.setText("--:--");
+            holder.tvTotalHours.setText("Active");
+            holder.tvTotalHours.setTextColor(Color.parseColor("#10B981"));
+        }
 
-        switch (p.getTipeLog()) {
-            case CHECK_IN:
-                holder.tvTitle.setText("Check In");
-                holder.tvTitle.setTextColor(Color.parseColor("#1B1B1F"));
-                iconBg.setColor(Color.parseColor("#3F51B5")); // primary-ish blue
-                holder.ivIcon.setImageResource(R.drawable.ic_exit);
-                holder.ivIcon.setColorFilter(Color.WHITE);
-                
-                // Find employee name
-                String empName = getEmployeeName(p.getKaryawanId());
-                holder.tvSubtitle.setText(empName != null ? empName : "Karyawan");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-                break;
+        // Status Badge Logic (Mock logic for On Time / Late)
+        if (p.getCheckInTime() != null) {
+            Calendar inTime = Calendar.getInstance();
+            inTime.setTime(p.getCheckInTime());
+            if (inTime.get(Calendar.HOUR_OF_DAY) > 9 || (inTime.get(Calendar.HOUR_OF_DAY) == 9 && inTime.get(Calendar.MINUTE) > 0)) {
+                // Late
+                holder.tvStatusBadge.setText("Late");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706"));
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+            } else {
+                // On Time
+                holder.tvStatusBadge.setText("On Time");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC"));
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
+            }
+        } else {
+            holder.tvStatusBadge.setText("Pending");
+        }
 
-            case CHECK_OUT:
-                holder.tvTitle.setText("Check Out");
-                holder.tvTitle.setTextColor(Color.parseColor("#1B1B1F"));
-                iconBg.setColor(Color.parseColor("#E53935")); // red
-                holder.ivIcon.setImageResource(R.drawable.ic_exit);
-                holder.ivIcon.setColorFilter(Color.WHITE);
-
-                String empNameCo = getEmployeeName(p.getKaryawanId());
-                holder.tvSubtitle.setText(empNameCo != null ? empNameCo : "Karyawan");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-
-                if (p.getCheckOutTime() != null) {
-                    holder.tvTime.setText(timeFormat.format(p.getCheckOutTime()));
-                }
-                break;
-
-            case FACE_DETECTED:
-                holder.tvTitle.setText("Wajah Terdeteksi");
-                holder.tvTitle.setTextColor(Color.parseColor("#1B1B1F"));
-                iconBg.setColor(Color.parseColor("#10B981")); // green
-                holder.ivIcon.setImageResource(android.R.drawable.ic_menu_camera);
-                holder.ivIcon.setColorFilter(Color.WHITE);
-                
-                String empNameFd = getEmployeeName(p.getKaryawanId());
-                holder.tvSubtitle.setText(empNameFd != null ? empNameFd : "Karyawan");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-                break;
-
-            case UNKNOWN_DETECTED:
-                holder.tvTitle.setText("Unknown Person Detected");
-                holder.tvTitle.setTextColor(Color.parseColor("#EF4444")); // red
-                iconBg.setColor(Color.parseColor("#374151")); // gray-700
-                holder.ivIcon.setImageResource(android.R.drawable.ic_menu_camera);
-                holder.ivIcon.setColorFilter(Color.parseColor("#9CA3AF"));
-                
-                holder.tvSubtitle.setText("⚠️ Security Log");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-                holder.tvSubtitle.setTextColor(Color.parseColor("#B91C1C"));
-                break;
-
-            case TRACKING_RUNNING:
-                holder.tvTitle.setText("Tracking Running");
-                holder.tvTitle.setTextColor(Color.parseColor("#1B1B1F"));
-                iconBg.setColor(Color.parseColor("#10B981")); // green
-                holder.ivIcon.setImageResource(android.R.drawable.ic_menu_mylocation);
-                holder.ivIcon.setColorFilter(Color.WHITE);
-                
-                String empNameTr = getEmployeeName(p.getKaryawanId());
-                holder.tvSubtitle.setText(empNameTr != null ? empNameTr : "Karyawan");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-                break;
-
-            case TRACKING_PAUSE:
-                holder.tvTitle.setText("Tracking Pause");
-                holder.tvTitle.setTextColor(Color.parseColor("#1B1B1F"));
-                iconBg.setColor(Color.parseColor("#F59E0B")); // amber
-                holder.ivIcon.setImageResource(android.R.drawable.ic_media_pause);
-                holder.ivIcon.setColorFilter(Color.WHITE);
-
-                String empNameTp = getEmployeeName(p.getKaryawanId());
-                holder.tvSubtitle.setText(empNameTp != null ? empNameTp : "Karyawan");
-                holder.tvSubtitle.setVisibility(View.VISIBLE);
-                break;
+        // Mock locations
+        if (position % 2 == 0) {
+            holder.tvLocation.setText("HQ Office");
+        } else {
+            holder.tvLocation.setText("WFH");
         }
     }
 
-    private String getEmployeeName(String karyawanId) {
-        if (karyawanId == null) return null;
-        List<Karyawan> all = MockDatabase.getInstance().getAllKaryawan();
-        for (Karyawan k : all) {
-            if (k.getId().equals(karyawanId)) {
-                return k.getNamaLengkap();
-            }
-        }
-        return null;
+    private int dpToPx(int dp) {
+        return (int) (dp * android.content.res.Resources.getSystem().getDisplayMetrics().density);
     }
 
     @Override
@@ -154,17 +140,30 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvSubtitle, tvTime;
-        FrameLayout flIcon;
-        ImageView ivIcon;
+        View vLineTop, vLineBottom, vInnerDot;
+        FrameLayout flDotContainer;
+        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation;
+        LinearLayout llStatusBadge;
+        com.google.android.material.card.MaterialCardView cardContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvSubtitle = itemView.findViewById(R.id.tvSubtitle);
-            tvTime = itemView.findViewById(R.id.tvTime);
-            flIcon = itemView.findViewById(R.id.flIcon);
-            ivIcon = itemView.findViewById(R.id.ivIcon);
+            vLineTop = itemView.findViewById(R.id.vLineTop);
+            vLineBottom = itemView.findViewById(R.id.vLineBottom);
+            flDotContainer = itemView.findViewById(R.id.flDotContainer);
+            vInnerDot = itemView.findViewById(R.id.vInnerDot);
+            
+            tvRelativeDate = itemView.findViewById(R.id.tvRelativeDate);
+            cardContainer = itemView.findViewById(R.id.cardContainer);
+            
+            tvDate = itemView.findViewById(R.id.tvDate);
+            llStatusBadge = itemView.findViewById(R.id.llStatusBadge);
+            tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
+            
+            tvCheckInTime = itemView.findViewById(R.id.tvCheckInTime);
+            tvCheckOutTime = itemView.findViewById(R.id.tvCheckOutTime);
+            tvTotalHours = itemView.findViewById(R.id.tvTotalHours);
+            tvLocation = itemView.findViewById(R.id.tvLocation);
         }
     }
 }

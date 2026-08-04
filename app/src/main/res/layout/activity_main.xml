@@ -10,41 +10,147 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomNavCard"
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_gravity="bottom"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="24dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:cardCornerRadius="32dp"
-        app:cardElevation="8dp">
+        app:backgroundTint="@color/nav_bg_white"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.BottomAppBar"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="24dp"
+        app:fabCradleVerticalOffset="0dp"
+        app:elevation="8dp">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:itemIconTint="@color/nav_item_color"
-            app:itemTextColor="@color/nav_item_color"
-            app:itemPaddingTop="12dp"
-            app:itemPaddingBottom="12dp"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu"
-            app:elevation="0dp" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:gravity="center_vertical">
 
-    </com.google.android.material.card.MaterialCardView>
+            <!-- Item 1: Dashboard -->
+            <LinearLayout
+                android:id="@+id/navDashboard"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconDashboard"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_nav_dashboard" />
+                <View
+                    android:id="@+id/dotDashboard"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <!-- Item 2: History -->
+            <LinearLayout
+                android:id="@+id/navHistory"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginEnd="28dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconHistory"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_nav_history" />
+                <View
+                    android:id="@+id/dotHistory"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <!-- Spacer for FAB -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+
+            <!-- Item 3: Manual -->
+            <LinearLayout
+                android:id="@+id/navManual"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginStart="28dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconManual"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_nav_manual" />
+                <View
+                    android:id="@+id/dotManual"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <!-- Item 4: Profile -->
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_nav_profile" />
+                <View
+                    android:id="@+id/dotProfile"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_face_scan"
+        android:src="@drawable/ic_fab_scan"
         app:backgroundTint="@color/dash_accent_orange"
         app:tint="@android:color/white"
-        app:layout_anchor="@id/bottomNavCard"
-        app:layout_anchorGravity="center"
-        app:elevation="12dp" />
+        app:layout_anchor="@id/bottomAppBar"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="32dp"
+        app:elevation="4dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,108 +2,115 @@ package com.example.javatraining.ui.main.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.javatraining.databinding.FragmentHomeBinding;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.javatraining.R;
+import com.example.javatraining.data.repository.MockDatabase;
+import com.example.javatraining.data.model.Karyawan;
+import com.example.javatraining.data.model.Presensi;
+import com.example.javatraining.data.model.User;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
-    private Handler handler = new Handler();
-
-    private Runnable updateTimeRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (binding != null) {
-                String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-                binding.tvLiveTime.setText(currentTime);
-                handler.postDelayed(this, 1000);
-            }
-        }
-    };
+    private RecentActivityAdapter activityAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        
-        binding.imgAvatar.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ProfileActivity.class);
-            startActivity(intent);
-        });
-
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Setup live clock
-        handler.post(updateTimeRunnable);
-
-        // Setup Date
-        String todayDate = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID")).format(new Date());
-        binding.tvDate.setText(todayDate);
-
-        // Initial UI Update
-        updateUI();
-
-        // Simulated Check In / Check Out logic with MockDatabase
-        binding.btnCheckIn.setOnClickListener(v -> {
-            com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
-            if (currentUser != null) {
-                com.example.javatraining.data.repository.MockDatabase.getInstance().checkIn(currentUser.getId());
-                updateUI();
-                android.widget.Toast.makeText(getContext(), "Check In Sukses!", android.widget.Toast.LENGTH_SHORT).show();
-            }
+        // Header
+        view.findViewById(R.id.imgAvatar).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(intent);
         });
 
-        binding.btnCheckOut.setOnClickListener(v -> {
-            com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
-            if (currentUser != null) {
-                com.example.javatraining.data.repository.MockDatabase.getInstance().checkOut(currentUser.getId());
-                updateUI();
-                android.widget.Toast.makeText(getContext(), "Check Out Sukses!", android.widget.Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    
-    private void updateUI() {
-        com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
-        if (currentUser != null) {
-            boolean isCheckedIn = com.example.javatraining.data.repository.MockDatabase.getInstance().isCheckedIn(currentUser.getId());
-            if (isCheckedIn) {
-                binding.tvCurrentStatus.setText("Tracking\nRunning");
-                binding.tvCurrentStatus.setTextColor(android.graphics.Color.parseColor("#10B981")); // Green
-                binding.btnCheckIn.setAlpha(0.5f);
-                binding.btnCheckIn.setEnabled(false);
-                binding.btnCheckOut.setAlpha(1.0f);
-                binding.btnCheckOut.setEnabled(true);
-            } else {
-                binding.tvCurrentStatus.setText("Tracking\nPause");
-                binding.tvCurrentStatus.setTextColor(android.graphics.Color.parseColor("#EF4444")); // Red
-                binding.btnCheckIn.setAlpha(1.0f);
-                binding.btnCheckIn.setEnabled(true);
-                binding.btnCheckOut.setAlpha(0.5f);
-                binding.btnCheckOut.setEnabled(false);
+        // Initialize Data
+        MockDatabase db = MockDatabase.getInstance();
+        User currentUser = db.getCurrentUser();
+        Karyawan currentKaryawan = db.getCurrentKaryawan();
+        String karyawanId = currentKaryawan != null ? currentKaryawan.getId() : "";
+
+        // Greeting
+        TextView tvGreeting = view.findViewById(R.id.tvGreeting);
+        String name = currentKaryawan != null ? currentKaryawan.getNamaLengkap() : "Budi";
+        // Extract first name
+        if (name.contains(" ")) {
+            name = name.substring(0, name.indexOf(" "));
+        }
+        tvGreeting.setText("Good Morning, " + name);
+
+        // Fetch user logs
+        List<Presensi> allLogs = db.getAttendanceHistory();
+        List<Presensi> userLogs = new ArrayList<>();
+        for (Presensi p : allLogs) {
+            if (p.getKaryawanId() != null && p.getKaryawanId().equals(karyawanId)) {
+                userLogs.add(p);
             }
         }
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        handler.removeCallbacks(updateTimeRunnable);
-        binding = null;
+        // Calculate Stats (Mocking logic for demonstration since data is limited)
+        int daysPresent = userLogs.size(); // Simplified mock logic
+        int daysTotal = 22; // Typical working days in a month
+        
+        TextView tvDaysPresent = view.findViewById(R.id.tvDaysPresent);
+        TextView tvDaysTotal = view.findViewById(R.id.tvDaysTotal);
+        ProgressBar pbPresence = view.findViewById(R.id.pbPresence);
+        
+        tvDaysPresent.setText(String.valueOf(daysPresent));
+        tvDaysTotal.setText("/ " + daysTotal + " Days");
+        int progress = (int) (((float) daysPresent / daysTotal) * 100);
+        pbPresence.setProgress(progress);
+
+        // Live Status Logic
+        TextView tvLiveStatus = view.findViewById(R.id.tvLiveStatus);
+        TextView tvLiveStatusTime = view.findViewById(R.id.tvLiveStatusTime);
+        
+        if (!userLogs.isEmpty()) {
+            // Get the most recent log (assuming index 0 is latest for mock data)
+            Presensi latestLog = userLogs.get(0);
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
+            
+            if (latestLog.getCheckOutTime() != null) {
+                tvLiveStatus.setText("Checked Out");
+                tvLiveStatusTime.setText("Last seen at " + sdf.format(latestLog.getCheckOutTime()));
+            } else if (latestLog.getCheckInTime() != null) {
+                tvLiveStatus.setText("In Office");
+                tvLiveStatusTime.setText("Clocked in at " + sdf.format(latestLog.getCheckInTime()));
+            } else if (latestLog.getWaktuTerdeteksi() != null) {
+                tvLiveStatus.setText("In Office");
+                tvLiveStatusTime.setText("Detected at " + sdf.format(latestLog.getWaktuTerdeteksi()));
+            } else {
+                tvLiveStatus.setText("Not Detected");
+                tvLiveStatusTime.setText("No activity yet today");
+            }
+        } else {
+            tvLiveStatus.setText("Not Detected");
+            tvLiveStatusTime.setText("No activity yet today");
+        }
+
+        // Setup Recent Activity RecyclerView
+        RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
+        rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        // Only show up to 3 recent activities
+        activityAdapter = new RecentActivityAdapter(userLogs);
+        rvRecentActivity.setAdapter(activityAdapter);
     }
 }

@@ -1,67 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
-    <!-- Icon -->
+    <!-- Top Half Line -->
+    <View
+        android:id="@+id/vLineTop"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="#D1D5DB"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/flDotContainer"
+        app:layout_constraintStart_toStartOf="@id/flDotContainer"
+        app:layout_constraintEnd_toEndOf="@id/flDotContainer" />
+
+    <!-- Bottom Half Line -->
+    <View
+        android:id="@+id/vLineBottom"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="#D1D5DB"
+        app:layout_constraintTop_toBottomOf="@id/flDotContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/flDotContainer"
+        app:layout_constraintEnd_toEndOf="@id/flDotContainer" />
+
+    <!-- Dot Container -->
     <FrameLayout
-        android:id="@+id/flIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_avatar_circle"
-        android:padding="12dp">
-
-        <ImageView
-            android:id="@+id/ivIcon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_exit"
-            app:tint="#FFFFFF" />
+        android:id="@+id/flDotContainer"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_circle_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        
+        <!-- Inner Dot -->
+        <View
+            android:id="@+id/vInnerDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_primary" />
     </FrameLayout>
+    
+    <TextView
+        android:id="@+id/tvRelativeDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"
+        android:textSize="10sp"
+        android:textColor="#737685"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/flDotContainer"
+        app:layout_constraintStart_toStartOf="@id/flDotContainer"
+        app:layout_constraintEnd_toEndOf="@id/flDotContainer" />
 
     <!-- Card -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="@drawable/bg_input_rounded"
-        android:backgroundTint="@color/history_card_low"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@id/flDotContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="12dp">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
+            <!-- Card Header: Date & Status Badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Check In"
-                android:textColor="@color/html_on_surface"
-                android:textSize="14sp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/tvSubtitle"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Wed, Oct 25"
+                    android:textColor="#011D35"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Status Badge -->
+                <LinearLayout
+                    android:id="@+id/llStatusBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge_light_primary"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp">
+                    <TextView
+                        android:id="@+id/tvStatusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="On Time"
+                        android:textColor="#0052CC"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Check In Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/html_on_surface_variant"
-                android:textSize="12sp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_exit"
+                    android:rotation="180"
+                    app:tint="#737685" />
+
+                <TextView
+                    android:id="@+id/tvCheckInTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="08:55 AM"
+                    android:textColor="#434654"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HQ Office"
+                    android:textColor="#737685"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Check Out Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_exit"
+                    app:tint="#737685" />
+
+                <TextView
+                    android:id="@+id/tvCheckOutTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="--:--"
+                    android:textColor="#434654"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvTotalHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active"
+                    android:textColor="#0052CC"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/html_on_surface"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-</LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
