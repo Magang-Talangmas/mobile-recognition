@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/html_background">
+    android:background="@color/html_background"
+    android:fitsSystemWindows="true">
 
     <!-- Fixed Top Navbar with Shadow -->
     <com.google.android.material.appbar.AppBarLayout
@@ -13,50 +14,58 @@
         android:background="#FFFFFF"
         app:elevation="4dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="48dp"
-            android:paddingBottom="16dp"
-            android:paddingHorizontal="24dp">
-
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_avatar"
-                android:background="@drawable/bg_avatar_circle"
-                android:backgroundTint="#E0E0E0" />
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Top Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:background="#FFFFFF"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/logo_face_recognition" />
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:backgroundTint="#E0E0E0"
+                    android:src="@drawable/ic_avatar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Precision Attendance"
-                    android:textColor="@color/html_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Placeholder to balance the avatar -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
-        </LinearLayout>
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/logo_face_recognition" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Precision Attendance"
+                        android:textColor="@color/html_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
