@@ -33,7 +33,9 @@
     <color name="html_surface_container">#e5eeff</color>
     <color name="html_primary">#001456</color>
     <color name="html_primary_container">#1a2b6d</color>
+    <color name="html_on_primary">#ffffff</color>
     <color name="html_on_primary_container">#8695dd</color>
+    <color name="html_on_error">#ffffff</color>
     <color name="html_primary_fixed">#dde1ff</color>
     <color name="html_on_primary_fixed">#001355</color>
     <color name="html_secondary">#7f5600</color>
