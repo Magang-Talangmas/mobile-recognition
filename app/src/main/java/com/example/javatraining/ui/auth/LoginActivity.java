@@ -69,6 +69,20 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         biometricPrompt.authenticate(promptInfo);
+        
+        binding.ivTogglePassword.setOnClickListener(v -> {
+            if (binding.etPassword.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod) {
+                // Show password
+                binding.etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
+                binding.ivTogglePassword.setAlpha(0.5f);
+            } else {
+                // Hide password
+                binding.etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+                binding.ivTogglePassword.setAlpha(1.0f);
+            }
+            // Keep cursor at the end
+            binding.etPassword.setSelection(binding.etPassword.getText().length());
+        });
 
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.etEmail.getText().toString();
