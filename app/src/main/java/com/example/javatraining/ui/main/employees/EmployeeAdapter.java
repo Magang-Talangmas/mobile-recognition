@@ -49,9 +49,9 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
             holder.flAvatarInitials.setVisibility(View.GONE);
         }
 
-        // Apply status colors
-        GradientDrawable badgeBg = (GradientDrawable) holder.tvStatusBadge.getBackground();
-        GradientDrawable dotBg = (GradientDrawable) holder.vStatusDot.getBackground();
+        // Apply status colors - MUST MUTATE so they don't share state
+        GradientDrawable badgeBg = (GradientDrawable) holder.tvStatusBadge.getBackground().mutate();
+        GradientDrawable dotBg = (GradientDrawable) holder.vStatusDot.getBackground().mutate();
 
         switch (employee.statusType) {
             case IN_OFFICE:
@@ -61,9 +61,9 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
                 holder.itemView.setAlpha(1.0f);
                 break;
             case ON_BREAK:
-                badgeBg.setColor(Color.parseColor("#001456")); // html_primary
-                holder.tvStatusBadge.setTextColor(Color.parseColor("#ffffff")); // html_on_primary
-                dotBg.setColor(Color.parseColor("#001456"));
+                badgeBg.setColor(Color.parseColor("#feb31b")); // html_secondary_container
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#6b4800")); // html_on_secondary_container
+                dotBg.setColor(Color.parseColor("#feb31b"));
                 holder.itemView.setAlpha(1.0f);
                 break;
             case REMOTE:
