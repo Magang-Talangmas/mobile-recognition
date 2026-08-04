@@ -12,10 +12,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="48dp"
-        android:paddingBottom="16dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="24dp">
+
+        <!-- Top Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_avatar"
+                android:background="@drawable/bg_avatar_circle"
+                android:backgroundTint="#E0E0E0" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/logo_face_recognition" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Precision Attendance"
+                    android:textColor="@color/html_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Placeholder to balance the avatar -->
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+        </LinearLayout>
 
         <!-- Header Section -->
         <LinearLayout
@@ -28,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Selamat Pagi, Budi"
-                android:textColor="@color/html_on_background"
-                android:textSize="24sp"
+                android:textColor="@color/html_primary"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -40,8 +83,8 @@
                 android:layout_marginTop="4dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:src="@android:drawable/ic_menu_today"
                     app:tint="@color/html_on_surface_variant" />
 
@@ -52,7 +95,7 @@
                     android:layout_marginStart="4dp"
                     android:text="Kamis, 24 Oktober 2023"
                     android:textColor="@color/html_on_surface_variant"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -62,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             app:cardBackgroundColor="@color/html_surface_container_lowest"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="2dp">
 
             <RelativeLayout
@@ -75,7 +118,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="@color/html_secondary_container"
+                    android:backgroundTint="#F5A623"
                     android:layout_centerVertical="true">
 
                     <ImageView
@@ -99,33 +142,30 @@
                         android:layout_height="wrap_content"
                         android:text="CURRENT STATUS"
                         android:textColor="@color/html_on_surface_variant"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tracking Running"
-                            android:textColor="@color/html_secondary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_avatar_circle"
-                            android:backgroundTint="@color/html_secondary" />
-                    </LinearLayout>
+                        android:text="Tracking\nRunning"
+                        android:textColor="#A06000"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
+                <!-- Indicator dot -->
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_toStartOf="@id/timeLayout"
+                    android:layout_marginEnd="12dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:backgroundTint="#A06000" />
+
                 <LinearLayout
+                    android:id="@+id/timeLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -137,9 +177,9 @@
                         android:id="@+id/tvLiveTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="08:45"
+                        android:text="09:24"
                         android:textColor="@color/html_primary"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -147,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:text="WIB"
                         android:textColor="@color/html_on_surface_variant"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
             </RelativeLayout>
@@ -156,25 +196,24 @@
         <!-- Live Camera Feed Placeholder -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
-            android:background="@color/html_surface_container"
+            android:layout_height="320dp"
+            android:background="#D1D5DB"
             android:layout_marginBottom="24dp">
 
             <!-- Scanning overlay (simplified) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
                 android:background="@drawable/face_guide_bg">
 
                 <!-- Face Tracking box -->
                 <View
                     android:layout_width="120dp"
-                    android:layout_height="160dp"
+                    android:layout_height="140dp"
                     android:layout_gravity="center"
                     android:background="@drawable/bg_input_rounded"
-                    android:backgroundTint="#33DDE1FF" />
+                    android:backgroundTint="#22FFFFFF"
+                    android:layout_marginTop="-20dp" />
 
                 <!-- Scan text -->
                 <TextView
@@ -183,12 +222,15 @@
                     android:text="Face Detected..."
                     android:textColor="@color/html_primary"
                     android:background="@drawable/bg_badge"
-                    android:backgroundTint="#CCF8F9FF"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
+                    android:backgroundTint="#E5EEFF"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="16dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    app:drawableStartCompat="@android:drawable/ic_menu_rotate"
+                    android:drawablePadding="8dp" />
             </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -203,34 +245,34 @@
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="54dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 android:text="Start Break"
                 android:textColor="@color/html_primary"
                 android:textAllCaps="false"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/html_surface_container_lowest"
                 app:strokeColor="@color/html_primary"
                 app:strokeWidth="1dp"
-                app:cornerRadius="8dp"
+                app:cornerRadius="6dp"
                 app:icon="@drawable/ic_cancel_outline"
                 app:iconTint="@color/html_primary"
                 app:iconGravity="textStart" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="54dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:text="Check Out"
                 android:textColor="@color/html_on_primary"
                 android:textAllCaps="false"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/html_primary"
-                app:cornerRadius="8dp"
+                app:cornerRadius="6dp"
                 app:icon="@drawable/ic_exit"
                 app:iconTint="@color/html_on_primary"
                 app:iconGravity="textStart" />
@@ -246,7 +288,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/html_surface_container_lowest"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
@@ -258,18 +300,18 @@
 
                     <FrameLayout
                         android:id="@+id/iconTotal"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_container"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input_rounded"
+                        android:backgroundTint="@color/html_primary"
                         android:layout_centerVertical="true">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_schedule"
-                            app:tint="@color/html_on_primary_container" />
+                            app:tint="@color/html_on_primary" />
                     </FrameLayout>
 
                     <LinearLayout
@@ -277,7 +319,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_toEndOf="@id/iconTotal"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="16dp"
                         android:layout_centerVertical="true">
 
                         <TextView
@@ -285,30 +327,29 @@
                             android:layout_height="wrap_content"
                             android:text="Total Work Hours"
                             android:textColor="@color/html_on_surface_variant"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="06:45:20"
                             android:textColor="@color/html_on_background"
-                            android:textSize="20sp"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="On Track"
-                        android:textColor="@color/html_secondary"
+                        android:text="↑ On Track"
+                        android:textColor="#A06000"
                         android:background="@drawable/bg_badge"
-                        android:backgroundTint="#33FFBA3F"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
+                        android:backgroundTint="#FFF3E0"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -324,7 +365,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="6dp"
                     app:cardBackgroundColor="@color/html_surface_container_lowest"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
@@ -338,20 +379,19 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp">
+                            android:layout_marginBottom="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Check In"
                                 android:textColor="@color/html_on_surface_variant"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
+                                android:textSize="12sp"
                                 android:layout_centerVertical="true" />
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
                                 android:src="@android:drawable/ic_menu_directions"
                                 app:tint="@color/html_on_surface_variant"
                                 android:layout_alignParentEnd="true"
@@ -363,7 +403,7 @@
                             android:layout_height="wrap_content"
                             android:text="08:00"
                             android:textColor="@color/html_on_background"
-                            android:textSize="24sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -371,7 +411,7 @@
                             android:layout_height="wrap_content"
                             android:text="On Time"
                             android:textColor="@color/html_on_surface_variant"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -380,7 +420,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="6dp"
                     app:cardBackgroundColor="@color/html_surface_container_lowest"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
@@ -394,20 +434,19 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp">
+                            android:layout_marginBottom="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Break Time"
                                 android:textColor="@color/html_on_surface_variant"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
+                                android:textSize="12sp"
                                 android:layout_centerVertical="true" />
 
                             <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
                                 android:src="@android:drawable/ic_menu_agenda"
                                 app:tint="@color/html_on_surface_variant"
                                 android:layout_alignParentEnd="true"
@@ -419,7 +458,7 @@
                             android:layout_height="wrap_content"
                             android:text="--:--"
                             android:textColor="@color/html_on_background"
-                            android:textSize="24sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -427,7 +466,7 @@
                             android:layout_height="wrap_content"
                             android:text="Not taken yet"
                             android:textColor="@color/html_on_surface_variant"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
