@@ -1,6 +1,7 @@
 package com.example.javatraining.ui.main.home;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +10,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.javatraining.R;
 import com.example.javatraining.data.repository.MockDatabase;
 import com.example.javatraining.data.model.Karyawan;
-import com.example.javatraining.data.model.Presensi;
+import com.example.javatraining.data.model.AttendanceEvent;
+import com.example.javatraining.data.model.LogType;
 import com.example.javatraining.data.model.User;
+import com.example.javatraining.ui.main.MainActivity;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
+import com.example.javatraining.ui.main.notifications.NotificationsFragment;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class HomeFragment extends Fragment {
 
     private RecentActivityAdapter activityAdapter;
+    private boolean isCheckedIn = false; // Based on latest log
 
     @Nullable
     @Override
@@ -41,6 +49,10 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+        loadDataAndRefreshUI(view);
+    }
+    
+    private void loadDataAndRefreshUI(View view) {
         // Initialize Data
         MockDatabase db = MockDatabase.getInstance();
         User currentUser = db.getCurrentUser();
@@ -50,67 +62,66 @@ public class HomeFragment extends Fragment {
         // Greeting
         TextView tvGreeting = view.findViewById(R.id.tvGreeting);
         String name = currentKaryawan != null ? currentKaryawan.getNamaLengkap() : "Budi";
-        // Extract first name
         if (name.contains(" ")) {
             name = name.substring(0, name.indexOf(" "));
         }
-        tvGreeting.setText("Good Morning, " + name);
+        tvGreeting.setText("Good morning, " + name + ".");
 
         // Fetch user logs
-        List<Presensi> allLogs = db.getAttendanceHistory();
-        List<Presensi> userLogs = new ArrayList<>();
-        for (Presensi p : allLogs) {
-            if (p.getKaryawanId() != null && p.getKaryawanId().equals(karyawanId)) {
+        List<AttendanceEvent> allLogs = db.getAttendanceHistory();
+        List<AttendanceEvent> userLogs = new ArrayList<>();
+        for (AttendanceEvent p : allLogs) {
+            if (p.getEmployeeId() != null && p.getEmployeeId().equals(karyawanId)) {
                 userLogs.add(p);
             }
         }
 
-        // Calculate Stats (Mocking logic for demonstration since data is limited)
-        int daysPresent = userLogs.size(); // Simplified mock logic
-        int daysTotal = 22; // Typical working days in a month
-        
-        TextView tvDaysPresent = view.findViewById(R.id.tvDaysPresent);
-        TextView tvDaysTotal = view.findViewById(R.id.tvDaysTotal);
-        ProgressBar pbPresence = view.findViewById(R.id.pbPresence);
-        
-        tvDaysPresent.setText(String.valueOf(daysPresent));
-        tvDaysTotal.setText("/ " + daysTotal + " Days");
-        int progress = (int) (((float) daysPresent / daysTotal) * 100);
-        pbPresence.setProgress(progress);
-
         // Live Status Logic
-        TextView tvLiveStatus = view.findViewById(R.id.tvLiveStatus);
-        TextView tvLiveStatusTime = view.findViewById(R.id.tvLiveStatusTime);
+        TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
+        TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
+        View vStatusDot = view.findViewById(R.id.vStatusDot);
         
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
+
         if (!userLogs.isEmpty()) {
-            // Get the most recent log (assuming index 0 is latest for mock data)
-            Presensi latestLog = userLogs.get(0);
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
-            
-            if (latestLog.getCheckOutTime() != null) {
-                tvLiveStatus.setText("Checked Out");
-                tvLiveStatusTime.setText("Last seen at " + sdf.format(latestLog.getCheckOutTime()));
-            } else if (latestLog.getCheckInTime() != null) {
-                tvLiveStatus.setText("In Office");
-                tvLiveStatusTime.setText("Clocked in at " + sdf.format(latestLog.getCheckInTime()));
-            } else if (latestLog.getWaktuTerdeteksi() != null) {
-                tvLiveStatus.setText("In Office");
-                tvLiveStatusTime.setText("Detected at " + sdf.format(latestLog.getWaktuTerdeteksi()));
+            AttendanceEvent latestLog = userLogs.get(0);
+            if (latestLog.getEventType() == LogType.CHECK_OUT) {
+                isCheckedIn = false;
+                tvStatusTitle.setText("Checked Out");
+                tvStatusTime.setText("Since " + sdf.format(latestLog.getDetectedAt()));
+                vStatusDot.setVisibility(View.GONE);
             } else {
-                tvLiveStatus.setText("Not Detected");
-                tvLiveStatusTime.setText("No activity yet today");
+                isCheckedIn = true;
+                tvStatusTitle.setText("Checked In");
+                tvStatusTime.setText("Since " + sdf.format(latestLog.getDetectedAt()));
+                vStatusDot.setVisibility(View.VISIBLE);
             }
         } else {
-            tvLiveStatus.setText("Not Detected");
-            tvLiveStatusTime.setText("No activity yet today");
+            isCheckedIn = false;
+            tvStatusTitle.setText("Checked Out");
+            tvStatusTime.setText("No activity today");
+            vStatusDot.setVisibility(View.GONE);
         }
 
+        // Handle Notifications Icon click
+        View btnNotifications = view.findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).switchToFragment(new NotificationsFragment());
+                }
+            });
+        }
+        
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        // Only show up to 3 recent activities
-        activityAdapter = new RecentActivityAdapter(userLogs);
-        rvRecentActivity.setAdapter(activityAdapter);
+        if (activityAdapter == null) {
+            activityAdapter = new RecentActivityAdapter(userLogs);
+            rvRecentActivity.setAdapter(activityAdapter);
+        } else {
+            activityAdapter.updateData(userLogs);
+        }
     }
 }

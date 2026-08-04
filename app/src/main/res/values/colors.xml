@@ -33,14 +33,15 @@
     <color name="html_surface_container">#e5eeff</color>
     <color name="html_surface_container_high">#dce9ff</color>
     <color name="html_surface_variant">#d3e4fe</color>
-    <color name="html_primary">#001456</color>
-    <color name="html_primary_container">#1a2b6d</color>
+    <color name="html_primary">#1A2D72</color>
+    <color name="html_primary_container">#331A2D72</color>
     <color name="html_on_primary">#ffffff</color>
-    <color name="html_on_primary_container">#8695dd</color>
+    <color name="html_on_primary_container">#1A2D72</color>
     <color name="html_on_error">#ffffff</color>
     <color name="html_primary_fixed">#dde1ff</color>
     <color name="html_on_primary_fixed">#001355</color>
     <color name="html_secondary">#7f5600</color>
+    <color name="html_on_secondary">#ffffff</color>
     <color name="html_secondary_container">#feb31b</color>
     <color name="html_on_secondary_container">#6b4800</color>
     <color name="html_error_container">#ffdad6</color>
@@ -57,6 +58,11 @@
     <color name="textWhite">#FFFFFF</color>
     <color name="statusPresent">#10B981</color>
     <color name="statusAbsent">#EF4444</color>
+    <color name="html_inverse_surface">#213145</color>
+    <color name="html_outline_variant">#c6c5d2</color>
+    <color name="html_secondary_new_2">#E65C00</color>
+    <color name="html_secondary_container_new_2">#F36F21</color>
+    <color name="html_on_secondary_container_new_2">#ffffff</color>
 
     <!-- New Semantic Colors from HTML Mockup -->
     <color name="html_tertiary">#004e32</color>

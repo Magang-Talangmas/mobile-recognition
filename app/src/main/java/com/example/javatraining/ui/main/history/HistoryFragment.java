@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javatraining.R;
 import com.example.javatraining.data.model.LogType;
-import com.example.javatraining.data.model.Presensi;
+import com.example.javatraining.data.model.AttendanceEvent;
+import com.example.javatraining.data.model.DailyAttendance;
 import com.example.javatraining.data.repository.MockDatabase;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ import java.util.Collections;
 public class HistoryFragment extends Fragment {
 
     private HistoryLogAdapter adapter;
-    private List<Presensi> allLogs;
-    private List<Presensi> filteredLogs;
+    private List<AttendanceEvent> allLogs;
+    private List<DailyAttendance> filteredLogs;
 
     private Date selectedDate = new Date();
     private TextView tvSelectedDate;
@@ -113,21 +114,38 @@ public class HistoryFragment extends Fragment {
         Calendar selectedCal = Calendar.getInstance();
         selectedCal.setTime(selectedDate);
         
-        for (Presensi p : allLogs) {
-            if (p.getKaryawanId() != null && p.getKaryawanId().equals(currentKaryawanId)) {
-                if (p.getTanggal() != null) {
+        java.util.Map<String, DailyAttendance> dailyMap = new java.util.HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        
+        for (AttendanceEvent p : allLogs) {
+            if (p.getEmployeeId() != null && p.getEmployeeId().equals(currentKaryawanId)) {
+                if (p.getDetectedAt() != null) {
                     Calendar pCal = Calendar.getInstance();
-                    pCal.setTime(p.getTanggal());
+                    pCal.setTime(p.getDetectedAt());
                     if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
-                        pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { // Note: changed to month filter based on UI (Oct 2023)
-                        filteredLogs.add(p);
+                        pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { 
+                        
+                        String dateKey = sdf.format(p.getDetectedAt());
+                        DailyAttendance daily = dailyMap.get(dateKey);
+                        if (daily == null) {
+                            daily = new DailyAttendance(p.getDetectedAt());
+                            dailyMap.put(dateKey, daily);
+                        }
+                        
+                        if (p.getEventType() == LogType.CHECK_IN) {
+                            daily.setCheckInEvent(p);
+                        } else if (p.getEventType() == LogType.CHECK_OUT) {
+                            daily.setCheckOutEvent(p);
+                        }
                     }
                 }
             }
         }
         
+        filteredLogs.addAll(dailyMap.values());
+        
         // Sort newest first
-        Collections.sort(filteredLogs, (p1, p2) -> p2.getTanggal().compareTo(p1.getTanggal()));
+        Collections.sort(filteredLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
         
         adapter.notifyDataSetChanged();
     }

@@ -5,26 +5,30 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.javatraining.R;
-import com.example.javatraining.data.model.Presensi;
+import com.example.javatraining.data.model.AttendanceEvent;
+import com.example.javatraining.data.model.LogType;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAdapter.ViewHolder> {
 
-    private List<Presensi> presensiList;
+    private List<AttendanceEvent> presensiList;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public RecentActivityAdapter(List<Presensi> presensiList) {
+    public RecentActivityAdapter(List<AttendanceEvent> presensiList) {
         this.presensiList = presensiList;
     }
 
-    public void updateData(List<Presensi> newList) {
+    public void updateData(List<AttendanceEvent> newList) {
         this.presensiList = newList;
         notifyDataSetChanged();
     }
@@ -38,40 +42,54 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Presensi presensi = presensiList.get(position);
+        AttendanceEvent event = presensiList.get(position);
         
-        // Icon Text
-        holder.tvIconText.setText("C"); // 'C' for Clock
-        
-        // Action & Time
-        boolean isCheckIn = presensi.getCheckInTime() != null;
-        boolean isCheckOut = presensi.getCheckOutTime() != null;
-        
-        if (isCheckIn && !isCheckOut) {
-            holder.tvAction.setText("Clocked In");
-            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getCheckInTime()));
-        } else if (isCheckOut) {
-            holder.tvAction.setText("Clocked Out");
-            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getCheckOutTime()));
+        // Icon & Colors
+        if (event.getEventType() == LogType.CHECK_IN) {
+            holder.tvAction.setText("Checked In");
+            holder.ivIcon.setImageResource(android.R.drawable.ic_input_add); // Or some login icon
+            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
+            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_container)));
+        } else if (event.getEventType() == LogType.CHECK_OUT) {
+            holder.tvAction.setText("Checked Out");
+            holder.ivIcon.setImageResource(android.R.drawable.ic_menu_revert);
+            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
+            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
         } else {
-            holder.tvAction.setText("Detected");
-            holder.tvTime.setText("Today at " + timeFormat.format(presensi.getWaktuTerdeteksi() != null ? presensi.getWaktuTerdeteksi() : new java.util.Date()));
+            holder.tvAction.setText(event.getEventType().name());
         }
         
-        // Badge
-        String status = "On Time";
-        if (isCheckIn && presensi.getCheckInTime().getHours() >= 9) {
-            status = "Late";
+        // Date Logic for Subtitle
+        Calendar calEvent = Calendar.getInstance();
+        calEvent.setTime(event.getDetectedAt());
+        Calendar calToday = Calendar.getInstance();
+        
+        boolean isToday = calEvent.get(Calendar.YEAR) == calToday.get(Calendar.YEAR) &&
+                          calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
+        
+        calToday.add(Calendar.DAY_OF_YEAR, -1);
+        boolean isYesterday = calEvent.get(Calendar.YEAR) == calToday.get(Calendar.YEAR) &&
+                              calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
+
+        String dayStr = isToday ? "Today" : (isYesterday ? "Yesterday" : new SimpleDateFormat("dd MMM", Locale.getDefault()).format(event.getDetectedAt()));
+        
+        holder.tvSubtitle.setText(dayStr + " • Main Office");
+        
+        // Time
+        holder.tvTime.setText(timeFormat.format(event.getDetectedAt()));
+        
+        // Indicator dot for today's check in
+        if (isToday && event.getEventType() == LogType.CHECK_IN) {
+            holder.vStatusIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.vStatusIndicator.setVisibility(View.GONE);
         }
         
-        holder.tvStatusBadge.setText(status);
-        
-        if (status.equalsIgnoreCase("Late") || status.equalsIgnoreCase("Terlambat")) {
-            holder.tvStatusBadge.setTextColor(Color.parseColor("#BA1A1A"));
-            holder.tvStatusBadge.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFDAD6")));
+        // Update Time text color based on date
+        if (isToday) {
+            holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface));
         } else {
-            holder.tvStatusBadge.setTextColor(Color.parseColor("#1A2D72"));
-            holder.tvStatusBadge.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E4EFFF")));
+            holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
         }
     }
 
@@ -81,14 +99,19 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvIconText, tvAction, tvTime, tvStatusBadge;
+        FrameLayout flIconBg;
+        ImageView ivIcon;
+        View vStatusIndicator;
+        TextView tvAction, tvSubtitle, tvTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvIconText = itemView.findViewById(R.id.tvIconText);
+            flIconBg = itemView.findViewById(R.id.flIconBg);
+            ivIcon = itemView.findViewById(R.id.ivIcon);
+            vStatusIndicator = itemView.findViewById(R.id.vStatusIndicator);
             tvAction = itemView.findViewById(R.id.tvAction);
+            tvSubtitle = itemView.findViewById(R.id.tvSubtitle);
             tvTime = itemView.findViewById(R.id.tvTime);
-            tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
         }
     }
 }

@@ -1,74 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/html_surface_container_lowest">
+    android:background="@color/html_background"
+    android:fitsSystemWindows="true">
 
-    <!-- Header / Close Button -->
-    <ImageButton
-        android:id="@+id/btnClose"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/bg_avatar_circle"
-        android:backgroundTint="@color/html_surface_container"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        app:tint="@color/html_on_surface"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ScrollView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <!-- Top Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:paddingHorizontal="16dp">
+
+            <ImageButton
+                android:id="@+id/btnClose"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_avatar_circle"
+                android:backgroundTint="@color/html_surface_container"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/html_on_surface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="@color/html_primary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="40dp"
-        app:layout_constraintTop_toBottomOf="@id/btnClose"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:paddingBottom="100dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp">
+            android:orientation="vertical">
 
-            <!-- Profile Section -->
+            <!-- Profile Identity Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="32dp"
+                android:paddingBottom="24dp">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Outer Glow Effect (Simulated) -->
+                    <View
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_primary"
+                        android:backgroundTint="@color/html_primary_container"
+                        android:alpha="0.3" />
+
                     <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/ic_avatar"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="#E0E0E0"
-                        android:padding="2dp" />
+                        android:backgroundTint="@color/html_surface_container"
+                        android:padding="4dp" />
 
-                    <!-- Badge Check -->
+                    <!-- Active Status Indicator -->
                     <FrameLayout
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="bottom|end"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_secondary_container">
-                        
+                        android:backgroundTint="@color/html_secondary">
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:layout_gravity="center"
                             android:src="@android:drawable/checkbox_on_background"
-                            app:tint="@color/html_on_secondary_container" />
+                            app:tint="@color/html_on_secondary" />
                     </FrameLayout>
                 </FrameLayout>
 
@@ -76,29 +112,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Budi Santoso"
-                    android:textColor="@color/html_on_surface"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/html_on_background"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="-0.01" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Senior Software Engineer"
-                    android:textColor="@color/html_secondary"
-                    android:textSize="18sp"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="4dp"
+                    android:text="Senior Staff"
+                    android:textColor="@color/html_on_surface_variant"
+                    android:textSize="18sp" />
 
                 <!-- Employee Badge -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/bg_badge"
                     android:backgroundTint="@color/html_primary_container"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="6dp">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -110,275 +147,315 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="ENG-102"
+                        android:text="EMP-2024-001"
                         android:textColor="@color/html_on_primary_container"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <!-- Menu List -->
+            <!-- Navigation Menu Cards -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="32dp">
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp">
 
-                <!-- Item: Personal Information -->
+                <!-- Personal Info -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_input_rounded"
                     android:backgroundTint="@color/html_surface_container_lowest"
+                    android:elevation="2dp"
                     android:padding="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
-
+                    android:orientation="horizontal">
+                    
                     <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_fixed">
-                        
+                        android:backgroundTint="@color/html_surface_container">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_avatar"
-                            app:tint="@color/html_on_primary_fixed" />
+                            android:src="@android:drawable/ic_menu_myplaces"
+                            app:tint="@color/html_primary" />
                     </FrameLayout>
-
-                    <TextView
+                    
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Personal Information"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="18sp"
-                        android:layout_marginStart="16dp" />
-
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Personal Info"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Update your details"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                    
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline" />
+                        app:tint="@color/html_outline_variant" />
                 </LinearLayout>
 
-                <!-- Item: Attendance Settings -->
+                <!-- Work Schedule -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_input_rounded"
                     android:backgroundTint="@color/html_surface_container_lowest"
+                    android:elevation="2dp"
                     android:padding="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
-
+                    android:orientation="horizontal">
+                    
                     <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_fixed">
-
+                        android:backgroundTint="@color/html_tertiary_container">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_recent_history"
-                            app:tint="@color/html_on_primary_fixed" />
+                            android:src="@android:drawable/ic_menu_month"
+                            app:tint="@color/html_on_tertiary_container" />
                     </FrameLayout>
-
-                    <TextView
+                    
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Attendance Settings"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="18sp"
-                        android:layout_marginStart="16dp" />
-
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Work Schedule"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View shifts &amp; rotations"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                    
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline" />
+                        app:tint="@color/html_outline_variant" />
                 </LinearLayout>
 
-                <!-- Item: Security & Face ID -->
+                <!-- My Leave Requests -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_input_rounded"
                     android:backgroundTint="@color/html_surface_container_lowest"
+                    android:elevation="2dp"
                     android:padding="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
-
+                    android:orientation="horizontal">
+                    
                     <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_fixed">
-
+                        android:backgroundTint="@color/html_error_container">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/logo_face_recognition"
-                            app:tint="@color/html_on_primary_fixed" />
+                            android:src="@android:drawable/ic_menu_close_clear_cancel"
+                            app:tint="@color/html_on_error_container" />
                     </FrameLayout>
-
-                    <TextView
+                    
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Security &amp; Face ID"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="18sp"
-                        android:layout_marginStart="16dp" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline" />
-                </LinearLayout>
-
-                <!-- Item: Language -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bg_input_rounded"
-                    android:backgroundTint="@color/html_surface_container_lowest"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
-
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_fixed">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_sort_alphabetically"
-                            app:tint="@color/html_on_primary_fixed" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Language"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="18sp"
-                        android:layout_marginStart="16dp" />
-                        
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="My Leave Requests"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Manage time off"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                    
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EN"
-                        android:textColor="@color/html_secondary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp" />
-
+                        android:text="2 Pending"
+                        android:textSize="12sp"
+                        android:textColor="@color/html_primary"
+                        android:background="@drawable/bg_badge"
+                        android:backgroundTint="#1A001456"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:layout_marginEnd="8dp"/>
+                    
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline" />
+                        app:tint="@color/html_outline_variant" />
                 </LinearLayout>
 
-                <!-- Item: Help Center -->
+                <!-- Payroll -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_input_rounded"
                     android:backgroundTint="@color/html_surface_container_lowest"
+                    android:elevation="2dp"
                     android:padding="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp">
-
+                    android:orientation="horizontal">
+                    
                     <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_primary_fixed">
-
+                        android:backgroundTint="@color/html_secondary_container">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_help"
-                            app:tint="@color/html_on_primary_fixed" />
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/html_on_secondary_container" />
                     </FrameLayout>
-
-                    <TextView
+                    
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Help Center"
-                        android:textColor="@color/html_on_surface"
-                        android:textSize="18sp"
-                        android:layout_marginStart="16dp" />
-
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Payroll"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Payslips &amp; taxes"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                    
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline" />
+                        app:tint="@color/html_outline_variant" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <!-- Footer -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="32dp"
-                android:gravity="center">
-
+                <!-- Settings -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/bg_input_rounded"
+                    android:backgroundTint="@color/html_surface_container_lowest"
+                    android:elevation="2dp"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="@color/html_surface_variant">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@android:drawable/ic_menu_preferences"
+                            app:tint="@color/html_on_surface_variant" />
+                    </FrameLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Settings"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="App preferences"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                    
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_media_next"
+                        app:tint="@color/html_outline_variant" />
+                </LinearLayout>
+                
+                <!-- Sign Out Button -->
                 <Button
                     android:id="@+id/btnLogout"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Log Out"
+                    android:text="Sign Out"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:textColor="@color/html_on_error_container"
-                    android:backgroundTint="@color/html_error_container"
+                    android:textStyle="bold"
+                    android:textColor="@color/html_error"
+                    android:backgroundTint="@color/html_surface_container"
                     app:cornerRadius="12dp"
-                    app:icon="@android:drawable/ic_menu_revert"
+                    app:icon="@android:drawable/ic_lock_power_off"
                     app:iconGravity="textStart"
-                    app:iconTint="@color/html_on_error_container" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="App Version v1.2.4"
-                    android:textColor="@color/html_outline"
-                    android:textSize="14sp" />
+                    app:iconTint="@color/html_error" />
 
             </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
