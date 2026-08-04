@@ -41,6 +41,7 @@ dependencies {
     implementation libs.appcompat
     implementation libs.material
     implementation libs.constraintlayout
+    implementation 'androidx.biometric:biometric:1.1.0'
     
     // Lifecycle
     implementation libs.lifecycle.viewmodel

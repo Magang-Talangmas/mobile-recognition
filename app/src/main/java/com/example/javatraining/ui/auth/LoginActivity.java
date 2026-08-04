@@ -4,9 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+import java.util.concurrent.Executor;
 
 import com.example.javatraining.databinding.ActivityLoginBinding;
 import com.example.javatraining.ui.main.MainActivity;
@@ -24,17 +29,41 @@ public class LoginActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        // Show mock biometric prompt
-        new AlertDialog.Builder(this)
-                .setTitle("Autentikasi Biometrik")
-                .setMessage("Gunakan Face ID atau Fingerprint yang sudah terdaftar untuk masuk secara otomatis.")
-                .setPositiveButton("Gunakan Biometrik", (dialog, which) -> {
-                    Toast.makeText(this, "Biometrik terverifikasi", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                })
-                .setNegativeButton("Batal", null)
-                .show();
+        // Native Biometric Prompt
+        Executor executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt biometricPrompt = new BiometricPrompt(LoginActivity.this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Biometric error: " + errString, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getApplicationContext(),
+                        "Biometrik terverifikasi!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Autentikasi gagal",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Login Biometrik")
+                .setSubtitle("Gunakan Face ID atau Fingerprint untuk masuk")
+                .setNegativeButtonText("Batal")
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
 
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.etEmail.getText().toString();
