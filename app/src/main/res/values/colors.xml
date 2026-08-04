@@ -57,7 +57,24 @@
     <color name="textWhite">#FFFFFF</color>
     <color name="statusPresent">#10B981</color>
     <color name="statusAbsent">#EF4444</color>
-    
+
+    <!-- New Semantic Colors from HTML Mockup -->
+    <color name="html_tertiary">#004e32</color>
+    <color name="html_tertiary_container">#006844</color>
+    <color name="html_on_tertiary_container">#72e9af</color>
+    <color name="html_tertiary_fixed">#82f9be</color>
+    <color name="html_error">#ba1a1a</color>
+    <color name="html_error_container_new">#ffdad6</color>
+    <color name="html_secondary_container_new">#d4e0f8</color>
+    <color name="html_on_secondary_container_new">#576377</color>
+    <color name="html_primary_container_new">#0052cc</color>
+    <color name="html_on_primary_container_new">#c4d2ff</color>
+    <color name="html_secondary_fixed_new">#d7e3fb</color>
+    <color name="html_surface_new">#f8f9fb</color>
+    <color name="html_on_surface_new">#191c1e</color>
+    <color name="html_on_surface_variant_new">#434654</color>
+    <color name="html_surface_container_new">#edeef0</color>
+    <color name="html_outline_new">#737685</color>
     <!-- History specific colors -->
     <color name="history_card_bg">#0052CC</color>
     <color name="history_chart_bar">#33FFFFFF</color>

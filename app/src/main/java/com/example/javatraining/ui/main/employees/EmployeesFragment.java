@@ -27,10 +27,11 @@ public class EmployeesFragment extends Fragment {
         rvEmployees.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<EmployeeAdapter.Employee> dummyData = new ArrayList<>();
-        dummyData.add(new EmployeeAdapter.Employee("Sarah Jenkins", "Engineering", "ENG-402", null, EmployeeAdapter.StatusType.IN_OFFICE));
-        dummyData.add(new EmployeeAdapter.Employee("Marcus Chen", "Product", "PRD-118", null, EmployeeAdapter.StatusType.ON_BREAK));
-        dummyData.add(new EmployeeAdapter.Employee("Elena Rodriguez", "Design", "DES-892", "EL", EmployeeAdapter.StatusType.REMOTE));
-        dummyData.add(new EmployeeAdapter.Employee("David Kim", "Marketing", "MKT-204", null, EmployeeAdapter.StatusType.OFFLINE));
+        dummyData.add(new EmployeeAdapter.Employee("Sarah Jenkins", "Lead Designer", "08:42 AM", null, EmployeeAdapter.StatusType.ACTIVE));
+        dummyData.add(new EmployeeAdapter.Employee("Marcus Chen", "Senior Engineer", "09:15 AM", null, EmployeeAdapter.StatusType.ACTIVE));
+        dummyData.add(new EmployeeAdapter.Employee("Elena Rodriguez", "Product Manager", "12:30 PM", "EL", EmployeeAdapter.StatusType.BREAK));
+        dummyData.add(new EmployeeAdapter.Employee("David Kim", "Data Analyst", "Expected 9:00", null, EmployeeAdapter.StatusType.ABSENT));
+        dummyData.add(new EmployeeAdapter.Employee("James Wilson", "Marketing Specialist", "08:55 AM", null, EmployeeAdapter.StatusType.ACTIVE));
 
         EmployeeAdapter adapter = new EmployeeAdapter(dummyData);
         rvEmployees.setAdapter(adapter);

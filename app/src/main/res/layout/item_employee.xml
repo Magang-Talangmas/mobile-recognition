@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/clRoot"
@@ -7,56 +6,82 @@
     android:layout_marginBottom="12dp"
     android:background="@drawable/bg_input_rounded"
     android:backgroundTint="@color/html_surface_container_lowest"
-    android:elevation="2dp"
-    android:padding="16dp">
+    android:clipToOutline="true"
+    android:elevation="2dp">
+
+    <!-- Status Indicator Line -->
+    <View
+        android:id="@+id/vStatusLine"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@color/html_tertiary_fixed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Avatar / Initials Container -->
     <FrameLayout
         android:id="@+id/flAvatarContainer"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/vStatusLine"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- For Initials -->
+        <!-- Outer Ring -->
+        <View
+            android:id="@+id/vAvatarRing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_avatar_circle"
+            android:backgroundTint="#4D82F9BE" /> <!-- ~30% opacity tertiary-fixed -->
+
         <FrameLayout
-            android:id="@+id/flAvatarInitials"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_avatar_circle"
-            android:backgroundTint="@color/html_secondary_container"
-            android:visibility="gone">
+            android:layout_margin="4dp">
 
-            <TextView
-                android:id="@+id/tvInitials"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="EL"
-                android:textColor="@color/html_on_secondary_container"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <!-- For Initials -->
+            <FrameLayout
+                android:id="@+id/flAvatarInitials"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_avatar_circle"
+                android:backgroundTint="@color/html_secondary_container"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvInitials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="EL"
+                    android:textColor="@color/html_on_secondary_container"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- For Image Avatar -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivAvatarImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_avatar"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
         </FrameLayout>
-
-        <!-- For Image Avatar (Placeholder for now) -->
-        <ImageView
-            android:id="@+id/ivAvatarImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_avatar_circle"
-            android:backgroundTint="#E0E0E0"
-            android:padding="4dp"
-            android:src="@drawable/ic_avatar" />
 
         <!-- Status Dot -->
         <View
             android:id="@+id/vStatusDot"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="bottom|end"
             android:background="@drawable/bg_avatar_circle"
-            android:backgroundTint="@color/html_primary"
+            android:backgroundTint="@color/html_tertiary_fixed"
             android:elevation="4dp" />
     </FrameLayout>
 
@@ -79,7 +104,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Sarah Jenkins"
-            android:textColor="@color/html_on_surface"
+            android:textColor="@color/html_on_surface_new"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -89,8 +114,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Engineering • ENG-402"
-            android:textColor="@color/html_on_surface_variant"
+            android:text="Lead Designer"
+            android:textColor="@color/html_on_surface_variant_new"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -99,6 +124,7 @@
         android:id="@+id/llRightStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:gravity="end"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,20 +136,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_badge"
-            android:backgroundTint="@color/html_primary"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:text="IN OFFICE"
-            android:textColor="@color/html_on_primary"
-            android:textSize="12sp"
+            android:backgroundTint="#3382F9BE"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:text="ACTIVE"
+            android:textAllCaps="true"
+            android:textColor="@color/html_tertiary"
+            android:textSize="11sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_arrow_forward"
-            app:tint="@color/html_outline" />
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="08:42 AM"
+            android:textColor="@color/html_on_surface_variant_new"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
