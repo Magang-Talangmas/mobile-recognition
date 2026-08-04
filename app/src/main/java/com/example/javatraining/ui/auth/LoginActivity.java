@@ -36,6 +36,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
+                // Ignore if the user intentionally cancelled the prompt
+                if (errorCode == BiometricPrompt.ERROR_USER_CANCELED || 
+                    errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                    return;
+                }
                 Toast.makeText(getApplicationContext(),
                         "Biometric error: " + errString, Toast.LENGTH_SHORT).show();
             }
