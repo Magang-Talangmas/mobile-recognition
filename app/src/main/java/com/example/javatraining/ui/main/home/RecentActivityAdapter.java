@@ -91,6 +91,15 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         } else {
             holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
         }
+
+        // Accuracy
+        double acc = event.getSimilarity() * 100;
+        if (acc > 0) {
+            holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.0f%%", acc));
+            holder.tvAccuracy.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvAccuracy.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -102,7 +111,7 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         FrameLayout flIconBg;
         ImageView ivIcon;
         View vStatusIndicator;
-        TextView tvAction, tvSubtitle, tvTime;
+        TextView tvAction, tvSubtitle, tvTime, tvAccuracy;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +121,7 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
             tvAction = itemView.findViewById(R.id.tvAction);
             tvSubtitle = itemView.findViewById(R.id.tvSubtitle);
             tvTime = itemView.findViewById(R.id.tvTime);
+            tvAccuracy = itemView.findViewById(R.id.tvAccuracy);
         }
     }
 }

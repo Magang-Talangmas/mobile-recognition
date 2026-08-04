@@ -69,6 +69,16 @@
                 android:textColor="@color/html_on_surface_variant"
                 android:textSize="14sp"
                 android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/tvAccuracy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Acc: 98%"
+                android:textColor="#10B981"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
 
         <TextView

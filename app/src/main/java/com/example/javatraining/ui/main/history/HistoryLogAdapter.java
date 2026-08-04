@@ -119,6 +119,15 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         } else {
             holder.tvStatusBadge.setText("Pending");
         }
+        
+        // Accuracy
+        if (inTime != null && p.getCheckInEvent() != null) {
+            double acc = p.getCheckInEvent().getSimilarity() * 100;
+            holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.0f%%", acc));
+            holder.tvAccuracy.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvAccuracy.setVisibility(View.GONE);
+        }
 
         // Mock locations
         if (position % 2 == 0) {
@@ -145,7 +154,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View vLineTop, vLineBottom, vInnerDot;
         FrameLayout flDotContainer;
-        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation;
+        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation, tvAccuracy;
         LinearLayout llStatusBadge;
         com.google.android.material.card.MaterialCardView cardContainer;
 
@@ -167,6 +176,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             tvCheckOutTime = itemView.findViewById(R.id.tvCheckOutTime);
             tvTotalHours = itemView.findViewById(R.id.tvTotalHours);
             tvLocation = itemView.findViewById(R.id.tvLocation);
+            tvAccuracy = itemView.findViewById(R.id.tvAccuracy);
         }
     }
 }
