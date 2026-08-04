@@ -32,14 +32,11 @@
             android:gravity="center_vertical">
 
             <!-- Item 1: Dashboard -->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/navDashboard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless">
@@ -47,15 +44,18 @@
                     android:id="@+id/iconDashboard"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/ic_nav_dashboard" />
                 <View
                     android:id="@+id/dotDashboard"
                     android:layout_width="4dp"
                     android:layout_height="4dp"
+                    android:layout_below="@id/iconDashboard"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/bg_nav_dot"
                     android:visibility="invisible" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <!-- Spacer for FAB -->
             <View
@@ -64,14 +64,11 @@
                 android:layout_weight="1" />
 
             <!-- Item 2: History -->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/navHistory"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless">
@@ -79,15 +76,18 @@
                     android:id="@+id/iconHistory"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/ic_nav_history" />
                 <View
                     android:id="@+id/dotHistory"
                     android:layout_width="4dp"
                     android:layout_height="4dp"
+                    android:layout_below="@id/iconHistory"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/bg_nav_dot"
                     android:visibility="invisible" />
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
