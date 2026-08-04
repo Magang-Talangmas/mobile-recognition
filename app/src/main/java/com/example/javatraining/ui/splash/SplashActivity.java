@@ -22,25 +22,11 @@ public class SplashActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        // Wait for 2 seconds (loading), then animate logo for 0.5s before moving to LoginActivity
+        // Wait for 2 seconds (loading), then move to LoginActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Hide progress bar and texts
-            findViewById(R.id.progressBar).animate().alpha(0f).setDuration(200).start();
-            findViewById(R.id.tvCompanyName).animate().alpha(0f).setDuration(200).start();
-            findViewById(R.id.tvSubtitle).animate().alpha(0f).setDuration(200).start();
-
-            // Animate logo expanding
-            findViewById(R.id.ivSplashLogo).animate()
-                    .scaleX(10f)
-                    .scaleY(10f)
-                    .alpha(0f)
-                    .setDuration(500)
-                    .withEndAction(() -> {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        finish();
-                    })
-                    .start();
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
         }, 2000);
     }
 }
