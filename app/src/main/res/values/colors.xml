@@ -26,22 +26,30 @@
     <color name="backgroundLight">#1A2D72</color>
     <color name="cardBackground">#283C90</color>
 
-    <!-- New Light Theme (from HTML UI) -->
+    <!-- Light Theme Colors from HTML (Tailwind) -->
     <color name="html_background">#f8f9ff</color>
-    <color name="html_on_background">#0b1c30</color>
-    <color name="html_primary">#001456</color>
-    <color name="html_on_primary">#ffffff</color>
-    <color name="html_on_surface_variant">#454650</color>
+    <color name="html_surface">#f8f9ff</color>
     <color name="html_surface_container_lowest">#ffffff</color>
     <color name="html_surface_container">#e5eeff</color>
+    <color name="html_primary">#001456</color>
+    <color name="html_primary_container">#1a2b6d</color>
+    <color name="html_on_primary_container">#8695dd</color>
+    <color name="html_primary_fixed">#dde1ff</color>
+    <color name="html_on_primary_fixed">#001355</color>
+    <color name="html_secondary">#7f5600</color>
     <color name="html_secondary_container">#feb31b</color>
     <color name="html_on_secondary_container">#6b4800</color>
+    <color name="html_error_container">#ffdad6</color>
+    <color name="html_on_error_container">#93000a</color>
+    <color name="html_on_surface">#0b1c30</color>
+    <color name="html_on_surface_variant">#454650</color>
+    <color name="html_on_background">#0b1c30</color>
+    <color name="html_outline">#767681</color>
     <color name="html_secondary">#7f5600</color>
     <color name="html_primary_fixed">#dde1ff</color>
     <color name="html_primary_fixed_dim">#b8c3ff</color>
     <color name="html_secondary_fixed">#ffdeae</color>
     <color name="html_secondary_fixed_dim">#ffba3f</color>
-    <color name="html_primary_container">#1a2b6d</color>
     <color name="html_on_primary_container">#8695dd</color>
     <color name="textPrimary">#FFFFFF</color>
     <color name="textSecondary">#93C5FD</color>
