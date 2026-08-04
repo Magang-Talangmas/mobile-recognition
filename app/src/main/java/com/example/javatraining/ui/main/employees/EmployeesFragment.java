@@ -18,6 +18,11 @@ import java.util.List;
 
 public class EmployeesFragment extends Fragment {
 
+    private List<EmployeeAdapter.Employee> allEmployeesData;
+    private List<EmployeeAdapter.Employee> filteredData;
+    private EmployeeAdapter adapter;
+    private String currentFilter = "";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,16 +31,83 @@ public class EmployeesFragment extends Fragment {
         RecyclerView rvEmployees = view.findViewById(R.id.rvEmployees);
         rvEmployees.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<EmployeeAdapter.Employee> dummyData = new ArrayList<>();
-        dummyData.add(new EmployeeAdapter.Employee("Sarah Jenkins", "Lead Designer", "08:42 AM", "SJ", EmployeeAdapter.StatusType.ACTIVE));
-        dummyData.add(new EmployeeAdapter.Employee("Marcus Chen", "Senior Engineer", "09:15 AM", "MC", EmployeeAdapter.StatusType.ACTIVE));
-        dummyData.add(new EmployeeAdapter.Employee("Elena Rodriguez", "Product Manager", "12:30 PM", "EL", EmployeeAdapter.StatusType.BREAK));
-        dummyData.add(new EmployeeAdapter.Employee("David Kim", "Data Analyst", "Expected 9:00", "DK", EmployeeAdapter.StatusType.ABSENT));
-        dummyData.add(new EmployeeAdapter.Employee("James Wilson", "Marketing Specialist", "08:55 AM", "JW", EmployeeAdapter.StatusType.ACTIVE));
-
-        EmployeeAdapter adapter = new EmployeeAdapter(dummyData);
+        allEmployeesData = getEmployeesFromDb();
+        filteredData = new ArrayList<>(allEmployeesData);
+        adapter = new EmployeeAdapter(filteredData);
         rvEmployees.setAdapter(adapter);
 
+        // Search feature
+        android.widget.EditText etSearch = view.findViewById(R.id.etSearch);
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterList(s.toString(), currentFilter);
+            }
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+
+        // Filter Chips
+        android.widget.TextView chipEngineering = view.findViewById(R.id.chipEngineering);
+        android.widget.TextView chipDesign = view.findViewById(R.id.chipDesign);
+        android.widget.TextView chipMarketing = view.findViewById(R.id.chipMarketing);
+
+        View.OnClickListener chipListener = v -> {
+            String selectedFilter = ((android.widget.TextView) v).getText().toString();
+            if (currentFilter.equals(selectedFilter)) {
+                currentFilter = ""; // deselect
+                v.setBackgroundResource(R.drawable.bg_chip_inactive);
+                ((android.widget.TextView)v).setTextColor(getResources().getColor(R.color.html_on_surface_variant));
+            } else {
+                currentFilter = selectedFilter;
+                chipEngineering.setBackgroundResource(R.drawable.bg_chip_inactive);
+                chipDesign.setBackgroundResource(R.drawable.bg_chip_inactive);
+                chipMarketing.setBackgroundResource(R.drawable.bg_chip_inactive);
+                chipEngineering.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
+                chipDesign.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
+                chipMarketing.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
+
+                v.setBackgroundResource(R.drawable.bg_chip_active);
+                ((android.widget.TextView)v).setTextColor(getResources().getColor(R.color.html_on_primary));
+            }
+            filterList(etSearch.getText().toString(), currentFilter);
+        };
+
+        chipEngineering.setOnClickListener(chipListener);
+        chipDesign.setOnClickListener(chipListener);
+        chipMarketing.setOnClickListener(chipListener);
+
         return view;
+    }
+
+    private List<EmployeeAdapter.Employee> getEmployeesFromDb() {
+        List<EmployeeAdapter.Employee> list = new ArrayList<>();
+        List<com.example.javatraining.data.model.Karyawan> dbKaryawans = com.example.javatraining.data.repository.MockDatabase.getInstance().getAllKaryawan();
+        for (com.example.javatraining.data.model.Karyawan k : dbKaryawans) {
+            EmployeeAdapter.StatusType st = EmployeeAdapter.StatusType.valueOf(k.getStatusTracking().name());
+            String initials = "";
+            if (k.getNamaLengkap().contains(" ")) {
+                String[] parts = k.getNamaLengkap().split(" ");
+                initials = parts[0].substring(0,1) + parts[1].substring(0,1);
+            } else {
+                initials = k.getNamaLengkap().substring(0,2).toUpperCase();
+            }
+            list.add(new EmployeeAdapter.Employee(k.getNamaLengkap(), k.getJabatan(), "Updated Just Now", initials, st));
+        }
+        return list;
+    }
+
+    private void filterList(String query, String filterDept) {
+        filteredData.clear();
+        for (EmployeeAdapter.Employee emp : allEmployeesData) {
+            boolean matchesQuery = emp.name.toLowerCase().contains(query.toLowerCase()) || emp.role.toLowerCase().contains(query.toLowerCase());
+            boolean matchesDept = filterDept.isEmpty() || emp.role.contains(filterDept);
+            if (matchesQuery && matchesDept) {
+                filteredData.add(emp);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

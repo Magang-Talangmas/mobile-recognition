@@ -67,6 +67,14 @@ public class HistoryEmployeeAdapter extends RecyclerView.Adapter<HistoryEmployee
             holder.tvStatus.setTextColor(Color.parseColor("#60A5FA"));
             holder.ivStatusIcon.setImageResource(android.R.drawable.ic_delete); // Placeholder for minus icon
             holder.ivStatusIcon.setColorFilter(Color.parseColor("#60A5FA"));
+        } else if (emp.status.equalsIgnoreCase("Unknown Person")) {
+            statusBg.setColor(Color.parseColor("#374151")); // Gray-700
+            holder.tvStatus.setTextColor(Color.parseColor("#9CA3AF")); // Gray-400
+            holder.ivStatusIcon.setImageResource(android.R.drawable.ic_menu_camera); // Placeholder for camera
+            holder.ivStatusIcon.setColorFilter(Color.parseColor("#9CA3AF"));
+            
+            holder.tvInitials.setText("?");
+            bgShape.setColor(Color.parseColor("#1F2937")); // Darker gray for avatar
         }
     }
 

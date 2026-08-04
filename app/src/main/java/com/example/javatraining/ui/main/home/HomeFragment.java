@@ -54,6 +54,50 @@ public class HomeFragment extends Fragment {
         // Setup Date
         String todayDate = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID")).format(new Date());
         binding.tvDate.setText(todayDate);
+
+        // Initial UI Update
+        updateUI();
+
+        // Simulated Check In / Check Out logic with MockDatabase
+        binding.btnCheckIn.setOnClickListener(v -> {
+            com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
+            if (currentUser != null) {
+                com.example.javatraining.data.repository.MockDatabase.getInstance().checkIn(currentUser.getId());
+                updateUI();
+                android.widget.Toast.makeText(getContext(), "Check In Sukses!", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnCheckOut.setOnClickListener(v -> {
+            com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
+            if (currentUser != null) {
+                com.example.javatraining.data.repository.MockDatabase.getInstance().checkOut(currentUser.getId());
+                updateUI();
+                android.widget.Toast.makeText(getContext(), "Check Out Sukses!", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    private void updateUI() {
+        com.example.javatraining.data.model.Karyawan currentUser = com.example.javatraining.data.repository.MockDatabase.getInstance().getCurrentKaryawan();
+        if (currentUser != null) {
+            boolean isCheckedIn = com.example.javatraining.data.repository.MockDatabase.getInstance().isCheckedIn(currentUser.getId());
+            if (isCheckedIn) {
+                binding.tvCurrentStatus.setText("Tracking\nRunning");
+                binding.tvCurrentStatus.setTextColor(android.graphics.Color.parseColor("#10B981")); // Green
+                binding.btnCheckIn.setAlpha(0.5f);
+                binding.btnCheckIn.setEnabled(false);
+                binding.btnCheckOut.setAlpha(1.0f);
+                binding.btnCheckOut.setEnabled(true);
+            } else {
+                binding.tvCurrentStatus.setText("Tracking\nPause");
+                binding.tvCurrentStatus.setTextColor(android.graphics.Color.parseColor("#EF4444")); // Red
+                binding.btnCheckIn.setAlpha(1.0f);
+                binding.btnCheckIn.setEnabled(true);
+                binding.btnCheckOut.setAlpha(0.5f);
+                binding.btnCheckOut.setEnabled(false);
+            }
+        }
     }
 
     @Override

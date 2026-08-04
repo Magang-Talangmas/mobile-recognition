@@ -2,25 +2,19 @@ package com.example.javatraining.data.model;
 
 public class User {
     private String id;
-    private String name;
-    private String email;
-    private String role;
-    private String shift;
-    private String faceImageUrl;
+    private String username;
+    private String password;
+    private String role; // ADMIN, EMPLOYEE
 
-    public User(String id, String name, String email, String role, String shift, String faceImageUrl) {
+    public User(String id, String username, String password, String role) {
         this.id = id;
-        this.name = name;
-        this.email = email;
+        this.username = username;
+        this.password = password;
         this.role = role;
-        this.shift = shift;
-        this.faceImageUrl = faceImageUrl;
     }
 
     public String getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
     public String getRole() { return role; }
-    public String getShift() { return shift; }
-    public String getFaceImageUrl() { return faceImageUrl; }
 }

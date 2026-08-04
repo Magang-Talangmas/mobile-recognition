@@ -61,7 +61,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         holder.ivAvatarImage.clearColorFilter();
 
         switch (employee.statusType) {
-            case ACTIVE:
+            case TRACKING_RUNNING:
                 holder.vStatusLine.setBackgroundColor(Color.parseColor("#82f9be")); // tertiary_fixed
                 badgeBg.setColor(Color.parseColor("#3382F9BE")); // 20% opacity tertiary_fixed
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#004e32")); // tertiary
@@ -69,6 +69,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
                 ringBg.setColor(Color.parseColor("#4D82F9BE")); // 30% tertiary_fixed
                 holder.itemView.setAlpha(1.0f);
                 break;
+            case BREAK_DI_AREA:
             case BREAK:
                 holder.vStatusLine.setBackgroundColor(Color.parseColor("#d7e3fb")); // secondary_fixed
                 badgeBg.setColor(Color.parseColor("#4DD7E3FB")); // 30% opacity secondary_fixed
@@ -77,7 +78,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
                 ringBg.setColor(Color.parseColor("#4DD7E3FB")); // 30% secondary_fixed
                 holder.itemView.setAlpha(1.0f);
                 break;
-            case ABSENT:
+            case TRACKING_PAUSE:
                 holder.vStatusLine.setBackgroundColor(Color.parseColor("#ba1a1a")); // error
                 badgeBg.setColor(Color.parseColor("#ffdad6")); // error_container
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#ba1a1a")); // error
@@ -120,7 +121,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     }
 
     public enum StatusType {
-        ACTIVE, BREAK, ABSENT
+        TRACKING_RUNNING, BREAK_DI_AREA, BREAK, TRACKING_PAUSE
     }
 
     public static class Employee {
