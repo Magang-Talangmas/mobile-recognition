@@ -57,5 +57,15 @@
     <color name="textWhite">#FFFFFF</color>
     <color name="statusPresent">#10B981</color>
     <color name="statusAbsent">#EF4444</color>
+    
+    <!-- History specific colors -->
+    <color name="history_card_bg">#0052CC</color>
+    <color name="history_chart_bar">#33FFFFFF</color>
+    <color name="history_chart_bar_active">#FFFFFF</color>
+    <color name="history_timeline_line">#E5E7EB</color>
+    <color name="history_card_low">#F3F4F6</color>
+    <color name="history_break_bg">#D4E0F8</color>
+    <color name="history_manual_bg">#E1E2E4</color>
+
     <color name="statusLate">#F59E0B</color>
 </resources>
