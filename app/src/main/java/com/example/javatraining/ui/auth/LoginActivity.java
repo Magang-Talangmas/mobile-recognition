@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,6 +23,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        // Show mock biometric prompt
+        new AlertDialog.Builder(this)
+                .setTitle("Autentikasi Biometrik")
+                .setMessage("Gunakan Face ID atau Fingerprint yang sudah terdaftar untuk masuk secara otomatis.")
+                .setPositiveButton("Gunakan Biometrik", (dialog, which) -> {
+                    Toast.makeText(this, "Biometrik terverifikasi", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                })
+                .setNegativeButton("Batal", null)
+                .show();
 
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.etEmail.getText().toString();

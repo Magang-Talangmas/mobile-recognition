@@ -193,53 +193,6 @@
                         app:iconGravity="textEnd"
                         app:iconTint="@android:color/white" />
 
-                    <!-- Divider OR -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1"
-                            android:background="#E5E7EB" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="12dp"
-                            android:text="ATAU"
-                            android:textColor="#9CA3AF"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1"
-                            android:background="#E5E7EB" />
-                    </LinearLayout>
-
-                    <!-- Face ID Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnFaceIdLogin"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="24dp"
-                        android:text="Masuk dengan Face ID"
-                        android:textAllCaps="false"
-                        android:textColor="#003399"
-                        android:textSize="16sp"
-                        app:backgroundTint="#E5EEFF"
-                        app:cornerRadius="12dp"
-                        app:elevation="0dp"
-                        app:icon="@drawable/logo_face_recognition"
-                        app:iconGravity="textStart"
-                        app:iconTint="#003399" />
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
