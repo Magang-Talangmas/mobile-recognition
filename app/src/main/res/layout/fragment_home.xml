@@ -15,14 +15,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:paddingTop="48dp"
+            android:paddingBottom="16dp"
             android:paddingHorizontal="24dp">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_avatar"
                 android:background="@drawable/bg_avatar_circle"
                 android:backgroundTint="#E0E0E0" />
@@ -35,8 +37,8 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@drawable/logo_face_recognition" />
 
                 <TextView
@@ -45,14 +47,14 @@
                     android:layout_marginStart="8dp"
                     android:text="Precision Attendance"
                     android:textColor="@color/html_primary"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Placeholder to balance the avatar -->
             <View
-                android:layout_width="32dp"
-                android:layout_height="32dp" />
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -73,160 +75,221 @@
             android:paddingTop="24dp"
             android:paddingBottom="24dp">
 
-        <!-- Header Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selamat Pagi, Budi"
-                android:textColor="@color/html_primary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
+            <!-- Header Section -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="4dp">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/ic_menu_today"
-                    app:tint="@color/html_on_surface_variant" />
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
                 <TextView
-                    android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="Kamis, 24 Oktober 2023"
-                    android:textColor="@color/html_on_surface_variant"
-                    android:textSize="14sp" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:text="Selamat Pagi, Budi"
+                    android:textColor="@color/html_primary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
-        <!-- Prominent Status Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardBackgroundColor="@color/html_surface_container_lowest"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-
-                <FrameLayout
-                    android:id="@+id/iconStatus"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#F5A623"
-                    android:layout_centerVertical="true">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_check_circle_outline"
-                        app:tint="@color/html_on_secondary_container" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@id/iconStatus"
-                    android:layout_marginStart="16dp"
-                    android:layout_centerVertical="true">
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@android:drawable/ic_menu_today"
+                        app:tint="@color/html_on_surface_variant" />
 
                     <TextView
+                        android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CURRENT STATUS"
+                        android:layout_marginStart="4dp"
+                        android:text="Kamis, 24 Oktober 2023"
                         android:textColor="@color/html_on_surface_variant"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tracking\nRunning"
-                        android:textColor="#A06000"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
                 </LinearLayout>
+            </LinearLayout>
 
-                <!-- Indicator dot -->
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_toStartOf="@id/timeLayout"
-                    android:layout_marginEnd="12dp"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#A06000" />
-
-                <LinearLayout
-                    android:id="@+id/timeLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="end">
-
-                    <TextView
-                        android:id="@+id/tvLiveTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="09:24"
-                        android:textColor="@color/html_primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="WIB"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="10sp" />
-                </LinearLayout>
-
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Live Camera Feed Placeholder -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:background="#D1D5DB"
-            android:layout_marginBottom="24dp">
-
-            <!-- Scanning overlay (simplified) -->
-            <FrameLayout
+            <!-- Prominent Status Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/face_guide_bg">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/html_surface_container_lowest"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
 
-                <!-- Face Tracking box -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:id="@+id/iconStatus"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#F5A623"
+                        android:layout_centerVertical="true">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_check_circle_outline"
+                            app:tint="@color/html_on_secondary_container" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@id/iconStatus"
+                        android:layout_marginStart="16dp"
+                        android:layout_centerVertical="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CURRENT STATUS"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tracking\nRunning"
+                            android:textColor="#A06000"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Indicator dot -->
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_toStartOf="@id/timeLayout"
+                        android:layout_marginEnd="12dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:backgroundTint="#A06000" />
+
+                    <LinearLayout
+                        android:id="@+id/timeLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/tvLiveTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="09:24"
+                            android:textColor="@color/html_primary"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="WIB"
+                            android:textColor="@color/html_on_surface_variant"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Live Camera Feed Placeholder -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:background="#D1D5DB"
+                android:layout_marginBottom="24dp">
+
+                <!-- Face Tracking box (Center) -->
                 <View
                     android:layout_width="120dp"
                     android:layout_height="140dp"
-                    android:layout_gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/bg_input_rounded"
                     android:backgroundTint="#22FFFFFF"
                     android:layout_marginTop="-20dp" />
+
+                <!-- Brackets (Top Left) -->
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="4dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_margin="24dp" />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_margin="24dp" />
+
+                <!-- Brackets (Top Right) -->
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="4dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="24dp" />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="24dp" />
+
+                <!-- Brackets (Bottom Left) -->
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="4dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_margin="24dp" />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_margin="24dp" />
+
+                <!-- Brackets (Bottom Right) -->
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="4dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="24dp" />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="@color/html_primary_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="24dp" />
 
                 <!-- Scan text -->
                 <TextView
@@ -238,15 +301,16 @@
                     android:backgroundTint="#E5EEFF"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="24dp"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     app:drawableStartCompat="@android:drawable/ic_menu_rotate"
                     android:drawablePadding="8dp" />
-            </FrameLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Quick Actions -->
         <LinearLayout
