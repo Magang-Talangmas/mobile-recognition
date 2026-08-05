@@ -62,6 +62,14 @@ public class HistoryFragment extends Fragment {
         adapter = new HistoryLogAdapter(filteredLogs);
         rvHistory.setAdapter(adapter);
 
+        View ivProfile = view.findViewById(R.id.ivProfile);
+        if (ivProfile != null) {
+            ivProfile.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(getActivity(), com.example.javatraining.ui.main.profile.ProfileActivity.class);
+                startActivity(intent);
+            });
+        }
+
         updateDateLabels();
         applyFilter();
 

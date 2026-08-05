@@ -74,11 +74,11 @@ public class LoginActivity extends AppCompatActivity {
             if (binding.etPassword.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod) {
                 // Show password
                 binding.etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
-                binding.ivTogglePassword.setAlpha(0.5f);
+                binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye_off);
             } else {
                 // Hide password
                 binding.etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
-                binding.ivTogglePassword.setAlpha(1.0f);
+                binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye);
             }
             // Keep cursor at the end
             binding.etPassword.setSelection(binding.etPassword.getText().length());

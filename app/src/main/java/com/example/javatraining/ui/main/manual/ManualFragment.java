@@ -138,6 +138,14 @@ public class ManualFragment extends Fragment {
             updateToggleState();
         });
 
+        View ivProfile = getView().findViewById(R.id.ivProfile);
+        if (ivProfile != null) {
+            ivProfile.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(getActivity(), com.example.javatraining.ui.main.profile.ProfileActivity.class);
+                startActivity(intent);
+            });
+        }
+
         // HANYA DIBUKA KETIKA AREA FOTO DI KLIK (TIDAK OTOMATIS)
         flPhotoUpload.setOnClickListener(v -> {
             if (!hasPhoto) {
