@@ -6,8 +6,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    // Emulator uses 10.0.2.2 for localhost
-    private static final String BASE_URL = "http://10.0.2.2:3000/api/v1/";
+    // Local Wi-Fi IP for physical device testing
+    private static final String BASE_URL = "http://192.168.77.170:3000/api/v1/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {
