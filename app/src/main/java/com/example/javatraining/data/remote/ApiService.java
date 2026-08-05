@@ -1,22 +1,19 @@
 package com.example.javatraining.data.remote;
 
-import com.example.javatraining.data.model.User;
+import com.example.javatraining.data.remote.request.LoginRequest;
+import com.example.javatraining.data.remote.response.BaseResponse;
+import com.example.javatraining.data.remote.response.LoginData;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiService {
-    @FormUrlEncoded
-    @POST("api/login")
-    Call<User> login(
-            @Field("email") String email,
-            @Field("password") String password
-    );
+    @POST("auth/login")
+    Call<BaseResponse<LoginData>> login(@Body LoginRequest request);
 
-    // Dummy endpoints for MVP
-    @GET("api/attendance/today")
+    // Keep dummy endpoint for compatibility
+    @GET("attendance/today")
     Call<Void> getTodayAttendance();
 }

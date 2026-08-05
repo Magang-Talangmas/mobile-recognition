@@ -11,6 +11,10 @@ import com.example.javatraining.data.local.AppDatabase;
 import com.example.javatraining.data.local.AttendanceEntity;
 import com.example.javatraining.data.local.dao.AttendanceDao;
 import com.example.javatraining.data.model.User;
+import com.example.javatraining.data.remote.ApiClient;
+import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.remote.request.LoginRequest;
+import com.example.javatraining.data.local.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +26,10 @@ public class AbsensioRepository {
     private AttendanceDao attendanceDao;
     private ExecutorService executorService;
     private Handler mainThreadHandler;
+    private Application application;
 
     public AbsensioRepository(Application application) {
+        this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         attendanceDao = db.attendanceDao();
         executorService = Executors.newFixedThreadPool(4);
@@ -32,19 +38,33 @@ public class AbsensioRepository {
 
     public LiveData<User> login(String email, String password) {
         MutableLiveData<User> result = new MutableLiveData<>();
-        // Mock API call delay
-        executorService.execute(() -> {
-            try {
-                Thread.sleep(1500); // Simulate network latency
-                User mockUser = new User("EMP-001", "John Doe", email, "Staff", "Morning (08:00 - 17:00)", "");
-                mainThreadHandler.post(() -> result.setValue(mockUser));
-                
-                // Mock initializing local data after login
-                initMockAttendanceData();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        LoginRequest request = new LoginRequest(email, password);
+        
+        apiService.login(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    com.example.javatraining.data.remote.response.LoginData data = response.body().getData();
+                    
+                    SessionManager sessionManager = new SessionManager(application);
+                    sessionManager.saveSession(data.getToken(), data.getUser());
+                    
+                    result.setValue(data.getUser());
+                    
+                    initMockAttendanceData();
+                } else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, Throwable t) {
+                result.setValue(null);
             }
         });
+        
         return result;
     }
 

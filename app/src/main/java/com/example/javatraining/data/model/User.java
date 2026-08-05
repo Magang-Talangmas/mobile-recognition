@@ -1,10 +1,20 @@
 package com.example.javatraining.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("id")
     private String id;
+    
+    @SerializedName("name")
     private String name;
+    
+    @SerializedName("email")
     private String username; // email
+    
+    @SerializedName("role")
     private String role; // ADMIN, EMPLOYEE, Staff
+    
     private String shift;
     private String avatar;
     private String password;
@@ -35,6 +45,6 @@ public class User {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public String getRole() { return role; }
-    public String getShift() { return shift; }
-    public String getAvatar() { return avatar; }
+    public String getShift() { return shift != null ? shift : ""; }
+    public String getAvatar() { return avatar != null ? avatar : ""; }
 }
