@@ -292,12 +292,23 @@
                     app:cardCornerRadius="8dp"
                     app:cardElevation="2dp"
                     app:strokeWidth="0dp">
-                    <Spinner
-                        android:id="@+id/spnReason"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingHorizontal="8dp"
-                        android:background="@android:color/transparent" />
+                        android:layout_height="match_parent">
+                        <Spinner
+                            android:id="@+id/spnReason"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingHorizontal="12dp"
+                            android:background="@android:color/transparent" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginEnd="16dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="@color/html_on_surface_variant"/>
+                    </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Verification (Photo) -->

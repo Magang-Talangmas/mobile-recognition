@@ -27,13 +27,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 // Mock Repository for MVP
-public class AbsensioRepository {
+public class AbsensiTMRepository {
     private AttendanceDao attendanceDao;
     private ExecutorService executorService;
     private Handler mainThreadHandler;
     private Application application;
 
-    public AbsensioRepository(Application application) {
+    public AbsensiTMRepository(Application application) {
         this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         attendanceDao = db.attendanceDao();

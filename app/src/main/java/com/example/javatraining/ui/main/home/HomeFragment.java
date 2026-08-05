@@ -24,7 +24,7 @@ import com.example.javatraining.ui.main.MainActivity;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
 import com.example.javatraining.ui.main.notifications.NotificationsFragment;
 import com.example.javatraining.data.remote.response.AttendanceData;
-import com.example.javatraining.data.repository.AbsensioRepository;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import androidx.lifecycle.Observer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class HomeFragment extends Fragment {
 
     private RecentActivityAdapter activityAdapter;
     private boolean isCheckedIn = false; // Based on latest log
-    private AbsensioRepository repository;
+    private AbsensiTMRepository repository;
 
     @Nullable
     @Override
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
         tvGreeting.setText("Good morning, " + name + ".");
 
         // Fetch user logs from API
-        repository = new AbsensioRepository(requireActivity().getApplication());
+        repository = new AbsensiTMRepository(requireActivity().getApplication());
         repository.getAttendancesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
             @Override
             public void onChanged(List<AttendanceData> attendanceDataList) {

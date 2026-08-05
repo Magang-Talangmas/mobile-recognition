@@ -17,7 +17,7 @@ import com.example.javatraining.data.model.LogType;
 import com.example.javatraining.data.model.AttendanceEvent;
 import com.example.javatraining.data.model.DailyAttendance;
 import com.example.javatraining.data.remote.response.AttendanceData;
-import com.example.javatraining.data.repository.AbsensioRepository;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import androidx.lifecycle.Observer;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class HistoryFragment extends Fragment {
     private List<AttendanceData> allLogs;
     private List<DailyAttendance> filteredLogs;
     private RecyclerView rvHistory;
-    private AbsensioRepository repository;
+    private AbsensiTMRepository repository;
 
     private Date selectedDate = new Date();
     private TextView tvSelectedDate;
@@ -65,7 +65,7 @@ public class HistoryFragment extends Fragment {
         adapter = new HistoryLogAdapter(filteredLogs);
         rvHistory.setAdapter(adapter);
 
-        repository = new AbsensioRepository(requireActivity().getApplication());
+        repository = new AbsensiTMRepository(requireActivity().getApplication());
         fetchAttendanceHistory();
 
         View ivProfile = view.findViewById(R.id.ivProfile);

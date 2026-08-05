@@ -19,7 +19,7 @@ public class User {
     private String avatar;
     private String password;
 
-    // Full constructor (for AbsensioRepository mock login)
+    // Full constructor (for AbsensiTMRepository mock login)
     public User(String id, String name, String username, String role, String shift, String avatar) {
         this.id = id;
         this.name = name;

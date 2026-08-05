@@ -5,15 +5,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.example.javatraining.data.local.AttendanceEntity;
-import com.example.javatraining.data.repository.AbsensioRepository;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import java.util.List;
 
 public class HistoryViewModel extends AndroidViewModel {
-    private AbsensioRepository repository;
+    private AbsensiTMRepository repository;
 
     public HistoryViewModel(@NonNull Application application) {
         super(application);
-        repository = new AbsensioRepository(application);
+        repository = new AbsensiTMRepository(application);
     }
 
     public LiveData<List<AttendanceEntity>> getHistory() {

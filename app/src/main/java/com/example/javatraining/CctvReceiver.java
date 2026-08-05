@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.example.javatraining.data.repository.AbsensioRepository;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 
 public class CctvReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if ("com.example.javatraining.CCTV_CHECK_IN".equals(intent.getAction())) {
             // Simulasi menerima sinyal dari backend via CCTV
-            AbsensioRepository repository = new AbsensioRepository((android.app.Application) context.getApplicationContext());
+            AbsensiTMRepository repository = new AbsensiTMRepository((android.app.Application) context.getApplicationContext());
             repository.performCheckIn("CCTV Auto");
             
             Toast.makeText(context, "Sistem mendeteksi kehadiran via CCTV!", Toast.LENGTH_LONG).show();

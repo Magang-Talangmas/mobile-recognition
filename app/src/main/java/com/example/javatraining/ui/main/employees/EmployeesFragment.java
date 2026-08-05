@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.javatraining.data.remote.response.EmployeeData;
-import com.example.javatraining.data.repository.AbsensioRepository;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import androidx.lifecycle.Observer;
 
 public class EmployeesFragment extends Fragment {
@@ -26,7 +26,7 @@ public class EmployeesFragment extends Fragment {
     private List<EmployeeAdapter.Employee> filteredData;
     private EmployeeAdapter adapter;
     private String currentFilter = "";
-    private AbsensioRepository repository;
+    private AbsensiTMRepository repository;
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public class EmployeesFragment extends Fragment {
         adapter = new EmployeeAdapter(filteredData);
         rvEmployees.setAdapter(adapter);
         
-        repository = new AbsensioRepository(requireActivity().getApplication());
+        repository = new AbsensiTMRepository(requireActivity().getApplication());
         fetchEmployees();
 
         // Search feature
