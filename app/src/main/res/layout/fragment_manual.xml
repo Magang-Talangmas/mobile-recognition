@@ -397,11 +397,11 @@
                     android:background="@drawable/bg_circle_primary"
                     android:layout_marginBottom="24dp">
                     <ImageView
+                        android:id="@+id/ivSuccessAnim"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:src="@android:drawable/ic_menu_recent_history"
-                        app:tint="@color/html_on_primary_container"/>
+                        android:src="@drawable/avd_anim_success_check" />
                 </FrameLayout>
                 
                 <TextView

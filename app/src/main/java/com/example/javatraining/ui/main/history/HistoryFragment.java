@@ -33,6 +33,7 @@ public class HistoryFragment extends Fragment {
     private HistoryLogAdapter adapter;
     private List<AttendanceEvent> allLogs;
     private List<DailyAttendance> filteredLogs;
+    private RecyclerView rvHistory;
 
     private Date selectedDate = new Date();
     private TextView tvSelectedDate;
@@ -45,7 +46,7 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        RecyclerView rvHistory = view.findViewById(R.id.rvHistory);
+        rvHistory = view.findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         
         tvSelectedDate = view.findViewById(R.id.tvSelectedDate);
@@ -156,5 +157,8 @@ public class HistoryFragment extends Fragment {
         Collections.sort(filteredLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
         
         adapter.notifyDataSetChanged();
+        if (rvHistory != null) {
+            rvHistory.scheduleLayoutAnimation();
+        }
     }
 }

@@ -78,7 +78,7 @@ public class ManualFragment extends Fragment {
         
         initViews(view);
         setupDefaults();
-        setupListeners();
+        setupListeners(view);
         
         return view;
     }
@@ -110,9 +110,9 @@ public class ManualFragment extends Fragment {
         updateToggleState();
     }
 
-    private void setupListeners() {
+    private void setupListeners(View view) {
         etDate.setOnClickListener(v -> {
-            new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+            new DatePickerDialog(getContext(), (view1, year, month, dayOfMonth) -> {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -121,7 +121,7 @@ public class ManualFragment extends Fragment {
         });
 
         etTime.setOnClickListener(v -> {
-            new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
+            new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 updateTimeLabel();
@@ -138,7 +138,7 @@ public class ManualFragment extends Fragment {
             updateToggleState();
         });
 
-        View ivProfile = getView().findViewById(R.id.ivProfile);
+        View ivProfile = view.findViewById(R.id.ivProfile);
         if (ivProfile != null) {
             ivProfile.setOnClickListener(v -> {
                 android.content.Intent intent = new android.content.Intent(getActivity(), com.example.javatraining.ui.main.profile.ProfileActivity.class);
@@ -177,6 +177,11 @@ public class ManualFragment extends Fragment {
             btnSubmit.postDelayed(() -> {
                 formContainer.setVisibility(View.GONE);
                 successState.setVisibility(View.VISIBLE);
+                
+                ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
+                if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
+                    ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
+                }
             }, 1200);
         });
 
