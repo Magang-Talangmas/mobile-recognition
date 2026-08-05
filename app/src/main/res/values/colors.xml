@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors based on Logo -->
+    <color name="colorPrimary">#1E2B5E</color>
+    <color name="colorPrimaryVariant">#151E43</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    
+    <color name="colorSecondary">#F5A623</color>
+    <color name="colorSecondaryVariant">#D98E1C</color>
+    <color name="colorOnSecondary">#000000</color>
+
+    <color name="colorBackground">#F8F9FA</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorError">#B00020</color>
+
+    <color name="colorOnBackground">#212121</color>
+    <color name="colorOnSurface">#212121</color>
+
+    <!-- Generic Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent_overlay">#80000000</color>
+</resources>
