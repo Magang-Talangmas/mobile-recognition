@@ -23,15 +23,21 @@ import com.example.javatraining.data.model.User;
 import com.example.javatraining.ui.main.MainActivity;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
 import com.example.javatraining.ui.main.notifications.NotificationsFragment;
+import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.repository.AbsensioRepository;
+import androidx.lifecycle.Observer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
     private RecentActivityAdapter activityAdapter;
     private boolean isCheckedIn = false; // Based on latest log
+    private AbsensioRepository repository;
 
     @Nullable
     @Override
@@ -66,15 +72,51 @@ public class HomeFragment extends Fragment {
         }
         tvGreeting.setText("Good morning, " + name + ".");
 
-        // Fetch user logs (using MockDatabase for now since attendance history is not yet integrated with API)
-        MockDatabase db = MockDatabase.getInstance();
-        List<AttendanceEvent> allLogs = db.getAttendanceHistory();
-        List<AttendanceEvent> userLogs = new ArrayList<>();
-        for (AttendanceEvent p : allLogs) {
-            // For MVP, just show all logs or dummy logs since karyawanId from JWT might not match MockDatabase
-            userLogs.add(p);
-        }
+        // Fetch user logs from API
+        repository = new AbsensioRepository(requireActivity().getApplication());
+        repository.getAttendancesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
+            @Override
+            public void onChanged(List<AttendanceData> attendanceDataList) {
+                if (attendanceDataList != null) {
+                    List<AttendanceEvent> userLogs = new ArrayList<>();
+                    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                    isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                    
+                    for (AttendanceData data : attendanceDataList) {
+                        try {
+                            Date detectedAt = isoFormat.parse(data.getTimestamp());
+                            if (detectedAt != null) {
+                                userLogs.add(new AttendanceEvent(
+                                        0, data.getCameraId(), 0, data.getEmployeeId(), null,
+                                        null, 
+                                        "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                        data.getSimilarity() != null ? data.getSimilarity() : 0.0,
+                                        null, null, detectedAt, detectedAt, null
+                                ));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    
+                    // Update UI with logs
+                    updateDashboard(view, userLogs);
+                }
+            }
+        });
 
+        // Handle Notifications Icon click
+        View btnNotifications = view.findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).switchToFragment(new NotificationsFragment());
+                }
+            });
+        }
+    }
+    
+    private void updateDashboard(View view, List<AttendanceEvent> userLogs) {
         // Live Status Logic
         TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
@@ -102,16 +144,6 @@ public class HomeFragment extends Fragment {
             vStatusDot.setVisibility(View.GONE);
         }
 
-        // Handle Notifications Icon click
-        View btnNotifications = view.findViewById(R.id.btnNotifications);
-        if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(v -> {
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).switchToFragment(new NotificationsFragment());
-                }
-            });
-        }
-        
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -16,12 +16,17 @@ import com.example.javatraining.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.javatraining.data.remote.response.EmployeeData;
+import com.example.javatraining.data.repository.AbsensioRepository;
+import androidx.lifecycle.Observer;
+
 public class EmployeesFragment extends Fragment {
 
     private List<EmployeeAdapter.Employee> allEmployeesData;
     private List<EmployeeAdapter.Employee> filteredData;
     private EmployeeAdapter adapter;
     private String currentFilter = "";
+    private AbsensioRepository repository;
 
     @Nullable
     @Override
@@ -31,10 +36,13 @@ public class EmployeesFragment extends Fragment {
         RecyclerView rvEmployees = view.findViewById(R.id.rvEmployees);
         rvEmployees.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        allEmployeesData = getEmployeesFromDb();
-        filteredData = new ArrayList<>(allEmployeesData);
+        allEmployeesData = new ArrayList<>();
+        filteredData = new ArrayList<>();
         adapter = new EmployeeAdapter(filteredData);
         rvEmployees.setAdapter(adapter);
+        
+        repository = new AbsensioRepository(requireActivity().getApplication());
+        fetchEmployees();
 
         // Search feature
         android.widget.EditText etSearch = view.findViewById(R.id.etSearch);
@@ -82,21 +90,42 @@ public class EmployeesFragment extends Fragment {
         return view;
     }
 
-    private List<EmployeeAdapter.Employee> getEmployeesFromDb() {
-        List<EmployeeAdapter.Employee> list = new ArrayList<>();
-        List<com.example.javatraining.data.model.Karyawan> dbKaryawans = com.example.javatraining.data.repository.MockDatabase.getInstance().getAllKaryawan();
-        for (com.example.javatraining.data.model.Karyawan k : dbKaryawans) {
-            EmployeeAdapter.StatusType st = EmployeeAdapter.StatusType.valueOf(k.getStatusTracking().name());
-            String initials = "";
-            if (k.getNamaLengkap().contains(" ")) {
-                String[] parts = k.getNamaLengkap().split(" ");
-                initials = parts[0].substring(0,1) + parts[1].substring(0,1);
-            } else {
-                initials = k.getNamaLengkap().substring(0,2).toUpperCase();
+    private void fetchEmployees() {
+        repository.getEmployeesApi(1, 100).observe(getViewLifecycleOwner(), new Observer<List<EmployeeData>>() {
+            @Override
+            public void onChanged(List<EmployeeData> employeeDataList) {
+                if (employeeDataList != null) {
+                    allEmployeesData.clear();
+                    for (EmployeeData data : employeeDataList) {
+                        EmployeeAdapter.StatusType st;
+                        if ("Active".equalsIgnoreCase(data.getStatus())) {
+                            st = EmployeeAdapter.StatusType.TRACKING_RUNNING;
+                        } else {
+                            st = EmployeeAdapter.StatusType.TRACKING_PAUSE;
+                        }
+                        
+                        String initials = "";
+                        String name = data.getName() != null ? data.getName() : "Unknown";
+                        if (name.contains(" ")) {
+                            String[] parts = name.split(" ");
+                            if (parts.length > 1 && parts[0].length() > 0 && parts[1].length() > 0) {
+                                initials = parts[0].substring(0, 1) + parts[1].substring(0, 1);
+                            }
+                        } else if (name.length() >= 2) {
+                            initials = name.substring(0, 2).toUpperCase();
+                        } else if (name.length() == 1) {
+                            initials = name.toUpperCase();
+                        }
+                        
+                        String role = data.getPosition() != null ? data.getPosition() : "Staff";
+                        allEmployeesData.add(new EmployeeAdapter.Employee(name, role, "Active Employee", initials, st));
+                    }
+                    
+                    android.widget.EditText etSearch = getView().findViewById(R.id.etSearch);
+                    filterList(etSearch != null ? etSearch.getText().toString() : "", currentFilter);
+                }
             }
-            list.add(new EmployeeAdapter.Employee(k.getNamaLengkap(), k.getJabatan(), "Updated Just Now", initials, st));
-        }
-        return list;
+        });
     }
 
     private void filterList(String query, String filterDept) {

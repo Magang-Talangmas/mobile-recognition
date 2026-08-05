@@ -16,6 +16,11 @@ import com.example.javatraining.data.remote.ApiService;
 import com.example.javatraining.data.remote.request.LoginRequest;
 import com.example.javatraining.data.local.SessionManager;
 
+import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.remote.response.EmployeeData;
+import com.example.javatraining.data.remote.response.PaginatedResponse;
+import com.example.javatraining.data.remote.response.BaseResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -39,7 +44,7 @@ public class AbsensioRepository {
     public LiveData<User> login(String email, String password) {
         MutableLiveData<User> result = new MutableLiveData<>();
         
-        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         LoginRequest request = new LoginRequest(email, password);
         
         apiService.login(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>>() {
@@ -107,5 +112,47 @@ public class AbsensioRepository {
             attendanceDao.clearAll();
             attendanceDao.insertAll(mocks);
         });
+    }
+
+    public LiveData<List<EmployeeData>> getEmployeesApi(int page, int perPage) {
+        MutableLiveData<List<EmployeeData>> result = new MutableLiveData<>();
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getEmployees(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<EmployeeData>>>() {
+            @Override
+            public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<EmployeeData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<EmployeeData>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.setValue(response.body().getData().getItems());
+                } else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<BaseResponse<PaginatedResponse<EmployeeData>>> call, Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
+    }
+
+    public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
+        MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
+            @Override
+            public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<AttendanceData>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.setValue(response.body().getData().getItems());
+                } else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
     }
 }

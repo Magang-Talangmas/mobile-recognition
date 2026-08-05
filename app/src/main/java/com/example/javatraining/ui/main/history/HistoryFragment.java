@@ -16,8 +16,9 @@ import com.example.javatraining.R;
 import com.example.javatraining.data.model.LogType;
 import com.example.javatraining.data.model.AttendanceEvent;
 import com.example.javatraining.data.model.DailyAttendance;
-import com.example.javatraining.data.repository.MockDatabase;
-
+import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.repository.AbsensioRepository;
+import androidx.lifecycle.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +32,10 @@ import java.util.Collections;
 public class HistoryFragment extends Fragment {
 
     private HistoryLogAdapter adapter;
-    private List<AttendanceEvent> allLogs;
+    private List<AttendanceData> allLogs;
     private List<DailyAttendance> filteredLogs;
     private RecyclerView rvHistory;
+    private AbsensioRepository repository;
 
     private Date selectedDate = new Date();
     private TextView tvSelectedDate;
@@ -57,11 +59,14 @@ public class HistoryFragment extends Fragment {
             btnPickDate.setOnClickListener(v -> showDatePicker());
         }
 
-        allLogs = MockDatabase.getInstance().getAttendanceHistory();
+        allLogs = new ArrayList<>();
         filteredLogs = new ArrayList<>();
         
         adapter = new HistoryLogAdapter(filteredLogs);
         rvHistory.setAdapter(adapter);
+
+        repository = new AbsensioRepository(requireActivity().getApplication());
+        fetchAttendanceHistory();
 
         View ivProfile = view.findViewById(R.id.ivProfile);
         if (ivProfile != null) {
@@ -113,40 +118,65 @@ public class HistoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Refresh data every time the tab is switched to
-        allLogs = MockDatabase.getInstance().getAttendanceHistory();
-        applyFilter();
+        fetchAttendanceHistory();
+    }
+
+    private void fetchAttendanceHistory() {
+        repository.getAttendancesApi(1, 100).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
+            @Override
+            public void onChanged(List<AttendanceData> attendanceDataList) {
+                if (attendanceDataList != null) {
+                    allLogs = attendanceDataList;
+                    applyFilter();
+                }
+            }
+        });
     }
 
     private void applyFilter() {
         filteredLogs.clear();
-        String currentKaryawanId = MockDatabase.getInstance().getCurrentKaryawan().getId();
         Calendar selectedCal = Calendar.getInstance();
         selectedCal.setTime(selectedDate);
         
         java.util.Map<String, DailyAttendance> dailyMap = new java.util.HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         
-        for (AttendanceEvent p : allLogs) {
-            if (p.getEmployeeId() != null && p.getEmployeeId().equals(currentKaryawanId)) {
-                if (p.getDetectedAt() != null) {
-                    Calendar pCal = Calendar.getInstance();
-                    pCal.setTime(p.getDetectedAt());
-                    if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
-                        pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { 
-                        
-                        String dateKey = sdf.format(p.getDetectedAt());
-                        DailyAttendance daily = dailyMap.get(dateKey);
-                        if (daily == null) {
-                            daily = new DailyAttendance(p.getDetectedAt());
-                            dailyMap.put(dateKey, daily);
-                        }
-                        
-                        if (p.getEventType() == LogType.CHECK_IN) {
-                            daily.setCheckInEvent(p);
-                        } else if (p.getEventType() == LogType.CHECK_OUT) {
-                            daily.setCheckOutEvent(p);
+        for (AttendanceData p : allLogs) {
+            if (p.getTimestamp() != null) {
+                try {
+                    Date detectedAt = isoFormat.parse(p.getTimestamp());
+                    if (detectedAt != null) {
+                        Calendar pCal = Calendar.getInstance();
+                        pCal.setTime(detectedAt);
+                        if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
+                            pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { 
+                            
+                            String dateKey = sdf.format(detectedAt);
+                            DailyAttendance daily = dailyMap.get(dateKey);
+                            if (daily == null) {
+                                daily = new DailyAttendance(detectedAt);
+                                dailyMap.put(dateKey, daily);
+                            }
+                            
+                            AttendanceEvent event = new AttendanceEvent(
+                                0, p.getCameraId(), 0, p.getEmployeeId(), null,
+                                null, 
+                                "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                p.getSimilarity() != null ? p.getSimilarity() : 0.0,
+                                null, null, detectedAt, detectedAt, null
+                            );
+                            
+                            if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                                daily.setCheckInEvent(event);
+                            } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                                daily.setCheckOutEvent(event);
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.javatraining.data.remote;
 
+import android.content.Context;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -10,13 +11,16 @@ public class ApiClient {
     private static final String BASE_URL = "http://192.168.77.170:3000/api/v1/";
     private static Retrofit retrofit = null;
 
-    public static Retrofit getClient() {
+    public static Retrofit getClient(Context context) {
         if (retrofit == null) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            AuthInterceptor authInterceptor = new AuthInterceptor(context);
 
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(interceptor)
+                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(authInterceptor)
                     .build();
 
             retrofit = new Retrofit.Builder()
