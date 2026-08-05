@@ -54,26 +54,25 @@ public class HomeFragment extends Fragment {
     
     private void loadDataAndRefreshUI(View view) {
         // Initialize Data
-        MockDatabase db = MockDatabase.getInstance();
-        User currentUser = db.getCurrentUser();
-        Karyawan currentKaryawan = db.getCurrentKaryawan();
-        String karyawanId = currentKaryawan != null ? currentKaryawan.getId() : "";
+        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(requireContext());
+        User currentUser = sessionManager.getUser();
+        String karyawanId = currentUser != null ? currentUser.getId() : "";
 
         // Greeting
         TextView tvGreeting = view.findViewById(R.id.tvGreeting);
-        String name = currentKaryawan != null ? currentKaryawan.getNamaLengkap() : "Budi";
-        if (name.contains(" ")) {
+        String name = currentUser != null ? currentUser.getName() : "Guest";
+        if (name != null && name.contains(" ")) {
             name = name.substring(0, name.indexOf(" "));
         }
         tvGreeting.setText("Good morning, " + name + ".");
 
-        // Fetch user logs
+        // Fetch user logs (using MockDatabase for now since attendance history is not yet integrated with API)
+        MockDatabase db = MockDatabase.getInstance();
         List<AttendanceEvent> allLogs = db.getAttendanceHistory();
         List<AttendanceEvent> userLogs = new ArrayList<>();
         for (AttendanceEvent p : allLogs) {
-            if (p.getEmployeeId() != null && p.getEmployeeId().equals(karyawanId)) {
-                userLogs.add(p);
-            }
+            // For MVP, just show all logs or dummy logs since karyawanId from JWT might not match MockDatabase
+            userLogs.add(p);
         }
 
         // Live Status Logic
