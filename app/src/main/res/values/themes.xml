@@ -22,5 +22,8 @@
         <!-- Default text colors. -->
         <item name="android:textColorPrimary">@color/colorOnBackground</item>
         <item name="android:textColorSecondary">@color/colorOnBackground</item>
+        
+        <item name="colorOnSurface">@color/colorOnBackground</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
     </style>
 </resources>

@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
             if (isLoading) {
                 binding.btnLogin.setText("");
             } else {
-                binding.btnLogin.setText("Masuk");
+                binding.btnLogin.setText("Sign In");
             }
         });
 

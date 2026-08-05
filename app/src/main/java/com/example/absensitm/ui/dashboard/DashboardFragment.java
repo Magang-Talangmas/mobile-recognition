@@ -43,6 +43,44 @@ public class DashboardFragment extends Fragment {
                 .setStartDelay(100)
                 .start();
 
+        // Setup ViewModel
+        DashboardViewModel viewModel = new androidx.lifecycle.ViewModelProvider(this).get(DashboardViewModel.class);
+        viewModel.setApiService(com.example.absensitm.data.network.ApiClient.getApiService(requireContext()));
+        
+        viewModel.getProfileData().observe(getViewLifecycleOwner(), profile -> {
+            if (profile != null) {
+                binding.tvUserName.setText(profile.getName());
+            }
+        });
+        
+        viewModel.fetchProfile();
+
+        // Fetch FCM Token and update device token
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            android.util.Log.w("DashboardFragment", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        com.example.absensitm.data.network.ApiClient.getApiService(requireContext())
+                                .updateDeviceToken(new com.example.absensitm.data.model.TokenRequest(token))
+                                .enqueue(new retrofit2.Callback<com.example.absensitm.data.model.BaseResponse>() {
+                                    @Override
+                                    public void onResponse(retrofit2.Call<com.example.absensitm.data.model.BaseResponse> call, retrofit2.Response<com.example.absensitm.data.model.BaseResponse> response) {
+                                        android.util.Log.d("DashboardFragment", "Token updated to server successfully");
+                                    }
+
+                                    @Override
+                                    public void onFailure(retrofit2.Call<com.example.absensitm.data.model.BaseResponse> call, Throwable t) {
+                                        android.util.Log.e("DashboardFragment", "Failed to update token: " + t.getMessage());
+                                    }
+                                });
+                    }
+                });
+
         // Setup Button listener
         binding.btnDoAttendance.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_dashboard_to_camera);

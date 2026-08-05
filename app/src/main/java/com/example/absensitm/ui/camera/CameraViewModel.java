@@ -34,14 +34,63 @@ public class CameraViewModel extends ViewModel {
         }
     }
 
-    public void startAttendanceProcess() {
+    private com.example.absensitm.data.network.ApiService apiService;
+
+    public void setApiService(com.example.absensitm.data.network.ApiService apiService) {
+        this.apiService = apiService;
+    }
+
+    public void startAttendanceProcess(java.io.File file) {
         faceStatus.postValue(2);
+        statusMessage.postValue("Mengambil foto...");
+    }
+
+    public void uploadAttendance(java.io.File photoFile) {
+        if (apiService == null) return;
         statusMessage.postValue("Memproses data absensi...");
+
+        okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
+        okhttp3.MultipartBody.Part body = okhttp3.MultipartBody.Part.createFormData("photo", photoFile.getName(), requestFile);
         
-        // Mock API call to process image for facial recognition
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-            // Assume success
-            statusMessage.postValue("Absensi Berhasil!");
-        }, 2000);
+        okhttp3.RequestBody eventType = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), "CHECK_IN");
+
+        apiService.checkIn(body, eventType).enqueue(new retrofit2.Callback<com.example.absensitm.data.model.BaseResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.absensitm.data.model.BaseResponse> call, retrofit2.Response<com.example.absensitm.data.model.BaseResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    statusMessage.postValue("Absensi Berhasil!");
+                    // Stay at status 2 so UI navigates back
+                } else {
+                    String errorMsg = "Absensi Gagal";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        errorMsg = response.body().getMessage();
+                    } else if (response.errorBody() != null) {
+                        try {
+                            org.json.JSONObject jObjError = new org.json.JSONObject(response.errorBody().string());
+                            errorMsg = jObjError.getString("message");
+                        } catch (Exception e) {}
+                    }
+                    statusMessage.postValue(errorMsg);
+                    
+                    // reset status after a delay so user can try again
+                    new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                        resetStatus();
+                    }, 3000);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.absensitm.data.model.BaseResponse> call, Throwable t) {
+                statusMessage.postValue("Koneksi Error: " + t.getMessage());
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                    resetStatus();
+                }, 3000);
+            }
+        });
+    }
+    
+    public void resetStatus() {
+        faceStatus.postValue(0);
+        statusMessage.postValue("Arahkan wajah ke dalam area frame");
     }
 }

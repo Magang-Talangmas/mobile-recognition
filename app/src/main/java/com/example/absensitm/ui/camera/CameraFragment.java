@@ -61,6 +61,7 @@ public class CameraFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(CameraViewModel.class);
+        viewModel.setApiService(com.example.absensitm.data.network.ApiClient.getApiService(requireContext()));
         cameraExecutor = Executors.newSingleThreadExecutor();
 
         setupObservers();
@@ -151,9 +152,25 @@ public class CameraFragment extends Fragment {
     private void takePhotoAndProcess() {
         if (imageCapture == null) return;
         
-        // In real app, we use imageCapture.takePicture to get the file/bitmap and send to API
-        // For now we just mock the process
-        viewModel.startAttendanceProcess();
+        viewModel.startAttendanceProcess(null); // Just UI update
+
+        java.io.File photoFile = new java.io.File(requireContext().getCacheDir(), "attendance_photo_" + System.currentTimeMillis() + ".jpg");
+
+        ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+
+        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireContext()), new ImageCapture.OnImageSavedCallback() {
+            @Override
+            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                viewModel.uploadAttendance(photoFile);
+            }
+
+            @Override
+            public void onError(@NonNull androidx.camera.core.ImageCaptureException exception) {
+                Log.e("CameraFragment", "Photo capture failed: " + exception.getMessage(), exception);
+                requireActivity().runOnUiThread(() -> Toast.makeText(requireContext(), "Gagal mengambil foto", Toast.LENGTH_SHORT).show());
+                viewModel.resetStatus(); // reset state
+            }
+        });
     }
 
     private boolean allPermissionsGranted() {

@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:3000/"; // Example for local emulator to Node.js
+    private static final String BASE_URL = "http://192.168.77.170:3000/api/v1/mobile/";
     private static Retrofit retrofit = null;
 
     public static ApiService getApiService(Context context) {

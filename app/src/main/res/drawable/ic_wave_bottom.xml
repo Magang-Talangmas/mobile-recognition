@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="150dp"
+    android:viewportWidth="360"
+    android:viewportHeight="150">
+
+    <!-- Light Blue Wave -->
+    <path
+        android:fillColor="#D8E2F2"
+        android:pathData="M 0,50 
+                          C 90,0 180,90 270,70 
+                          S 360,30 360,30 
+                          L 360,150 
+                          L 0,150 Z" />
+
+    <!-- Dark Blue Wave -->
+    <path
+        android:fillColor="#0A2C87"
+        android:pathData="M 0,80 
+                          C 100,-10 200,120 360,70 
+                          L 360,150 
+                          L 0,150 Z" />
+</vector>

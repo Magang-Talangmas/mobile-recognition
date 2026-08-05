@@ -44,27 +44,27 @@ public class LoginViewModel extends ViewModel {
 
         isLoading.setValue(true);
         
-        // Dummy implementation to bypass actual network call for now 
-        // since backend endpoint might not be ready or reachable
-        new android.os.Handler().postDelayed(() -> {
-            isLoading.setValue(false);
-            if (email.equals("admin@test.com") && password.equals("admin123")) {
-                loginSuccess.setValue("dummy_jwt_token_12345");
-            } else {
-                loginError.setValue("Kredensial tidak valid");
-            }
-        }, 1500);
-
-        /* Real implementation for later
         LoginRequest request = new LoginRequest(email, password);
         apiService.login(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 isLoading.setValue(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    loginSuccess.setValue(response.body().getToken());
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    loginSuccess.setValue(response.body().getData().getToken());
                 } else {
-                    loginError.setValue("Login Gagal: " + response.message());
+                    String errorMsg = "Login Gagal";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        errorMsg = response.body().getMessage();
+                    } else if (response.errorBody() != null) {
+                        try {
+                            // Extract error message from JSON if possible, otherwise use fallback
+                            org.json.JSONObject jObjError = new org.json.JSONObject(response.errorBody().string());
+                            errorMsg = jObjError.getString("message");
+                        } catch (Exception e) {
+                            errorMsg = "Email atau Password Salah";
+                        }
+                    }
+                    loginError.setValue(errorMsg);
                 }
             }
 
@@ -74,6 +74,5 @@ public class LoginViewModel extends ViewModel {
                 loginError.setValue("Koneksi Error: " + t.getMessage());
             }
         });
-        */
     }
 }
