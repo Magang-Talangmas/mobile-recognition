@@ -3,26 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_gradient">
-
-    <!-- Bottom White Area -->
-    <View
-        android:id="@+id/bottomWhiteArea"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- Wave Transition -->
-    <ImageView
-        android:id="@+id/ivWaveBottom"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_wave_white"
-        app:layout_constraintBottom_toTopOf="@id/bottomWhiteArea"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    android:background="#FFFFFF">
 
     <!-- Main Content Container -->
     <ScrollView
@@ -36,15 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Logo (Optional small logo at top) -->
             <ImageView
                 android:id="@+id/ivLogo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="32dp"
                 android:src="@drawable/logo_face_recognition"
-                android:background="@drawable/bg_logo_plate"
-                android:padding="8dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -55,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Login"
-                android:textColor="#FFFFFF"
+                android:textColor="#1A2456"
                 android:textSize="28sp"
                 android:fontFamily="sans-serif-medium"
                 app:layout_constraintTop_toBottomOf="@id/ivLogo"
@@ -143,7 +121,7 @@
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/bg_button_capsule"
+                android:background="@drawable/bg_button_signup"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
@@ -159,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Forgot your password?"
-                android:textColor="#E0E7FF"
+                android:textColor="#1A2456"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/btnLogin"
                 app:layout_constraintStart_toStartOf="parent"
