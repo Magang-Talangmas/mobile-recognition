@@ -3,18 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#0F172A">
 
-    <!-- Background Wave -->
-    <ImageView
-        android:id="@+id/ivWave"
+    <!-- Biometric Tech Background -->
+    <com.example.javatraining.ui.custom.TechBackgroundView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_login_wave"
-        android:translationY="60dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- App Titles over the wave -->
@@ -72,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Welcome Back"
-                android:textColor="#0F172A"
+                android:textColor="#F8FAFC"
                 android:textSize="36sp"
                 android:fontFamily="sans-serif-black"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +83,7 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="Sign in to continue your attendance\nand manage your profile."
-                android:textColor="#64748B"
+                android:textColor="#94A3B8"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
                 android:lineSpacingExtra="4dp"
@@ -94,13 +91,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvWelcomeTitle" />
 
-            <!-- Wrap form in a white card -->
+            <!-- Wrap form in a dark slate card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="#1E293B"
                 app:cardCornerRadius="32dp"
                 app:cardElevation="12dp"
                 app:cardUseCompatPadding="true"
@@ -118,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Email"
-                        android:textColor="#333333"
+                        android:textColor="#F8FAFC"
                         android:textSize="14sp" />
 
                     <!-- Email Input Container -->
@@ -127,7 +124,7 @@
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_rounded"
-                        android:backgroundTint="#F3F4F6"
+                        android:backgroundTint="#334155"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
@@ -136,7 +133,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_dialog_email"
-                            app:tint="#6B7280" />
+                            app:tint="#94A3B8" />
 
                         <EditText
                             android:id="@+id/etEmail"
@@ -146,8 +143,8 @@
                             android:background="@android:color/transparent"
                             android:hint="Enter Email"
                             android:inputType="textEmailAddress"
-                            android:textColor="#333333"
-                            android:textColorHint="#9CA3AF"
+                            android:textColor="#F8FAFC"
+                            android:textColorHint="#64748B"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -156,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="Password"
-                        android:textColor="#333333"
+                        android:textColor="#F8FAFC"
                         android:textSize="14sp" />
 
                     <!-- Password Input Container -->
@@ -165,7 +162,7 @@
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_input_rounded"
-                        android:backgroundTint="#F3F4F6"
+                        android:backgroundTint="#334155"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
@@ -174,7 +171,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_secure"
-                            app:tint="#6B7280" />
+                            app:tint="#94A3B8" />
 
                         <EditText
                             android:id="@+id/etPassword"
@@ -185,8 +182,8 @@
                             android:background="@android:color/transparent"
                             android:hint="••••••••"
                             android:inputType="textPassword"
-                            android:textColor="#333333"
-                            android:textColorHint="#9CA3AF"
+                            android:textColor="#F8FAFC"
+                            android:textColorHint="#64748B"
                             android:textSize="14sp" />
 
                         <ImageView
@@ -194,7 +191,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_eye"
-                            app:tint="#6B7280" />
+                            app:tint="#94A3B8" />
                     </LinearLayout>
 
                     <TextView
@@ -204,7 +201,7 @@
                         android:layout_gravity="end"
                         android:layout_marginTop="16dp"
                         android:text="Forgot Password?"
-                        android:textColor="#0047AB"
+                        android:textColor="#60A5FA"
                         android:textSize="14sp" />
 
                     <!-- Main Login Button -->
