@@ -61,7 +61,7 @@
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#0B0F19"
+        android:background="#1E3A8A"
         android:visibility="invisible"
         android:elevation="10dp" />
 

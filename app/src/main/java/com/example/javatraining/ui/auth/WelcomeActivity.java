@@ -47,13 +47,17 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         btnLogin.setOnClickListener(v -> {
-            int cx = darkOverlay.getWidth() / 2;
-            int cy = 0; // Top center
-            float finalRadius = (float) Math.hypot(cx, darkOverlay.getHeight());
+            int[] location = new int[2];
+            v.getLocationInWindow(location);
+            int cx = location[0] + (v.getWidth() / 2);
+            int cy = location[1] + (v.getHeight() / 2);
+            
+            // Calculate radius to cover the whole screen from the button's position
+            float finalRadius = (float) Math.hypot(Math.max(cx, darkOverlay.getWidth() - cx), Math.max(cy, darkOverlay.getHeight() - cy));
             
             darkOverlay.setVisibility(View.VISIBLE);
             Animator anim = ViewAnimationUtils.createCircularReveal(darkOverlay, cx, cy, 0, finalRadius);
-            anim.setDuration(800);
+            anim.setDuration(600);
             anim.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
