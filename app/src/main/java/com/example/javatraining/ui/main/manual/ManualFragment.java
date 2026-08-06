@@ -184,14 +184,15 @@ public class ManualFragment extends Fragment {
             btnSubmit.setText("Processing...");
             btnSubmit.setEnabled(false);
 
-            String status = isCheckIn ? "IN" : "OUT";
+            String eventType = isCheckIn ? "CHECK_IN" : "CHECK_OUT";
+            String status = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
             String date = etDate.getText().toString();
             String timeStr = etTime.getText().toString();
             String combinedTime = date + "T" + timeStr + ":00.000Z";
             String reason = spnReason.getText().toString();
             String location = "Menara Thamrin, Jakarta"; // Dummy location
 
-            ManualAttendanceRequest request = new ManualAttendanceRequest(status, combinedTime, location, reason);
+            ManualAttendanceRequest request = new ManualAttendanceRequest(eventType, status, combinedTime, location, reason);
             ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
             apiService.submitManualAttendance(request).enqueue(new Callback<BaseResponse<AttendanceData>>() {
                 @Override

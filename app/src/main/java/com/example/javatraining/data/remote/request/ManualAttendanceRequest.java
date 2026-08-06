@@ -3,6 +3,9 @@ package com.example.javatraining.data.remote.request;
 import com.google.gson.annotations.SerializedName;
 
 public class ManualAttendanceRequest {
+    @SerializedName("eventType")
+    private String eventType;
+
     @SerializedName("status")
     private String status;
 
@@ -15,7 +18,8 @@ public class ManualAttendanceRequest {
     @SerializedName("reason")
     private String reason;
 
-    public ManualAttendanceRequest(String status, String time, String location, String reason) {
+    public ManualAttendanceRequest(String eventType, String status, String time, String location, String reason) {
+        this.eventType = eventType;
         this.status = status;
         this.time = time;
         this.location = location;

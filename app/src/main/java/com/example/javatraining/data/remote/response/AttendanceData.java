@@ -24,7 +24,7 @@ public class AttendanceData {
     @SerializedName("similarity")
     private Double similarity;
 
-    @SerializedName("timestamp")
+    @SerializedName(value = "timestamp", alternate = {"createdAt", "detected_at"})
     private String timestamp;
 
     @SerializedName("confirmationStatus")
