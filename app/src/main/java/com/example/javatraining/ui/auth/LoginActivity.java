@@ -43,12 +43,30 @@ public class LoginActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        // Animate the wave background
-        ObjectAnimator waveAnimator = ObjectAnimator.ofFloat(binding.ivWave, "translationY", 0f, 40f, 0f);
-        waveAnimator.setDuration(4000);
-        waveAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        waveAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        waveAnimator.start();
+        // Animate wave horizontally and vertically to simulate flowing water
+        ObjectAnimator waveY = ObjectAnimator.ofFloat(binding.ivWave, "translationY", 0f, 25f);
+        waveY.setDuration(3000);
+        waveY.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+        waveY.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+
+        ObjectAnimator waveX = ObjectAnimator.ofFloat(binding.ivWave, "translationX", -40f, 40f);
+        waveX.setDuration(4500);
+        waveX.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+        waveX.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.ivWave, "scaleX", 1.0f, 1.1f);
+        scaleX.setDuration(3500);
+        scaleX.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+        scaleX.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.ivWave, "scaleY", 1.0f, 1.05f);
+        scaleY.setDuration(4000);
+        scaleY.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+        scaleY.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+
+        android.animation.AnimatorSet waveAnimSet = new android.animation.AnimatorSet();
+        waveAnimSet.playTogether(waveY, waveX, scaleX, scaleY);
+        waveAnimSet.start();
 
         // Native Biometric Prompt
         Executor executor = ContextCompat.getMainExecutor(this);
