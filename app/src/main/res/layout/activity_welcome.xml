@@ -15,13 +15,26 @@
 
     <TextView
         android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to AbsensiTM"
+        android:text="Welcome to PT Talangmas Anugerah Semesta"
         android:textColor="#1A2456"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp" />
+        android:textAlignment="center"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sistem Presensi Digital \u0026 Face Recognition"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="48dp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
