@@ -152,7 +152,7 @@
                 android:id="@+id/ivBiometric"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/ic_face_scan"
+                android:src="@drawable/ic_fingerprint"
                 android:background="@drawable/bg_circle_white"
                 android:elevation="4dp"
                 android:padding="12dp"
