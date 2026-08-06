@@ -1,14 +1,8 @@
 package com.example.javatraining.ui.auth;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,32 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        final View rootLayout = binding.getRoot();
-        if (savedInstanceState == null && getIntent().hasExtra("reveal_x")) {
-            rootLayout.setVisibility(View.INVISIBLE);
-            
-            ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
-            if (viewTreeObserver.isAlive()) {
-                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        
-                        int cx = getIntent().getIntExtra("reveal_x", rootLayout.getWidth() / 2);
-                        int cy = getIntent().getIntExtra("reveal_y", rootLayout.getHeight() / 2);
-                        
-                        int finalRadius = Math.max(rootLayout.getWidth(), rootLayout.getHeight());
-                        
-                        Animator anim = ViewAnimationUtils.createCircularReveal(rootLayout, cx, cy, 0, finalRadius);
-                        anim.setDuration(800);
-                        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-                        rootLayout.setVisibility(View.VISIBLE);
-                        anim.start();
-                    }
-                });
-            }
-        }
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
@@ -178,8 +146,6 @@ public class LoginActivity extends AppCompatActivity {
             });
         });
 
-        binding.tvForgotPassword.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
-        });
+        // tvForgotPassword removed in new sci-fi design
     }
 }

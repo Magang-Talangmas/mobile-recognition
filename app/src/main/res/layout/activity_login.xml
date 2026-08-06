@@ -26,22 +26,24 @@
             android:alpha="0.5"/>
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_face_scan"
+            android:src="@drawable/ic_avatar"
             app:tint="#D0FBFF" />
     </FrameLayout>
 
     <!-- Titles -->
     <TextView
         android:id="@+id/tvWelcomeTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Precision"
+        android:layout_marginHorizontal="32dp"
+        android:text="PT Talangmas Anugerah Semesta"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="36sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:shadowColor="#3355A0"
         android:shadowDx="0"
@@ -56,8 +58,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:letterSpacing="0.2"
-        android:text="ATTENDANCE PROTOCOL"
+        android:letterSpacing="0.05"
+        android:text="Sistem Presensi Digital &amp; Face Recognition"
         android:textColor="#9CA3AF"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -86,7 +88,7 @@
             android:layout_weight="1"
             android:layout_marginStart="20dp"
             android:background="@android:color/transparent"
-            android:hint="Operator ID"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:textColor="#FFFFFF"
             android:textColorHint="#6B7280"
@@ -121,7 +123,7 @@
             android:layout_weight="1"
             android:layout_marginStart="20dp"
             android:background="@android:color/transparent"
-            android:hint="Passcode"
+            android:hint="Password"
             android:inputType="textPassword"
             android:textColor="#FFFFFF"
             android:textColorHint="#6B7280"
@@ -144,7 +146,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/bg_button_cyan"
-        android:text="AUTHENTICATE"
+        android:text="Login"
         android:textAllCaps="false"
         android:textColor="#0B0F19"
         android:textSize="16sp"
