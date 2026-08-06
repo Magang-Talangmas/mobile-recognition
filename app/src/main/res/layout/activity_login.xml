@@ -31,6 +31,15 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_avatar"
             app:tint="#D0FBFF" />
+
+        <!-- Scanning Line Animation -->
+        <View
+            android:id="@+id/vScanLine"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#F5A623"
+            android:elevation="4dp" />
     </FrameLayout>
 
     <!-- Titles -->
@@ -179,8 +188,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/ic_fingerprint"
-        android:background="@drawable/bg_circle_outline"
-        android:padding="16dp"
+        android:padding="8dp"
         app:tint="#9CA3AF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

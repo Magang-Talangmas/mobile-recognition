@@ -1,5 +1,7 @@
 package com.example.javatraining.ui.auth;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +40,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Start scanning animation
+        View vScanLine = binding.vScanLine;
+        ObjectAnimator scanAnim = ObjectAnimator.ofFloat(vScanLine, "translationY", -24f, 24f);
+        scanAnim.setDuration(1200);
+        scanAnim.setRepeatMode(ValueAnimator.REVERSE);
+        scanAnim.setRepeatCount(ValueAnimator.INFINITE);
+        scanAnim.start();
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
