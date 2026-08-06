@@ -125,18 +125,18 @@ public class AbsensiTMRepository {
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
+        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<List<AttendanceData>>>() {
             @Override
-            public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<AttendanceData>>> response) {
+            public void onResponse(retrofit2.Call<BaseResponse<List<AttendanceData>>> call, retrofit2.Response<BaseResponse<List<AttendanceData>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData().getItems());
+                    result.setValue(response.body().getData());
                 } else {
                     result.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<BaseResponse<List<AttendanceData>>> call, Throwable t) {
                 result.setValue(null);
             }
         });

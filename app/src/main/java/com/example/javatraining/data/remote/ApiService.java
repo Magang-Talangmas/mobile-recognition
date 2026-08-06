@@ -5,6 +5,7 @@ import com.example.javatraining.data.remote.response.BaseResponse;
 import com.example.javatraining.data.remote.response.LoginData;
 import com.example.javatraining.data.remote.response.PaginatedResponse;
 import com.example.javatraining.data.remote.response.EmployeeData;
+import java.util.List;
 import com.example.javatraining.data.remote.response.AttendanceData;
 
 import retrofit2.Call;
@@ -26,7 +27,7 @@ public interface ApiService {
     Call<BaseResponse<EmployeeData>> getProfile();
 
     @GET("mobile/attendance/history")
-    Call<BaseResponse<PaginatedResponse<AttendanceData>>> getAttendances(
+    Call<BaseResponse<List<AttendanceData>>> getAttendances(
             @Query("page") Integer page,
             @Query("limit") Integer limit
     );
