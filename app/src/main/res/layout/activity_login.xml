@@ -156,7 +156,7 @@
                 android:background="@drawable/bg_circle_white"
                 android:elevation="4dp"
                 android:padding="12dp"
-                app:tint="#0055FF"
+                app:tint="#1A2456"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
