@@ -44,7 +44,16 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         btnLogin.setOnClickListener(v -> {
-            startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            int[] location = new int[2];
+            v.getLocationInWindow(location);
+            int cx = location[0] + v.getWidth() / 2;
+            int cy = location[1] + v.getHeight() / 2;
+            
+            Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+            intent.putExtra("reveal_x", cx);
+            intent.putExtra("reveal_y", cy);
+            startActivity(intent);
+            overridePendingTransition(0, 0); // No default animation
         });
     }
 }
