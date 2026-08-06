@@ -58,6 +58,8 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/logo_face_recognition"
+                android:background="@drawable/bg_logo_plate"
+                android:padding="16dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
