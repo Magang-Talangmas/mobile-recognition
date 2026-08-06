@@ -18,9 +18,6 @@ public class AttendanceData {
     @SerializedName("eventType")
     private String eventType;
 
-    @SerializedName("status")
-    private String status;
-
     @SerializedName("similarity")
     private Double similarity;
 
@@ -30,6 +27,15 @@ public class AttendanceData {
     @SerializedName("confirmationStatus")
     private String confirmationStatus;
     
+    @SerializedName("isLate")
+    private Boolean isLate;
+    
+    @SerializedName("photoUrl")
+    private String photoUrl;
+    
+    @SerializedName("updatedAt")
+    private String updatedAt;
+
     @SerializedName("employee")
     private EmployeeData employee;
 
@@ -38,9 +44,11 @@ public class AttendanceData {
     public String getEmployeeId() { return employeeId; }
     public String getCameraId() { return cameraId; }
     public String getEventType() { return eventType; }
-    public String getStatus() { return status; }
     public Double getSimilarity() { return similarity; }
     public String getTimestamp() { return timestamp; }
     public String getConfirmationStatus() { return confirmationStatus; }
+    public Boolean getIsLate() { return isLate != null && isLate; }
+    public String getPhotoUrl() { return photoUrl; }
+    public String getUpdatedAt() { return updatedAt; }
     public EmployeeData getEmployee() { return employee; }
 }

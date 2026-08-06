@@ -22,8 +22,9 @@ import android.widget.Toast;
 import com.example.javatraining.data.remote.ApiClient;
 import com.example.javatraining.data.remote.ApiService;
 import com.example.javatraining.data.remote.request.ManualAttendanceRequest;
-import com.example.javatraining.data.remote.response.AttendanceData;
 import com.example.javatraining.data.remote.response.BaseResponse;
+import com.example.javatraining.data.remote.response.PaginatedResponse;
+import com.example.javatraining.data.remote.response.AttendanceData;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,12 +59,25 @@ public class ManualFragment extends Fragment {
     
     private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable timerRunnable;
+    private java.io.File currentPhotoFile;
 
     private final ActivityResultLauncher<Intent> takePictureLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
                     Bundle extras = result.getData().getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    
+                    try {
+                        java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
+                        cachePath.mkdirs();
+                        currentPhotoFile = new java.io.File(cachePath, "selfie_" + System.currentTimeMillis() + ".jpg");
+                        java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
+                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        stream.close();
+                    } catch (java.io.IOException e) {
+                        e.printStackTrace();
+                    }
+
                     ivPhotoPreview.setImageBitmap(imageBitmap);
                     ivPhotoPreview.setVisibility(View.VISIBLE);
                     btnRemovePhoto.setVisibility(View.VISIBLE);
@@ -187,9 +201,15 @@ public class ManualFragment extends Fragment {
             String reason = ""; // Removed from UI
             String location = "Menara Thamrin, Jakarta"; // Dummy location
 
-            ManualAttendanceRequest request = new ManualAttendanceRequest(eventType, status, combinedTime, location, reason);
+            okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), eventType);
+            okhttp3.MultipartBody.Part photoPart = null;
+            if (currentPhotoFile != null && currentPhotoFile.exists()) {
+                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), currentPhotoFile);
+                photoPart = okhttp3.MultipartBody.Part.createFormData("photos", currentPhotoFile.getName(), requestFile);
+            }
+
             ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-            apiService.submitManualAttendance(request).enqueue(new Callback<BaseResponse<AttendanceData>>() {
+            apiService.submitManualAttendance(photoPart, eventTypeBody).enqueue(new Callback<BaseResponse<AttendanceData>>() {
                 @Override
                 public void onResponse(Call<BaseResponse<AttendanceData>> call, Response<BaseResponse<AttendanceData>> response) {
                     if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
@@ -232,9 +252,9 @@ public class ManualFragment extends Fragment {
         successState.setVisibility(View.GONE);
         
         ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-        apiService.getAttendances(1, 1).enqueue(new Callback<BaseResponse<List<AttendanceData>>>() {
+        apiService.getAttendances(1, 1).enqueue(new Callback<PaginatedResponse<AttendanceData>>() {
             @Override
-            public void onResponse(Call<BaseResponse<List<AttendanceData>>> call, Response<BaseResponse<List<AttendanceData>>> response) {
+            public void onResponse(Call<PaginatedResponse<AttendanceData>> call, Response<PaginatedResponse<AttendanceData>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null && !response.body().getData().isEmpty()) {
                     AttendanceData latest = response.body().getData().get(0);
                     
@@ -258,8 +278,8 @@ public class ManualFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<List<AttendanceData>>> call, Throwable t) {
-                setCheckInState();
+            public void onFailure(Call<PaginatedResponse<AttendanceData>> call, Throwable t) {
+                loadingState.setVisibility(View.GONE);
             }
         });
     }
