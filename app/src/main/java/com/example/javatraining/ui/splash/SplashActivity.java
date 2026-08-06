@@ -8,7 +8,7 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.javatraining.R;
-import com.example.javatraining.ui.auth.LoginActivity;
+import com.example.javatraining.ui.auth.WelcomeActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -41,9 +41,9 @@ public class SplashActivity extends AppCompatActivity {
             progressBar.animate().alpha(1f).setDuration(1000).setStartDelay(900).start();
         }
 
-        // Wait for 2 seconds (loading), then move to LoginActivity
+        // Wait for 2 seconds (loading), then move to WelcomeActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         }, 2000);
