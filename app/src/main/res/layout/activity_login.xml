@@ -21,24 +21,12 @@
                 android:id="@+id/ivLogo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="32dp"
                 android:src="@drawable/logo_face_recognition"
+                app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/llEmail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Login"
-                android:textColor="#1A2456"
-                android:textSize="28sp"
-                android:fontFamily="sans-serif-medium"
-                app:layout_constraintTop_toBottomOf="@id/ivLogo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Email Input -->
             <LinearLayout
@@ -50,7 +38,8 @@
                 android:background="@drawable/bg_input_capsule"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/ivLogo"
+                app:layout_constraintBottom_toTopOf="@id/llPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -84,6 +73,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/llEmail"
+                app:layout_constraintBottom_toTopOf="@id/btnLogin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -128,6 +118,7 @@
                 android:textSize="18sp"
                 android:fontFamily="sans-serif-medium"
                 app:layout_constraintTop_toBottomOf="@id/llPassword"
+                app:layout_constraintBottom_toTopOf="@id/tvForgotPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -140,6 +131,7 @@
                 android:textColor="#1A2456"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/btnLogin"
+                app:layout_constraintBottom_toTopOf="@id/tvOrConnect"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
