@@ -142,4 +142,25 @@ public class AbsensiTMRepository {
         });
         return result;
     }
+
+    public LiveData<com.example.javatraining.data.remote.response.ScheduleData> getScheduleTodayApi() {
+        MutableLiveData<com.example.javatraining.data.remote.response.ScheduleData> result = new MutableLiveData<>();
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getScheduleToday().enqueue(new retrofit2.Callback<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    result.setValue(response.body().getData());
+                } else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
+    }
 }

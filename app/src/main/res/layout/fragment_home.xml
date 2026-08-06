@@ -203,235 +203,118 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Today's Summary & Weekly Goal Grid -->
-            <LinearLayout
+            <!-- Today's Schedule Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/html_surface_container_lowest"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/html_outline_variant"
+                app:strokeWidth="1dp">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <!-- Today's Hours Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="@color/html_surface_container_lowest"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/html_outline_variant"
-                    app:strokeWidth="1dp">
-                    
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="top">
-                        
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp">
-                            <FrameLayout
-                                android:id="@+id/iconHours"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@drawable/bg_circle_primary"
-                                android:backgroundTint="@color/html_surface_container">
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_nav_history"
-                                    app:tint="@color/html_primary"/>
-                            </FrameLayout>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Today's Hours"
-                                android:layout_toEndOf="@id/iconHours"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="8dp"
-                                android:textColor="@color/html_on_surface_variant"
-                                android:textSize="12sp"
-                                android:textStyle="bold"/>
-                        </RelativeLayout>
-
-                        <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+                        <FrameLayout
+                            android:id="@+id/iconSchedule"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_circle_primary"
+                            android:backgroundTint="@color/html_surface_container">
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_schedule"
+                                app:tint="@color/html_primary"/>
+                        </FrameLayout>
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="6"
-                                android:textColor="@color/html_on_surface"
-                                android:textSize="28sp"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="h "
-                                android:textColor="@color/html_on_surface_variant"
-                                android:textSize="16sp"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="45"
-                                android:textColor="@color/html_on_surface"
-                                android:textSize="28sp"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="m"
-                                android:textColor="@color/html_on_surface_variant"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
+                            android:text="Today's Schedule"
+                            android:layout_toEndOf="@id/iconSchedule"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12dp"
+                            android:textColor="@color/html_on_surface"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/> <!-- Spacer -->
-
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="6dp"
-                            android:max="100"
-                            android:progress="85"
-                            android:progressTint="@color/html_primary"
-                            android:progressBackgroundTint="@color/html_surface_container"
-                            android:layout_marginTop="16dp"/>
-                        
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0h"
-                                android:textSize="10sp"
-                                android:textColor="@color/html_outline"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Target: 9h"
-                                android:layout_alignParentEnd="true"
-                                android:textSize="10sp"
-                                android:textColor="@color/html_outline"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Weekly Progress Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardBackgroundColor="@color/html_surface_container_lowest"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/html_outline_variant"
-                    app:strokeWidth="1dp">
-                    
+                    <!-- Shift Info -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="top">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
                         
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp">
-                            <FrameLayout
-                                android:id="@+id/iconWeekly"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@drawable/bg_circle_primary"
-                                android:backgroundTint="@color/html_surface_container">
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_nav_dashboard"
-                                    app:tint="@color/html_primary"/>
-                            </FrameLayout>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Weekly Progress"
-                                android:layout_toEndOf="@id/iconWeekly"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="8dp"
-                                android:textColor="@color/html_on_surface_variant"
-                                android:textSize="12sp"
-                                android:textStyle="bold"/>
-                        </RelativeLayout>
-
+                        <!-- Left col: Shift & Time -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:orientation="vertical">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="32"
-                                android:textColor="@color/html_on_surface"
-                                android:textSize="28sp"
+                                android:text="SHIFT"
+                                android:textColor="@color/html_outline"
+                                android:textSize="10sp"
                                 android:textStyle="bold"/>
                             <TextView
+                                android:id="@+id/tvScheduleShiftName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" / 45h"
-                                android:textColor="@color/html_on_surface_variant"
-                                android:textSize="16sp"/>
+                                tools:text="Normal Shift"
+                                android:textColor="@color/html_on_surface"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2dp"/>
+                            <TextView
+                                android:id="@+id/tvScheduleTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="08:00 - 17:00"
+                                android:textColor="@color/html_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp"/>
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/> <!-- Spacer -->
-
-                        <!-- Mini Chart -->
+                        <!-- Right col: Location -->
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:orientation="horizontal"
-                            android:weightSum="5"
-                            android:gravity="bottom"
-                            android:layout_marginTop="16dp">
-                            
-                            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom|center_horizontal">
-                                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@color/html_primary"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="M" android:textSize="10sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom|center_horizontal">
-                                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="0.9" android:layout_marginHorizontal="2dp" android:background="@color/html_primary"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textSize="10sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom|center_horizontal">
-                                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@color/html_primary"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="W" android:textSize="10sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom|center_horizontal">
-                                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="0.85" android:layout_marginHorizontal="2dp" android:background="@color/html_secondary_container_new_2"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/html_secondary_container_new_2" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom|center_horizontal">
-                                <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="0.1" android:layout_marginHorizontal="2dp" android:background="@color/html_surface_container"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="F" android:textSize="10sp" android:textColor="@color/html_outline" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="end">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="LOCATION"
+                                android:textColor="@color/html_outline"
+                                android:textSize="10sp"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:id="@+id/tvScheduleLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="Head Office"
+                                android:textColor="@color/html_on_surface"
+                                android:textSize="14sp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="end"/>
                         </LinearLayout>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Recent Activity Section -->
             <LinearLayout

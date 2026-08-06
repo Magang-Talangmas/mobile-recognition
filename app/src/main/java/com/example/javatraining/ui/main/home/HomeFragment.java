@@ -24,6 +24,7 @@ import com.example.javatraining.ui.main.MainActivity;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
 import com.example.javatraining.ui.main.notifications.NotificationsFragment;
 import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.remote.response.ScheduleData;
 import com.example.javatraining.data.repository.AbsensiTMRepository;
 import androidx.lifecycle.Observer;
 import java.util.ArrayList;
@@ -101,6 +102,30 @@ public class HomeFragment extends Fragment {
                     
                     // Update UI with logs
                     updateDashboard(view, userLogs);
+                }
+            }
+        });
+
+        // Fetch Today's Schedule
+        repository.getScheduleTodayApi().observe(getViewLifecycleOwner(), new Observer<ScheduleData>() {
+            @Override
+            public void onChanged(ScheduleData scheduleData) {
+                TextView tvScheduleShiftName = view.findViewById(R.id.tvScheduleShiftName);
+                TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
+                TextView tvScheduleLocation = view.findViewById(R.id.tvScheduleLocation);
+                
+                if (scheduleData != null) {
+                    if (tvScheduleShiftName != null) tvScheduleShiftName.setText(scheduleData.getShiftName() != null ? scheduleData.getShiftName() : "Normal Shift");
+                    if (tvScheduleTime != null) {
+                        String start = scheduleData.getStartTime() != null ? scheduleData.getStartTime() : "--:--";
+                        String end = scheduleData.getEndTime() != null ? scheduleData.getEndTime() : "--:--";
+                        tvScheduleTime.setText(start + " - " + end);
+                    }
+                    if (tvScheduleLocation != null) tvScheduleLocation.setText("Head Office");
+                } else {
+                    if (tvScheduleShiftName != null) tvScheduleShiftName.setText("No Schedule");
+                    if (tvScheduleTime != null) tvScheduleTime.setText("--:-- - --:--");
+                    if (tvScheduleLocation != null) tvScheduleLocation.setText("-");
                 }
             }
         });
