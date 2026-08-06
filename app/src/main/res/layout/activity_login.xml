@@ -94,16 +94,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvWelcomeTitle" />
 
             <!-- Wrap form in a white card -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cardForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="120dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="32dp"
                 app:cardElevation="12dp"
-                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintTop_toBottomOf="@+id/tvWelcomeSubtitle"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -220,7 +222,7 @@
                         app:cornerRadius="32dp" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

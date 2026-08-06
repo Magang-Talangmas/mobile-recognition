@@ -1,7 +1,10 @@
 package com.example.javatraining.ui.auth;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +31,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        // Animate the wave background
+        ObjectAnimator waveAnimator = ObjectAnimator.ofFloat(binding.ivWave, "translationY", 0f, 40f, 0f);
+        waveAnimator.setDuration(4000);
+        waveAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        waveAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        waveAnimator.start();
 
         // Native Biometric Prompt
         Executor executor = ContextCompat.getMainExecutor(this);
