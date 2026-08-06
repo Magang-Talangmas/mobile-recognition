@@ -25,5 +25,8 @@
         
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnBackground">@android:color/white</item>
+        
+        <item name="android:fontFamily">@font/geist_font</item>
+        <item name="fontFamily">@font/geist_font</item>
     </style>
 </resources>

@@ -45,6 +45,10 @@ public class LoginFragment extends Fragment {
             String password = binding.etPassword.getText().toString().trim();
             viewModel.login(email, password);
         });
+
+        binding.tvForgotPassword.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_login_to_forgot_password);
+        });
     }
 
     private void setupObservers() {

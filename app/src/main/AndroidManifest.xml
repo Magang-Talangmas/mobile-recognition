@@ -27,6 +27,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.main.ConfirmationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AbsensiTM" />
+        <activity
+            android:name=".ui.profile.ChangePasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+            
+        <activity
+            android:name=".ui.profile.FaceRegistrationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -35,6 +48,16 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

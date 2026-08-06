@@ -15,8 +15,20 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        def envFile = rootProject.file(".env")
+        def baseUrl = "http://192.168.77.169:5000/api/v1/mobile/"
+        if (envFile.exists()) {
+            envFile.eachLine { line ->
+                def matcher = (line =~ /^\s*BASE_URL\s*=\s*(.*)$/)
+                if (matcher.find()) {
+                    baseUrl = matcher[0][1].replace("\"", "").replace("'", "")
+                }
+            }
+        }
+        buildConfigField "String", "BASE_URL", "\"${baseUrl}\""
     }
-
+    
     buildTypes {
         release {
             optimization {
@@ -30,6 +42,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 

@@ -30,6 +30,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + message.getNotification().getBody());
             // Show custom notification if needed
         }
+
+        if (message.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + message.getData());
+            String intentAction = message.getData().get("intentAction");
+            
+            if ("com.example.javatraining.CCTV_CHECK_IN".equals(intentAction)) {
+                String employeeId = message.getData().get("employeeId");
+                String timestamp = message.getData().get("timestamp");
+                String attendanceId = message.getData().get("attendanceId"); // we might need to send this from BE
+
+                android.content.Intent intent = new android.content.Intent(this, com.example.absensitm.ui.main.ConfirmationActivity.class);
+                intent.putExtra("employeeId", employeeId);
+                intent.putExtra("timestamp", timestamp);
+                intent.putExtra("attendanceId", attendanceId);
+                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

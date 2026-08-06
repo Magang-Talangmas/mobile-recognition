@@ -1,5 +1,6 @@
 package com.example.absensitm.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,36 @@ public class ProfileFragment extends Fragment {
 
         sessionManager = new SessionManager(requireContext());
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        viewModel.setApiService(com.example.absensitm.data.network.ApiClient.getApiService(requireContext()));
+
+        viewModel.getProfileData().observe(getViewLifecycleOwner(), profile -> {
+            if (profile != null) {
+                binding.tvProfileName.setText(profile.getName());
+                binding.tvEmailDetail.setText(profile.getEmail());
+                
+                String roleText = profile.getPosition();
+                if (profile.getDepartment() != null && !profile.getDepartment().isEmpty()) {
+                    roleText += " - " + profile.getDepartment();
+                }
+                binding.tvProfileRole.setText(roleText);
+            }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.fetchProfile();
+
+        binding.btnChangePassword.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ChangePasswordActivity.class));
+        });
+
+        binding.btnRegisterFace.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), FaceRegistrationActivity.class));
+        });
 
         binding.btnLogout.setOnClickListener(v -> {
             sessionManager.clearSession();

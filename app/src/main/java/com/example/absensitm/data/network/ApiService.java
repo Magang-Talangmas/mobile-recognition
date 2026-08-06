@@ -30,4 +30,26 @@ public interface ApiService {
     
     @retrofit2.http.PATCH("device-token")
     Call<BaseResponse> updateDeviceToken(@Body com.example.absensitm.data.model.TokenRequest request);
+
+    @GET("attendance/status")
+    Call<com.example.absensitm.data.model.StatusResponse> getLiveStatus();
+
+    @retrofit2.http.PATCH("attendance/{id}/confirm")
+    Call<BaseResponse> confirmAttendance(@retrofit2.http.Path("id") String id, @Body com.example.absensitm.data.model.ConfirmRequest request);
+
+    @POST("attendance/checkout")
+    Call<BaseResponse> checkOut();
+
+    @retrofit2.http.PATCH("profile/password")
+    Call<BaseResponse> updatePassword(@Body com.example.absensitm.data.model.PasswordRequest request);
+
+    @GET("attendance/stats")
+    Call<com.example.absensitm.data.model.StatsResponse> getMonthlyStats();
+
+    @GET("schedule/today")
+    Call<com.example.absensitm.data.model.ScheduleResponse> getTodaySchedule();
+
+    @retrofit2.http.Multipart
+    @retrofit2.http.POST("profile/face-registration")
+    Call<BaseResponse> registerFace(@retrofit2.http.Part java.util.List<okhttp3.MultipartBody.Part> photos);
 }

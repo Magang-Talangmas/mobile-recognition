@@ -26,6 +26,35 @@ public class DashboardFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private android.net.Uri photoUri;
+    private java.io.File photoFile;
+    private DashboardViewModel viewModel;
+
+    private final androidx.activity.result.ActivityResultLauncher<android.net.Uri> takePictureLauncher =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.TakePicture(), success -> {
+                if (success) {
+                    binding.cardAttendanceStatus.setAlpha(0.5f);
+                    viewModel.uploadAttendance(photoFile);
+                } else {
+                    android.widget.Toast.makeText(requireContext(), "Batal mengambil foto", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private void launchCamera() {
+        try {
+            photoFile = new java.io.File(requireContext().getCacheDir(), "attendance_" + System.currentTimeMillis() + ".jpg");
+            photoUri = androidx.core.content.FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().getPackageName() + ".fileprovider",
+                    photoFile
+            );
+            takePictureLauncher.launch(photoUri);
+        } catch (Exception e) {
+            e.printStackTrace();
+            android.widget.Toast.makeText(requireContext(), "Gagal membuka kamera: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -44,7 +73,7 @@ public class DashboardFragment extends Fragment {
                 .start();
 
         // Setup ViewModel
-        DashboardViewModel viewModel = new androidx.lifecycle.ViewModelProvider(this).get(DashboardViewModel.class);
+        viewModel = new androidx.lifecycle.ViewModelProvider(this).get(DashboardViewModel.class);
         viewModel.setApiService(com.example.absensitm.data.network.ApiClient.getApiService(requireContext()));
         
         viewModel.getProfileData().observe(getViewLifecycleOwner(), profile -> {
@@ -53,7 +82,76 @@ public class DashboardFragment extends Fragment {
             }
         });
         
+        viewModel.getLiveStatus().observe(getViewLifecycleOwner(), statusData -> {
+            binding.cardAttendanceStatus.setAlpha(1f);
+            if (statusData != null) {
+                binding.tvStatusValue.setText(statusData.getStatus());
+                
+                if (statusData.getStatus().equals("Sedang Bekerja")) {
+                    binding.btnDoAttendance.setVisibility(View.GONE);
+                    binding.btnCheckout.setVisibility(View.VISIBLE);
+                    binding.chronometer.setVisibility(View.VISIBLE);
+                    
+                    if (statusData.getCheckInTime() != null) {
+                        try {
+                            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                            format.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                            java.util.Date checkInDate = format.parse(statusData.getCheckInTime());
+                            long timeSinceCheckIn = System.currentTimeMillis() - checkInDate.getTime();
+                            binding.chronometer.setBase(android.os.SystemClock.elapsedRealtime() - timeSinceCheckIn);
+                            binding.chronometer.start();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (statusData.getStatus().equals("Selesai Bekerja")) {
+                    binding.btnDoAttendance.setVisibility(View.GONE);
+                    binding.btnCheckout.setVisibility(View.GONE);
+                    binding.chronometer.stop();
+                } else {
+                    binding.btnDoAttendance.setVisibility(View.VISIBLE);
+                    binding.btnCheckout.setVisibility(View.GONE);
+                    binding.chronometer.setVisibility(View.GONE);
+                    binding.chronometer.stop();
+                }
+            }
+        });
+
+        viewModel.getCheckoutSuccess().observe(getViewLifecycleOwner(), msg -> {
+             binding.cardAttendanceStatus.setAlpha(1f);
+             if (msg != null) {
+                 android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show();
+             }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), msg -> {
+            binding.cardAttendanceStatus.setAlpha(1f);
+            if (msg != null) {
+                android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
+
+        viewModel.getStatsData().observe(getViewLifecycleOwner(), stats -> {
+            if (stats != null) {
+                binding.tvTotalHadir.setText(String.valueOf(stats.getPresentCount()));
+                binding.tvTotalTelat.setText(String.valueOf(stats.getLateCount()));
+            }
+        });
+
+        viewModel.getScheduleData().observe(getViewLifecycleOwner(), schedule -> {
+            if (schedule != null) {
+                binding.tvScheduleName.setText("Jadwal Hari Ini");
+                binding.tvScheduleTime.setText(schedule.getCheckInTime() + " - " + schedule.getCheckOutTime() + " (Toleransi: " + schedule.getToleranceMinutes() + " mnt)");
+            } else {
+                binding.tvScheduleName.setText("Libur");
+                binding.tvScheduleTime.setText("Tidak ada jadwal kerja hari ini");
+            }
+        });
+
         viewModel.fetchProfile();
+        viewModel.fetchLiveStatus();
+        viewModel.fetchStats();
+        viewModel.fetchSchedule();
 
         // Fetch FCM Token and update device token
         com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
@@ -83,7 +181,11 @@ public class DashboardFragment extends Fragment {
 
         // Setup Button listener
         binding.btnDoAttendance.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_dashboard_to_camera);
+            launchCamera();
+        });
+
+        binding.btnCheckout.setOnClickListener(v -> {
+            viewModel.checkOut();
         });
     }
 
