@@ -92,17 +92,21 @@ public class LoginActivity extends AppCompatActivity {
         biometricPrompt.authenticate(promptInfo);
         
         binding.ivTogglePassword.setOnClickListener(v -> {
-            if (binding.etPassword.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod) {
-                // Show password
-                binding.etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
-                binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye_off);
-            } else {
-                // Hide password
-                binding.etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
-                binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye);
-            }
-            // Keep cursor at the end
-            binding.etPassword.setSelection(binding.etPassword.getText().length());
+            // Animate eye click
+            binding.ivTogglePassword.animate().scaleX(0.7f).scaleY(0.7f).setDuration(100).withEndAction(() -> {
+                if (binding.etPassword.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod) {
+                    // Show password
+                    binding.etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
+                    binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye_off);
+                } else {
+                    // Hide password
+                    binding.etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+                    binding.ivTogglePassword.setImageResource(com.example.javatraining.R.drawable.ic_eye);
+                }
+                binding.ivTogglePassword.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                // Keep cursor at the end
+                binding.etPassword.setSelection(binding.etPassword.getText().length());
+            }).start();
         });
 
         binding.btnLogin.setOnClickListener(v -> {
