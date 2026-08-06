@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -10,15 +11,33 @@ android {
         }
     }
 
+    def envProperties = new Properties()
+    def envFile = rootProject.file('.env')
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            def parts = line.split('=', 2)
+            if (parts.length == 2 && !line.startsWith("#")) {
+                envProperties.setProperty(parts[0].trim(), parts[1].trim())
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.javatraining"
         minSdk 21
         targetSdk 36
         versionCode 1
         versionName "1.0"
+        
+        def apiUrl = envProperties.getProperty("API_BASE_URL", envProperties.getProperty("NEXT_PUBLIC_API_URL", "http://10.0.2.2:3000/api/v1/"))
+        if (!apiUrl.endsWith("/")) {
+            apiUrl += "/"
+        }
+        buildConfigField("String", "API_BASE_URL", "\"${apiUrl}\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
 
     buildTypes {
         release {
@@ -29,6 +48,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     compileOptions {
