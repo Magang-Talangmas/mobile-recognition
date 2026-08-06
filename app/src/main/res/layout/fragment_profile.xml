@@ -42,7 +42,7 @@
                 android:layout_height="96dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_avatar"
-                app:shapeAppearanceOverlay="@style/CircleImageView"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                 app:strokeWidth="4dp"
                 app:strokeColor="#1A001456" />
 
