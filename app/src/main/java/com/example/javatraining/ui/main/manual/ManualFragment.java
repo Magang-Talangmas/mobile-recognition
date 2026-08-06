@@ -11,8 +11,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -47,7 +45,6 @@ import java.util.Locale;
 public class ManualFragment extends Fragment {
 
     private TextView etDate, etTime, tvCheckIn, tvCheckOut;
-    private AutoCompleteTextView spnReason;
     private FrameLayout flPhotoUpload;
     private LinearLayout llUploadPlaceholder, formContainer, successState;
     private ImageView ivPhotoPreview;
@@ -57,6 +54,9 @@ public class ManualFragment extends Fragment {
     private Calendar calendar;
     private boolean hasPhoto = false;
     private boolean isCheckIn = true;
+    
+    private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable timerRunnable;
 
     private final ActivityResultLauncher<Intent> takePictureLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -107,10 +107,6 @@ public class ManualFragment extends Fragment {
         btnSubmitAnother = view.findViewById(R.id.btnSubmitAnother);
         formContainer = view.findViewById(R.id.formContainer);
         successState = view.findViewById(R.id.successState);
-        
-        String[] reasons = {"Device / Scanner Offline", "Face Recognition Failed", "Offsite Work / Meeting", "Forgot ID / Badge", "Other"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_dropdown, reasons);
-        spnReason.setAdapter(adapter);
     }
 
     private void setupDefaults() {
@@ -118,25 +114,29 @@ public class ManualFragment extends Fragment {
         updateDateLabel();
         updateTimeLabel();
         updateToggleState();
+        
+        // Start real-time clock
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                calendar = Calendar.getInstance();
+                updateDateLabel();
+                updateTimeLabel();
+                timerHandler.postDelayed(this, 1000);
+            }
+        };
+        timerHandler.post(timerRunnable);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (timerHandler != null && timerRunnable != null) {
+            timerHandler.removeCallbacks(timerRunnable);
+        }
     }
 
     private void setupListeners(View view) {
-        etDate.setOnClickListener(v -> {
-            new DatePickerDialog(getContext(), (view1, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateLabel();
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-
-        etTime.setOnClickListener(v -> {
-            new TimePickerDialog(getContext(), (view1, hourOfDay, minute) -> {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                updateTimeLabel();
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-        });
 
         tvCheckIn.setOnClickListener(v -> {
             isCheckIn = true;
@@ -186,10 +186,13 @@ public class ManualFragment extends Fragment {
 
             String eventType = isCheckIn ? "CHECK_IN" : "CHECK_OUT";
             String status = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
-            String date = etDate.getText().toString();
-            String timeStr = etTime.getText().toString();
-            String combinedTime = date + "T" + timeStr + ":00.000Z";
-            String reason = spnReason.getText().toString();
+            
+            // Get precise current time instead of relying on the UI text
+            SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+            isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+            String combinedTime = isoFormat.format(Calendar.getInstance().getTime());
+            
+            String reason = ""; // Removed from UI
             String location = "Menara Thamrin, Jakarta"; // Dummy location
 
             ManualAttendanceRequest request = new ManualAttendanceRequest(eventType, status, combinedTime, location, reason);
