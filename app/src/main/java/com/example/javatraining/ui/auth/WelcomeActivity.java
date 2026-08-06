@@ -17,14 +17,9 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         Button btnLogin = findViewById(R.id.btnLogin);
-        Button btnSignup = findViewById(R.id.btnSignup);
 
         btnLogin.setOnClickListener(v -> {
             startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-        });
-
-        btnSignup.setOnClickListener(v -> {
-            Toast.makeText(this, "Fitur pendaftaran (Sign up) hubungi HRD Anda.", Toast.LENGTH_SHORT).show();
         });
     }
 }
