@@ -54,9 +54,9 @@ public class AbsensiTMRepository {
                     com.example.javatraining.data.remote.response.LoginData data = response.body().getData();
                     
                     SessionManager sessionManager = new SessionManager(application);
-                    sessionManager.saveSession(data.getToken(), data.getUser());
+                    sessionManager.saveSession(data.getToken(), data.getEmployee());
                     
-                    result.setValue(data.getUser());
+                    result.setValue(data.getEmployee());
                     
                     initMockAttendanceData();
                 } else {
@@ -114,33 +114,18 @@ public class AbsensiTMRepository {
         });
     }
 
+
     public LiveData<List<EmployeeData>> getEmployeesApi(int page, int perPage) {
         MutableLiveData<List<EmployeeData>> result = new MutableLiveData<>();
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getEmployees(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<EmployeeData>>>() {
-            @Override
-            public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<EmployeeData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<EmployeeData>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData().getItems());
-                } else {
-                    result.setValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<BaseResponse<PaginatedResponse<EmployeeData>>> call, Throwable t) {
-                result.setValue(null);
-            }
-        });
+        // Mock empty list since the API endpoint was removed in the mobile contract
+        result.setValue(new ArrayList<>());
         return result;
     }
 
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
-        SessionManager sessionManager = new SessionManager(application);
-        String employeeId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances(employeeId, page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
+        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
             @Override
             public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<AttendanceData>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {

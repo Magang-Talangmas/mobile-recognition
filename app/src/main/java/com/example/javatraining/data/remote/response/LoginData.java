@@ -7,14 +7,14 @@ public class LoginData {
     @SerializedName("token")
     private String token;
 
-    @SerializedName("user")
-    private User user;
+    @SerializedName("employee")
+    private User employee;
 
     public String getToken() {
         return token;
     }
 
-    public User getUser() {
-        return user;
+    public User getEmployee() {
+        return employee;
     }
 }

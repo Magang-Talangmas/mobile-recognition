@@ -10,7 +10,16 @@ public class User {
     private String name;
     
     @SerializedName("email")
-    private String username; // email
+    private String email;
+    
+    @SerializedName("employeeId")
+    private String employeeId;
+    
+    @SerializedName("department")
+    private String department;
+    
+    @SerializedName("position")
+    private String position;
     
     @SerializedName("role")
     private String role; // ADMIN, EMPLOYEE, Staff
@@ -20,31 +29,35 @@ public class User {
     private String password;
 
     // Full constructor (for AbsensiTMRepository mock login)
-    public User(String id, String name, String username, String role, String shift, String avatar) {
+    public User(String id, String name, String email, String role, String shift, String avatar) {
         this.id = id;
         this.name = name;
-        this.username = username;
+        this.email = email;
         this.role = role;
         this.shift = shift;
         this.avatar = avatar;
     }
 
     // Simple constructor (for MockDatabase internal use)
-    public User(String id, String username, String password, String role) {
+    public User(String id, String email, String password, String role) {
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
-        this.name = username; // fallback name = username
+        this.name = email; // fallback name
         this.shift = "";
         this.avatar = "";
     }
 
     public String getId() { return id; }
     public String getName() { return name; }
-    public String getUsername() { return username; }
+    public String getUsername() { return email; }
+    public String getEmail() { return email; }
     public String getPassword() { return password; }
     public String getRole() { return role; }
+    public String getEmployeeId() { return employeeId; }
+    public String getDepartment() { return department; }
+    public String getPosition() { return position; }
     public String getShift() { return shift != null ? shift : ""; }
     public String getAvatar() { return avatar != null ? avatar : ""; }
 }

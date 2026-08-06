@@ -13,38 +13,33 @@ import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.POST;
+import retrofit2.http.PATCH;
 import retrofit2.http.Query;
 import com.example.javatraining.data.remote.request.FcmTokenRequest;
 import com.example.javatraining.data.remote.request.ManualAttendanceRequest;
 
 public interface ApiService {
-    @POST("auth/login")
+    @POST("mobile/auth/login")
     Call<BaseResponse<LoginData>> login(@Body LoginRequest request);
 
-    @GET("employees")
-    Call<BaseResponse<PaginatedResponse<EmployeeData>>> getEmployees(
-            @Query("page") Integer page,
-            @Query("per_page") Integer perPage
-    );
+    @GET("mobile/profile")
+    Call<BaseResponse<EmployeeData>> getProfile();
 
-    @GET("attendance")
+    @GET("mobile/attendance/history")
     Call<BaseResponse<PaginatedResponse<AttendanceData>>> getAttendances(
-            @Query("employee_id") String employeeId,
             @Query("page") Integer page,
-            @Query("per_page") Integer perPage
+            @Query("limit") Integer limit
     );
 
-    // Keep dummy endpoint for compatibility
-    @GET("attendance/today")
-    Call<Void> getTodayAttendance();
+    @GET("mobile/schedule/today")
+    Call<Void> getScheduleToday();
 
-    @PUT("employees/{id}/fcm-token")
+    @PATCH("mobile/device-token")
     Call<BaseResponse<EmployeeData>> updateFcmToken(
-            @Path("id") String id,
             @Body FcmTokenRequest request
     );
 
-    @POST("attendance/manual")
+    @POST("mobile/attendance")
     Call<BaseResponse<AttendanceData>> submitManualAttendance(
             @Body ManualAttendanceRequest request
     );

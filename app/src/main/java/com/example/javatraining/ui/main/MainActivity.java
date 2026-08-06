@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 User user = sessionManager.getUser();
                 if (user != null) {
                     ApiService apiService = ApiClient.getClient(MainActivity.this).create(ApiService.class);
-                    apiService.updateFcmToken(user.getId(), new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+                    apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
                         @Override
                         public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
                             Log.d("MainActivity", "FCM Token registered on server for user: " + user.getId());

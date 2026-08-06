@@ -62,10 +62,8 @@ public class FCMService extends FirebaseMessagingService {
             Log.d(TAG, "User not logged in, skipping FCM token upload");
             return;
         }
-        String employeeId = user.getId();
-        
         ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
-        apiService.updateFcmToken(employeeId, new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+        apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
             @Override
             public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
