@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Start scanning animation
         View vScanLine = binding.vScanLine;
-        ObjectAnimator scanAnim = ObjectAnimator.ofFloat(vScanLine, "translationY", -24f, 24f);
+        ObjectAnimator scanAnim = ObjectAnimator.ofFloat(vScanLine, "translationY", -60f, 60f);
         scanAnim.setDuration(1200);
         scanAnim.setRepeatMode(ValueAnimator.REVERSE);
         scanAnim.setRepeatCount(ValueAnimator.INFINITE);

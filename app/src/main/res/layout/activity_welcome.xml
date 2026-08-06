@@ -56,13 +56,13 @@
 
     </LinearLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieTransition"
+    <!-- Liquid Transition Overlay -->
+    <View
+        android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:lottie_rawRes="@raw/liquid_transition"
-        android:scaleType="centerCrop"
-        android:elevation="100dp" />
+        android:background="#0B0F19"
+        android:visibility="invisible"
+        android:elevation="10dp" />
 
 </FrameLayout>
