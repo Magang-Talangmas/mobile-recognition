@@ -14,8 +14,17 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.javatraining.R;
 import com.example.javatraining.ui.main.MainActivity;
+import com.example.javatraining.data.remote.ApiClient;
+import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.remote.request.FcmTokenRequest;
+import com.example.javatraining.data.remote.response.BaseResponse;
+import com.example.javatraining.data.remote.response.EmployeeData;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FCMService extends FirebaseMessagingService {
 
@@ -47,7 +56,30 @@ public class FCMService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(this);
+        com.example.javatraining.data.model.User user = sessionManager.getUser();
+        if (user == null || user.getId() == null) {
+            Log.d(TAG, "User not logged in, skipping FCM token upload");
+            return;
+        }
+        String employeeId = user.getId();
+        
+        ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
+        apiService.updateFcmToken(employeeId, new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    Log.d(TAG, "FCM Token updated on server successfully");
+                } else {
+                    Log.e(TAG, "Failed to update FCM Token: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+                Log.e(TAG, "Error updating FCM Token", t);
+            }
+        });
     }
 
     private void sendNotification(String title, String messageBody) {

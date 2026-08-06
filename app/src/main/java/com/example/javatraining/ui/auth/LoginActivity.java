@@ -18,6 +18,17 @@ import java.util.concurrent.Executor;
 
 import com.example.javatraining.databinding.ActivityLoginBinding;
 import com.example.javatraining.ui.main.MainActivity;
+import com.example.javatraining.data.remote.ApiClient;
+import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.remote.request.FcmTokenRequest;
+import com.example.javatraining.data.remote.response.BaseResponse;
+import com.example.javatraining.data.remote.response.EmployeeData;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import android.util.Log;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -106,6 +117,27 @@ public class LoginActivity extends AppCompatActivity {
             viewModel.login(email, password).observe(this, user -> {
                 if (user != null) {
                     Toast.makeText(this, "Welcome " + user.getName(), Toast.LENGTH_SHORT).show();
+                    
+                    // Upload FCM Token
+                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.w("LoginActivity", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        ApiService apiService = ApiClient.getClient(LoginActivity.this).create(ApiService.class);
+                        apiService.updateFcmToken(user.getId(), new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+                            @Override
+                            public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
+                                Log.d("LoginActivity", "FCM Token updated successfully");
+                            }
+                            @Override
+                            public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+                                Log.e("LoginActivity", "FCM Token update failed", t);
+                            }
+                        });
+                    });
+
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
