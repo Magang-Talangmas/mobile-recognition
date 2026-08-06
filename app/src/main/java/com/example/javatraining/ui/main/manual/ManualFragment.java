@@ -98,7 +98,6 @@ public class ManualFragment extends Fragment {
         etTime = view.findViewById(R.id.etTime);
         tvCheckIn = view.findViewById(R.id.tvCheckIn);
         tvCheckOut = view.findViewById(R.id.tvCheckOut);
-        spnReason = view.findViewById(R.id.spnReason);
         flPhotoUpload = view.findViewById(R.id.flPhotoUpload);
         llUploadPlaceholder = view.findViewById(R.id.llUploadPlaceholder);
         ivPhotoPreview = view.findViewById(R.id.ivPhotoPreview);
