@@ -12,14 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.javatraining.data.remote.ApiClient;
+import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.remote.request.ManualAttendanceRequest;
+import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.remote.response.BaseResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -37,7 +47,7 @@ import java.util.Locale;
 public class ManualFragment extends Fragment {
 
     private TextView etDate, etTime, tvCheckIn, tvCheckOut;
-    private Spinner spnReason;
+    private AutoCompleteTextView spnReason;
     private FrameLayout flPhotoUpload;
     private LinearLayout llUploadPlaceholder, formContainer, successState;
     private ImageView ivPhotoPreview;
@@ -99,7 +109,7 @@ public class ManualFragment extends Fragment {
         successState = view.findViewById(R.id.successState);
         
         String[] reasons = {"Device / Scanner Offline", "Face Recognition Failed", "Offsite Work / Meeting", "Forgot ID / Badge", "Other"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, reasons);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_dropdown, reasons);
         spnReason.setAdapter(adapter);
     }
 
@@ -173,16 +183,41 @@ public class ManualFragment extends Fragment {
             
             btnSubmit.setText("Processing...");
             btnSubmit.setEnabled(false);
-            
-            btnSubmit.postDelayed(() -> {
-                formContainer.setVisibility(View.GONE);
-                successState.setVisibility(View.VISIBLE);
-                
-                ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
-                if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
-                    ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
+
+            String status = isCheckIn ? "IN" : "OUT";
+            String date = etDate.getText().toString();
+            String timeStr = etTime.getText().toString();
+            String combinedTime = date + "T" + timeStr + ":00.000Z";
+            String reason = spnReason.getText().toString();
+            String location = "Menara Thamrin, Jakarta"; // Dummy location
+
+            ManualAttendanceRequest request = new ManualAttendanceRequest(status, combinedTime, location, reason);
+            ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+            apiService.submitManualAttendance(request).enqueue(new Callback<BaseResponse<AttendanceData>>() {
+                @Override
+                public void onResponse(Call<BaseResponse<AttendanceData>> call, Response<BaseResponse<AttendanceData>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        formContainer.setVisibility(View.GONE);
+                        successState.setVisibility(View.VISIBLE);
+                        
+                        ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
+                        if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
+                            ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Gagal submit manual attendance", Toast.LENGTH_SHORT).show();
+                        btnSubmit.setText("Submit Request");
+                        btnSubmit.setEnabled(true);
+                    }
                 }
-            }, 1200);
+
+                @Override
+                public void onFailure(Call<BaseResponse<AttendanceData>> call, Throwable t) {
+                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    btnSubmit.setText("Submit Request");
+                    btnSubmit.setEnabled(true);
+                }
+            });
         });
 
         btnSubmitAnother.setOnClickListener(v -> {

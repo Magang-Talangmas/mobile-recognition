@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1440dp"
+    android:height="400dp"
+    android:viewportWidth="1440"
+    android:viewportHeight="400">
+  <!-- Soft semi-transparent white wave for depth -->
+  <path
+      android:fillColor="#4DFFFFFF"
+      android:pathData="M0,400 L1440,400 L1440,150 C1000,300 400,0 0,150 Z" />
+  <!-- Main solid white wave -->
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M0,400 L1440,400 L1440,200 C900,350 400,50 0,200 Z" />
+</vector>

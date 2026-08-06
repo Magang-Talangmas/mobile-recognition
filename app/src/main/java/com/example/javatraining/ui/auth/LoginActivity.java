@@ -82,7 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButtonText("Batal")
                 .build();
 
-        biometricPrompt.authenticate(promptInfo);
+        // Check if biometric button exists in the layout (ivBiometric)
+        if (binding.ivBiometric != null) {
+            binding.ivBiometric.setOnClickListener(v -> {
+                biometricPrompt.authenticate(promptInfo);
+            });
+        }
         
         binding.ivTogglePassword.setOnClickListener(v -> {
             // Animate eye click

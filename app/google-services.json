@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "261649363219",
+    "project_id": "absensitm-eeca0",
+    "storage_bucket": "absensitm-eeca0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261649363219:android:0273d7ebc19ab186b2aae6",
+        "android_client_info": {
+          "package_name": "com.example.javatraining"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS1FD_aBiV5b8X9DCeeEAq8MKWJ5Y5r0c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

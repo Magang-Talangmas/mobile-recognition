@@ -137,8 +137,10 @@ public class AbsensiTMRepository {
 
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
+        SessionManager sessionManager = new SessionManager(application);
+        String employeeId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
+        apiService.getAttendances(employeeId, page, perPage).enqueue(new retrofit2.Callback<BaseResponse<PaginatedResponse<AttendanceData>>>() {
             @Override
             public void onResponse(retrofit2.Call<BaseResponse<PaginatedResponse<AttendanceData>>> call, retrofit2.Response<BaseResponse<PaginatedResponse<AttendanceData>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {

@@ -18,11 +18,26 @@ import android.view.View;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import android.widget.Toast;
+import com.example.javatraining.ui.auth.LoginActivity;
 import com.example.javatraining.ui.main.home.FaceScanActivity;
+import com.example.javatraining.ui.main.home.HomeFragment;
+import com.example.javatraining.data.remote.ApiClient;
+import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.remote.request.FcmTokenRequest;
+import com.example.javatraining.data.remote.response.BaseResponse;
+import com.example.javatraining.data.remote.response.EmployeeData;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.example.javatraining.data.local.SessionManager;
+import com.example.javatraining.data.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,6 +73,31 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(new HomeFragment());
             selectNavTab(0);
         }
+
+        // Ensure FCM Token is always registered on launch
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult();
+                Log.d("MainActivity", "FCM Token: " + token);
+                SessionManager sessionManager = new SessionManager(MainActivity.this);
+                User user = sessionManager.getUser();
+                if (user != null) {
+                    ApiService apiService = ApiClient.getClient(MainActivity.this).create(ApiService.class);
+                    apiService.updateFcmToken(user.getId(), new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
+                            Log.d("MainActivity", "FCM Token registered on server for user: " + user.getId());
+                        }
+                        @Override
+                        public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+                            Log.e("MainActivity", "FCM Token registration failed", t);
+                        }
+                    });
+                } else {
+                    Log.e("MainActivity", "User is null, cannot register FCM Token");
+                }
+            }
+        });
     }
 
     private void setupNavigation() {
