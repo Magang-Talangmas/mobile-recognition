@@ -17,7 +17,7 @@
         android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to PT Talangmas Anugerah Semesta"
+        android:text="PT Talangmas Anugerah Semesta"
         android:textColor="#1A2456"
         android:textSize="22sp"
         android:textStyle="bold"
