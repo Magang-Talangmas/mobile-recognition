@@ -57,7 +57,7 @@ public class AbsensiTMRepository {
                     // Temporarily save to inject token for the next request
                     sessionManager.saveSession(data.getToken(), data.getEmployee());
                     
-                    apiService.getProfile(email).enqueue(new retrofit2.Callback<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>>() {
+                    apiService.getProfile("eq." + email).enqueue(new retrofit2.Callback<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>>() {
                         @Override
                         public void onResponse(retrofit2.Call<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> profileResponse) {
                             if (profileResponse.isSuccessful() && profileResponse.body() != null && !profileResponse.body().isEmpty()) {
@@ -73,6 +73,7 @@ public class AbsensiTMRepository {
 
                         @Override
                         public void onFailure(retrofit2.Call<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
+                            android.util.Log.e("LOGIN_ERROR", "Failed to fetch profile: " + t.getMessage());
                             result.setValue(data.getEmployee());
                         }
                     });
