@@ -192,9 +192,7 @@ public class ManualFragment extends Fragment {
             btnSubmit.setEnabled(false);
 
             String eventType = isCheckIn ? "CHECK_IN" : "CHECK_OUT";
-            String status = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
             
-            // Get precise current time instead of relying on the UI text
             SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
             isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
             String combinedTime = isoFormat.format(Calendar.getInstance().getTime());
@@ -204,59 +202,82 @@ public class ManualFragment extends Fragment {
             
             String directionStr = isCheckIn ? "IN" : "OUT";
             String statusStr = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
-            
-            com.example.javatraining.data.remote.request.ManualAttendanceRequest request = 
-                new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
-                    empId,
-                    directionStr,
-                    eventType,
-                    statusStr,
-                    combinedTime
-                );
 
-            ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-            apiService.submitManualAttendance(request).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        formContainer.setVisibility(View.GONE);
-                        successState.setVisibility(View.VISIBLE);
-                        
-                        if (isCheckIn) {
-                            tvSuccessTitle.setText("Check In Submitted");
-                            tvSuccessSubtitle.setText("Your check-in has been sent to your supervisor for review.");
-                        } else {
-                            tvSuccessTitle.setText("Check Out Submitted");
-                            tvSuccessSubtitle.setText("Your check-out has been sent to your supervisor for review.");
-                        }
-                        
-                        ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
-                        if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
-                            ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
-                        }
-                    } else {
-                        String errorMsg = "Gagal: " + response.code();
-                        try {
-                            if (response.errorBody() != null) {
-                                errorMsg += " - " + response.errorBody().string();
-                            }
-                        } catch (Exception e) {}
-                        android.util.Log.e("MANUAL_ATTENDANCE", errorMsg);
-                        Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
-                        btnSubmit.setText("Submit Request");
-                        btnSubmit.setEnabled(true);
+            if (currentPhotoFile != null && currentPhotoFile.exists()) {
+                String filename = "manual_" + empId + "_" + System.currentTimeMillis() + ".jpg";
+                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile, okhttp3.MediaType.parse("image/jpeg"));
+                
+                ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+                apiService.uploadStorageObject("attendance-images", filename, requestFile).enqueue(new Callback<okhttp3.ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<okhttp3.ResponseBody> call, Response<okhttp3.ResponseBody> response) {
+                        String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "storage/v1/object/public/attendance-images/" + filename;
+                        sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, publicUrl);
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
+                        sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null);
+                    }
+                });
+            } else {
+                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null);
+            }
+        });
+    }
+
+    private void sendManualAttendance(View view, String empId, String directionStr, String eventType, String statusStr, String combinedTime, String imageUrl) {
+        com.example.javatraining.data.remote.request.ManualAttendanceRequest request = 
+            new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
+                empId,
+                directionStr,
+                eventType,
+                statusStr,
+                combinedTime,
+                imageUrl
+            );
+
+        ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+        apiService.submitManualAttendance(request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    formContainer.setVisibility(View.GONE);
+                    successState.setVisibility(View.VISIBLE);
+                    
+                    if (isCheckIn) {
+                        tvSuccessTitle.setText("Check In Submitted");
+                        tvSuccessSubtitle.setText("Your check-in has been sent to your supervisor for review.");
+                    } else {
+                        tvSuccessTitle.setText("Check Out Submitted");
+                        tvSuccessSubtitle.setText("Your check-out has been sent to your supervisor for review.");
+                    }
+                    
+                    ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
+                    if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
+                        ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
+                    }
+                } else {
+                    String errorMsg = "Gagal: " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            errorMsg += " - " + response.errorBody().string();
+                        }
+                    } catch (Exception e) {}
+                    android.util.Log.e("MANUAL_ATTENDANCE", errorMsg);
+                    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                     btnSubmit.setText("Submit Request");
                     btnSubmit.setEnabled(true);
                 }
-            });
-        });
+            }
 
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                btnSubmit.setText("Submit Request");
+                btnSubmit.setEnabled(true);
+            }
+        });
     }
 
     private void fetchAttendanceStatus() {
