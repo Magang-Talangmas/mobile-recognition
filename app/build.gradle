@@ -29,14 +29,14 @@ android {
         versionCode 1
         versionName "1.0"
         
-        def apiUrl = envProperties.getProperty("API_BASE_URL", envProperties.getProperty("NEXT_PUBLIC_API_URL", "http://10.0.2.2:3000/api/v1/"))
-        if (!apiUrl.endsWith("/")) {
-            apiUrl += "/"
+        def supabaseUrl = envProperties.getProperty("SUPABASE_URL", "https://your-project.supabase.co/rest/v1/")
+        if (!supabaseUrl.endsWith("/")) {
+            supabaseUrl += "/"
         }
-        if (!apiUrl.contains("/api/")) {
-            apiUrl += "api/v1/"
-        }
-        buildConfigField("String", "API_BASE_URL", "\"${apiUrl}\"")
+        buildConfigField("String", "SUPABASE_URL", "\"${supabaseUrl}\"")
+
+        def supabaseAnonKey = envProperties.getProperty("SUPABASE_ANON_KEY", "your-anon-key")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${supabaseAnonKey}\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

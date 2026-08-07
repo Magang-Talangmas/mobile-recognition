@@ -47,11 +47,11 @@ public class AbsensiTMRepository {
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         LoginRequest request = new LoginRequest(email, password);
         
-        apiService.login(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>>() {
+        apiService.login(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.LoginData>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    com.example.javatraining.data.remote.response.LoginData data = response.body().getData();
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.LoginData> call, retrofit2.Response<com.example.javatraining.data.remote.response.LoginData> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.javatraining.data.remote.response.LoginData data = response.body();
                     
                     SessionManager sessionManager = new SessionManager(application);
                     sessionManager.saveSession(data.getToken(), data.getEmployee());
@@ -81,7 +81,7 @@ public class AbsensiTMRepository {
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.LoginData> call, Throwable t) {
                 android.util.Log.e("LOGIN_ERROR", "Exception: " + t.getMessage());
                 mainThreadHandler.post(() -> {
                     android.widget.Toast.makeText(application, "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
@@ -144,19 +144,22 @@ public class AbsensiTMRepository {
 
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : "";
+        
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances(page, perPage).enqueue(new retrofit2.Callback<PaginatedResponse<AttendanceData>>() {
+        apiService.getAttendances(employeeId, perPage).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
             @Override
-            public void onResponse(retrofit2.Call<PaginatedResponse<AttendanceData>> call, retrofit2.Response<PaginatedResponse<AttendanceData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<AttendanceData>> call, retrofit2.Response<List<AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
                 } else {
                     result.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<PaginatedResponse<AttendanceData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<AttendanceData>> call, Throwable t) {
                 result.setValue(null);
             }
         });
@@ -166,18 +169,18 @@ public class AbsensiTMRepository {
     public LiveData<com.example.javatraining.data.remote.response.ScheduleData> getScheduleTodayApi() {
         MutableLiveData<com.example.javatraining.data.remote.response.ScheduleData> result = new MutableLiveData<>();
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getScheduleToday().enqueue(new retrofit2.Callback<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>>() {
+        apiService.getScheduleToday().enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.ScheduleData>>() {
             @Override
-            public void onResponse(retrofit2.Call<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.ScheduleData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    result.setValue(response.body().get(0));
                 } else {
                     result.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
                 result.setValue(null);
             }
         });
@@ -186,19 +189,22 @@ public class AbsensiTMRepository {
 
     public LiveData<com.example.javatraining.data.remote.response.EmployeeData> getProfileApi() {
         MutableLiveData<com.example.javatraining.data.remote.response.EmployeeData> data = new MutableLiveData<>();
+        SessionManager sm = new SessionManager(application);
+        String email = sm.getUser() != null ? sm.getUser().getEmail() : "";
+
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getProfile().enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>>() {
+        apiService.getProfile(email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    data.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.EmployeeData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    data.setValue(response.body().get(0));
                 } else {
                     data.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
                 data.setValue(null);
             }
         });

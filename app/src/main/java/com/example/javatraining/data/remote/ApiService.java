@@ -25,40 +25,39 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
-    @POST("mobile/auth/login")
-    Call<BaseResponse<LoginData>> login(@Body LoginRequest request);
+    @POST("auth/v1/token?grant_type=password")
+    Call<LoginData> login(@Body LoginRequest request);
 
-    @GET("mobile/profile")
-    Call<BaseResponse<EmployeeData>> getProfile();
+    @GET("rest/v1/employees?select=*")
+    Call<List<EmployeeData>> getProfile(@Query("email") String email);
 
-    @GET("mobile/attendance/history")
-    Call<PaginatedResponse<AttendanceData>> getAttendances(
-            @Query("page") Integer page,
+    @GET("rest/v1/attendance_events?select=*,employees(*)&order=detected_at.desc")
+    Call<List<AttendanceData>> getAttendances(
+            @Query("employee_id") String employeeId,
             @Query("limit") Integer limit
     );
 
-    @GET("mobile/schedule/today")
-    Call<BaseResponse<ScheduleData>> getScheduleToday();
+    @GET("rest/v1/schedule?select=*")
+    Call<List<ScheduleData>> getScheduleToday();
 
-    @PATCH("mobile/device-token")
-    Call<BaseResponse<EmployeeData>> updateFcmToken(
+    @PATCH("rest/v1/employees")
+    Call<Void> updateFcmToken(
+            @Query("email") String email,
             @Body FcmTokenRequest request
     );
 
     @Multipart
-    @POST("mobile/attendance")
-    Call<BaseResponse<AttendanceData>> submitManualAttendance(
+    @POST("rest/v1/attendance_events")
+    Call<Void> submitManualAttendance(
             @Part MultipartBody.Part photo,
-            @Part("eventType") RequestBody eventType,
-            @Part("location") RequestBody location,
-            @Part("reason") RequestBody reason,
-            @Part("status") RequestBody status,
-            @Part("time") RequestBody time
+            @Part("event_type") RequestBody eventType,
+            @Part("employee_id") RequestBody employeeId,
+            @Part("direction") RequestBody direction
     );
 
-    @GET("mobile/notifications")
-    Call<BaseResponse<List<NotificationData>>> getNotifications();
+    @GET("rest/v1/notifications?select=*")
+    Call<List<NotificationData>> getNotifications();
 
-    @PATCH("mobile/notifications/{id}/read")
-    Call<BaseResponse<NotificationData>> readNotification(@Path("id") String id);
+    @PATCH("rest/v1/notifications")
+    Call<Void> readNotification(@Query("id") String id, @Body RequestBody body);
 }

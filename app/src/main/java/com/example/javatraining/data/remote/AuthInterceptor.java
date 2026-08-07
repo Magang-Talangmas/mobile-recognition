@@ -24,9 +24,14 @@ public class AuthInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request.Builder requestBuilder = chain.request().newBuilder();
 
+        String anonKey = com.example.javatraining.BuildConfig.SUPABASE_ANON_KEY;
+        requestBuilder.addHeader("apikey", anonKey);
+
         String token = sessionManager.getToken();
         if (token != null && !token.isEmpty()) {
             requestBuilder.addHeader("Authorization", "Bearer " + token);
+        } else {
+            requestBuilder.addHeader("Authorization", "Bearer " + anonKey);
         }
 
         return chain.proceed(requestBuilder.build());

@@ -17,16 +17,14 @@ public class ApiClient {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             AuthInterceptor authInterceptor = new AuthInterceptor(context);
-            MockInterceptor mockInterceptor = new MockInterceptor();
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
-                    .addInterceptor(mockInterceptor)
                     .addInterceptor(authInterceptor)
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BuildConfig.API_BASE_URL)
+                    .baseUrl(BuildConfig.SUPABASE_URL)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

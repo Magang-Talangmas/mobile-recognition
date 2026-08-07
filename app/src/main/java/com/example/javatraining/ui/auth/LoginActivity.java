@@ -136,13 +136,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     String token = task.getResult();
                     ApiService apiService = ApiClient.getClient(LoginActivity.this).create(ApiService.class);
-                    apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+                    apiService.updateFcmToken(email, new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             Log.d("LoginActivity", "FCM Token updated successfully");
                         }
                         @Override
-                        public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.e("LoginActivity", "FCM Token update failed", t);
                         }
                     });

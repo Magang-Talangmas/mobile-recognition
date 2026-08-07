@@ -4,10 +4,10 @@ import com.example.javatraining.data.model.User;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginData {
-    @SerializedName("token")
+    @SerializedName("access_token")
     private String token;
 
-    @SerializedName("employee")
+    @SerializedName("user")
     private User employee;
 
     public String getToken() {
