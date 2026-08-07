@@ -102,6 +102,27 @@ public class WelcomeActivity extends AppCompatActivity {
             child.setTranslationY(50f);
         }
 
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    vDimOverlay.animate().alpha(0f).setDuration(300)
+                        .withEndAction(() -> vDimOverlay.setVisibility(View.GONE)).start();
+                    clWelcomeContent.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset >= 0) {
+                    vDimOverlay.setAlpha(slideOffset);
+                    float scale = 1f - (0.06f * slideOffset);
+                    clWelcomeContent.setScaleX(scale);
+                    clWelcomeContent.setScaleY(scale);
+                }
+            }
+        });
+
         // --- Animations & Interactions ---
 
         btnGetStartedContainer.setOnClickListener(v -> {
@@ -111,18 +132,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
             // Sequence Timeline
             vDimOverlay.setVisibility(View.VISIBLE);
-            vDimOverlay.animate().alpha(1f).setDuration(300).start();
             
-            clWelcomeContent.animate()
-                .scaleX(0.94f).scaleY(0.94f)
-                .setDuration(400)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
-
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 triggerBottomSheetStagger();
-            }, 300);
+            }, 100);
         });
 
         // Toggle Password
@@ -208,8 +222,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void handleLoginSuccess() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        vDimOverlay.animate().alpha(0f).setDuration(400).start();
-        clWelcomeContent.animate().scaleX(1f).scaleY(1f).setDuration(400).start();
         
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
@@ -273,8 +285,6 @@ public class WelcomeActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            vDimOverlay.animate().alpha(0f).setDuration(300).start();
-            clWelcomeContent.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
         } else {
             super.onBackPressed();
         }
