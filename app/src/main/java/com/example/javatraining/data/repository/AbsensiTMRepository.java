@@ -54,9 +54,28 @@ public class AbsensiTMRepository {
                     com.example.javatraining.data.remote.response.LoginData data = response.body();
                     
                     SessionManager sessionManager = new SessionManager(application);
+                    // Temporarily save to inject token for the next request
                     sessionManager.saveSession(data.getToken(), data.getEmployee());
                     
-                    result.setValue(data.getEmployee());
+                    apiService.getProfile(email).enqueue(new retrofit2.Callback<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> profileResponse) {
+                            if (profileResponse.isSuccessful() && profileResponse.body() != null && !profileResponse.body().isEmpty()) {
+                                com.example.javatraining.data.remote.response.EmployeeData empData = profileResponse.body().get(0);
+                                String role = data.getEmployee() != null ? data.getEmployee().getRole() : "EMPLOYEE";
+                                User realUser = new User(empData.getId(), empData.getName(), empData.getEmail(), role, "", "");
+                                sessionManager.saveSession(data.getToken(), realUser);
+                                result.setValue(realUser);
+                            } else {
+                                result.setValue(data.getEmployee());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<java.util.List<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
+                            result.setValue(data.getEmployee());
+                        }
+                    });
                 } else {
                     try {
                         String errBody = response.errorBody() != null ? response.errorBody().string() : "null";
