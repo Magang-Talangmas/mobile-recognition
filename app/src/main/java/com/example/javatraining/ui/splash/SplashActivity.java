@@ -29,8 +29,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
-        ImageView ivOrbit = findViewById(R.id.ivOrbit);
-        View vGlow = findViewById(R.id.vGlow);
         TextView tvCompanyName = findViewById(R.id.tvCompanyName);
         TextView tvAppName = findViewById(R.id.tvAppName);
 
@@ -40,35 +38,6 @@ public class SplashActivity extends AppCompatActivity {
             .setDuration(600)
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
-
-        // Sequence: Glow Appears & Pulses (300ms -> 1300ms)
-        vGlow.animate()
-            .alpha(1f)
-            .setStartDelay(300)
-            .setDuration(1000)
-            .withEndAction(() -> {
-                ObjectAnimator glowPulse = ObjectAnimator.ofPropertyValuesHolder(
-                    vGlow,
-                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.5f, 1.6f, 1.5f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.5f, 1.6f, 1.5f)
-                );
-                glowPulse.setDuration(2000);
-                glowPulse.setRepeatCount(ObjectAnimator.INFINITE);
-                glowPulse.start();
-            }).start();
-
-        // Sequence: Orbit fades in and rotates (400ms -> Infinite)
-        ivOrbit.animate()
-            .alpha(1f)
-            .setStartDelay(400)
-            .setDuration(600)
-            .withEndAction(() -> {
-                ObjectAnimator orbitRot = ObjectAnimator.ofFloat(ivOrbit, View.ROTATION, 0f, 360f);
-                orbitRot.setDuration(6000);
-                orbitRot.setRepeatCount(ObjectAnimator.INFINITE);
-                orbitRot.setInterpolator(new LinearInterpolator());
-                orbitRot.start();
-            }).start();
 
         // Sequence: Company Name Appears (900ms -> 1500ms)
         tvCompanyName.setTranslationY(20f);

@@ -17,26 +17,6 @@
         app:layout_constraintVertical_chainStyle="packed"
         android:layout_marginBottom="48dp">
 
-        <!-- Glowing background behind logo -->
-        <View
-            android:id="@+id/vGlow"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_circle_inverse"
-            android:backgroundTint="#20FEB300"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:alpha="0"/>
-
-        <!-- Orbit Ring -->
-        <ImageView
-            android:id="@+id/ivOrbit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_golden_orbit"
-            android:alpha="0"/>
-
         <!-- Main Logo -->
         <ImageView
             android:id="@+id/ivSplashLogo"

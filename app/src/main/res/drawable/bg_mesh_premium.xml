@@ -18,14 +18,4 @@
         </shape>
     </item>
 
-    <!-- Bottom right subtle yellow gradient -->
-    <item android:top="200dp" android:left="100dp" android:right="-50dp" android:bottom="-50dp">
-        <shape android:shape="oval">
-            <gradient
-                android:type="radial"
-                android:gradientRadius="400dp"
-                android:startColor="#20feb300"
-                android:endColor="#00feb300" />
-        </shape>
-    </item>
 </layer-list>
