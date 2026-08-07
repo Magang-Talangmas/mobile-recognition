@@ -47,14 +47,16 @@
         android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Talang Attendance"
-        android:textColor="#454652"
-        android:textSize="24sp"
+        android:text="Attendance App"
+        android:textColor="#333333"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        android:alpha="0"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCompanyName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCompanyName"
+        android:layout_marginBottom="64dp"
+        android:alpha="0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
