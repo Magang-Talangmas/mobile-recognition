@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
             com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(ProfileActivity.this);
             sessionManager.clearSession();
             // Logout logic
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, com.example.javatraining.ui.auth.WelcomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });

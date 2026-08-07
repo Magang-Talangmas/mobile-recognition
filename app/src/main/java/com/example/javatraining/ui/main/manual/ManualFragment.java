@@ -203,7 +203,7 @@ public class ManualFragment extends Fragment {
             String empId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
             
             String directionStr = isCheckIn ? "IN" : "OUT";
-            String statusStr = "PENDING_CONFIRMATION";
+            String statusStr = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
             
             com.example.javatraining.data.remote.request.ManualAttendanceRequest request = 
                 new com.example.javatraining.data.remote.request.ManualAttendanceRequest(

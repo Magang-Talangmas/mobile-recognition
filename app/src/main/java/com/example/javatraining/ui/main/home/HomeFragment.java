@@ -81,6 +81,13 @@ public class HomeFragment extends Fragment {
             });
         }
 
+        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                loadDataAndRefreshUI(view);
+            });
+        }
+
         loadDataAndRefreshUI(view);
     }
     
@@ -105,12 +112,10 @@ public class HomeFragment extends Fragment {
             public void onChanged(List<AttendanceData> attendanceDataList) {
                 if (attendanceDataList != null) {
                     List<AttendanceEvent> userLogs = new ArrayList<>();
-                    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                    isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                     
                     for (AttendanceData data : attendanceDataList) {
                         try {
-                            Date detectedAt = isoFormat.parse(data.getTimestamp());
+                            Date detectedAt = parseIsoDate(data.getTimestamp());
                             if (detectedAt != null) {
                                 userLogs.add(new AttendanceEvent(
                                         0, data.getCameraId(), 0, data.getEmployeeId(), null,
@@ -127,6 +132,11 @@ public class HomeFragment extends Fragment {
                     
                     // Update UI with logs
                     updateDashboard(view, userLogs);
+                }
+                
+                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
@@ -203,5 +213,25 @@ public class HomeFragment extends Fragment {
         } else {
             activityAdapter.updateData(userLogs);
         }
+    }
+
+    private Date parseIsoDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        String[] formats = {
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SSS",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss"
+        };
+        for (String fmt : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.getDefault());
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                Date d = sdf.parse(dateStr);
+                if (d != null) return d;
+            } catch (Exception ignored) {}
+        }
+        return null;
     }
 }

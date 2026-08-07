@@ -66,6 +66,14 @@ public class HistoryFragment extends Fragment {
         rvHistory.setAdapter(adapter);
 
         repository = new AbsensiTMRepository(requireActivity().getApplication());
+        
+        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                fetchAttendanceHistory();
+            });
+        }
+
         fetchAttendanceHistory();
 
         View ivProfile = view.findViewById(R.id.ivProfile);
@@ -129,6 +137,10 @@ public class HistoryFragment extends Fragment {
                     allLogs = attendanceDataList;
                     applyFilter();
                 }
+                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null ? getView().findViewById(R.id.swipeRefreshLayout) : null;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -146,7 +158,7 @@ public class HistoryFragment extends Fragment {
         for (AttendanceData p : allLogs) {
             if (p.getTimestamp() != null) {
                 try {
-                    Date detectedAt = isoFormat.parse(p.getTimestamp());
+                    Date detectedAt = parseIsoDate(p.getTimestamp());
                     if (detectedAt != null) {
                         Calendar pCal = Calendar.getInstance();
                         pCal.setTime(detectedAt);
@@ -192,5 +204,25 @@ public class HistoryFragment extends Fragment {
         if (rvHistory != null) {
             rvHistory.scheduleLayoutAnimation();
         }
+    }
+
+    private Date parseIsoDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        String[] formats = {
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SSS",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss"
+        };
+        for (String fmt : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.getDefault());
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                Date d = sdf.parse(dateStr);
+                if (d != null) return d;
+            } catch (Exception ignored) {}
+        }
+        return null;
     }
 }

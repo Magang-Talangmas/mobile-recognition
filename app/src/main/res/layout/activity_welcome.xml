@@ -256,7 +256,7 @@
                         android:id="@+id/ivTogglePassword"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_eye_off"
+                        android:src="@drawable/ic_eye"
                         app:tint="#767683" />
                 </LinearLayout>
 
