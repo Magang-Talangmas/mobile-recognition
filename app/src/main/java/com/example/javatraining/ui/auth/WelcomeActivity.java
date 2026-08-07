@@ -31,6 +31,8 @@ import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.javatraining.R;
+import com.example.javatraining.data.local.SessionManager;
+import com.example.javatraining.data.model.User;
 import com.example.javatraining.data.remote.ApiClient;
 import com.example.javatraining.data.remote.ApiService;
 import com.example.javatraining.data.remote.request.FcmTokenRequest;
@@ -278,11 +280,13 @@ public class WelcomeActivity extends AppCompatActivity {
             if (!task.isSuccessful()) return;
             String token = task.getResult();
             ApiService apiService = ApiClient.getClient(WelcomeActivity.this).create(ApiService.class);
-            apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+            SessionManager sessionManager = new SessionManager(WelcomeActivity.this);
+            String email = sessionManager.getUser() != null ? sessionManager.getUser().getEmail() : "";
+            apiService.updateFcmToken(email, new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {}
+                public void onResponse(Call<Void> call, Response<Void> response) {}
                 @Override
-                public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {}
+                public void onFailure(Call<Void> call, Throwable t) {}
             });
         });
     }

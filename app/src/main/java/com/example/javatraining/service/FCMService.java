@@ -63,10 +63,10 @@ public class FCMService extends FirebaseMessagingService {
             return;
         }
         ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
-        apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+        apiService.updateFcmToken(user.getEmail(), new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
                     Log.d(TAG, "FCM Token updated on server successfully");
                 } else {
                     Log.e(TAG, "Failed to update FCM Token: " + response.code());
@@ -74,7 +74,7 @@ public class FCMService extends FirebaseMessagingService {
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.e(TAG, "Error updating FCM Token", t);
             }
         });

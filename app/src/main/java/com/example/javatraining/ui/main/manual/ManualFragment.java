@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.javatraining.data.local.SessionManager;
 import com.example.javatraining.data.remote.ApiClient;
 import com.example.javatraining.data.remote.ApiService;
 import com.example.javatraining.data.remote.request.ManualAttendanceRequest;
@@ -213,11 +214,18 @@ public class ManualFragment extends Fragment {
                 photoPart = okhttp3.MultipartBody.Part.createFormData("photo", currentPhotoFile.getName(), requestFile);
             }
 
+            SessionManager sessionManager = new SessionManager(getContext());
+            String empId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
+            okhttp3.RequestBody empIdBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), empId);
+            
+            // For now map direction to status 
+            okhttp3.RequestBody directionBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), status);
+
             ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-            apiService.submitManualAttendance(photoPart, eventTypeBody, locationBody, reasonBody, statusBody, timeBody).enqueue(new Callback<BaseResponse<AttendanceData>>() {
+            apiService.submitManualAttendance(photoPart, eventTypeBody, empIdBody, directionBody).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<BaseResponse<AttendanceData>> call, Response<BaseResponse<AttendanceData>> response) {
-                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
                         formContainer.setVisibility(View.GONE);
                         successState.setVisibility(View.VISIBLE);
                         
@@ -241,7 +249,7 @@ public class ManualFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<BaseResponse<AttendanceData>> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     btnSubmit.setText("Submit Request");
                     btnSubmit.setEnabled(true);
@@ -257,11 +265,13 @@ public class ManualFragment extends Fragment {
         successState.setVisibility(View.GONE);
         
         ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-        apiService.getAttendances(1, 1).enqueue(new Callback<PaginatedResponse<AttendanceData>>() {
+        SessionManager sm = new SessionManager(getContext());
+        String empId = sm.getUser() != null ? sm.getUser().getId() : "";
+        apiService.getAttendances(empId, 1).enqueue(new Callback<List<AttendanceData>>() {
             @Override
-            public void onResponse(Call<PaginatedResponse<AttendanceData>> call, Response<PaginatedResponse<AttendanceData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null && !response.body().getData().isEmpty()) {
-                    AttendanceData latest = response.body().getData().get(0);
+            public void onResponse(Call<List<AttendanceData>> call, Response<List<AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    AttendanceData latest = response.body().get(0);
                     
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     String todayStr = sdf.format(Calendar.getInstance().getTime());
@@ -283,8 +293,12 @@ public class ManualFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResponse<AttendanceData>> call, Throwable t) {
+            public void onFailure(Call<List<AttendanceData>> call, Throwable t) {
                 loadingState.setVisibility(View.GONE);
+                formContainer.setVisibility(View.VISIBLE);
+                
+                isCheckIn = true;
+                setCheckInState();
             }
         });
     }
