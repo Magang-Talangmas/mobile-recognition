@@ -235,7 +235,14 @@ public class ManualFragment extends Fragment {
                             ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
                         }
                     } else {
-                        Toast.makeText(getContext(), "Gagal submit manual attendance", Toast.LENGTH_SHORT).show();
+                        String errorMsg = "Gagal: " + response.code();
+                        try {
+                            if (response.errorBody() != null) {
+                                errorMsg += " - " + response.errorBody().string();
+                            }
+                        } catch (Exception e) {}
+                        android.util.Log.e("MANUAL_ATTENDANCE", errorMsg);
+                        Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                         btnSubmit.setText("Submit Request");
                         btnSubmit.setEnabled(true);
                     }
