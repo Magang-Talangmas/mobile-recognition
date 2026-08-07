@@ -216,22 +216,40 @@ public class HomeFragment extends Fragment {
     }
 
     private Date parseIsoDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
+        if (dateStr == null || dateStr.trim().isEmpty()) return null;
+        String raw = dateStr.trim();
+        String normalized = raw.replace(" ", "T");
+        
         String[] formats = {
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+            "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
+            "yyyy-MM-dd'T'HH:mm:ss.SXXX",
+            "yyyy-MM-dd'T'HH:mm:ssXXX",
             "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
             "yyyy-MM-dd'T'HH:mm:ss.SSS",
             "yyyy-MM-dd'T'HH:mm:ss'Z'",
             "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd HH:mm:ss"
+            "yyyy-MM-dd HH:mm:ss.SSS",
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd"
         };
+        
         for (String fmt : formats) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
                 sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-                Date d = sdf.parse(dateStr);
+                Date d = sdf.parse(raw);
+                if (d != null) return d;
+            } catch (Exception ignored) {}
+            
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                Date d = sdf.parse(normalized);
                 if (d != null) return d;
             } catch (Exception ignored) {}
         }
-        return null;
+        return new Date();
     }
 }

@@ -165,22 +165,24 @@ public class AbsensiTMRepository {
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
         SessionManager sm = new SessionManager(application);
-        String employeeId = sm.getUser() != null ? sm.getUser().getId() : "";
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        
+        String filter = (employeeId != null && !employeeId.trim().isEmpty()) ? "eq." + employeeId : null;
         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances("eq." + employeeId, perPage).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
+        apiService.getAttendances(filter, perPage).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
             @Override
             public void onResponse(retrofit2.Call<List<AttendanceData>> call, retrofit2.Response<List<AttendanceData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {
-                    result.setValue(null);
+                    result.setValue(new ArrayList<>());
                 }
             }
 
             @Override
             public void onFailure(retrofit2.Call<List<AttendanceData>> call, Throwable t) {
-                result.setValue(null);
+                result.setValue(new ArrayList<>());
             }
         });
         return result;
