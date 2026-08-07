@@ -35,11 +35,11 @@
         android:textColor="#333333"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/pbSplashLoading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCompanyName"
+        app:layout_constraintTop_toBottomOf="@+id/flLogoContainer"
+        android:layout_marginBottom="24dp"
         android:alpha="0"/>
 
     <ProgressBar
@@ -47,11 +47,9 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:indeterminateTint="#000666"
-        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvAppName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:alpha="0"/>
 
