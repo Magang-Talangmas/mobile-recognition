@@ -1,9 +1,16 @@
 package com.example.javatraining.ui.splash;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,35 +24,77 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Hide Action Bar if present
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        android.widget.ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
-        android.widget.TextView tvCompanyName = findViewById(R.id.tvCompanyName);
-        android.widget.TextView tvSubtitle = findViewById(R.id.tvSubtitle);
-        android.widget.ProgressBar progressBar = findViewById(R.id.progressBar);
+        ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
+        ImageView ivOrbit = findViewById(R.id.ivOrbit);
+        View vGlow = findViewById(R.id.vGlow);
+        TextView tvCompanyName = findViewById(R.id.tvCompanyName);
+        TextView tvAppName = findViewById(R.id.tvAppName);
 
-        if (ivSplashLogo != null && tvCompanyName != null && tvSubtitle != null && progressBar != null) {
-            ivSplashLogo.setAlpha(0f);
-            ivSplashLogo.setScaleX(0.8f);
-            ivSplashLogo.setScaleY(0.8f);
-            tvCompanyName.setAlpha(0f);
-            tvSubtitle.setAlpha(0f);
-            progressBar.setAlpha(0f);
+        // Sequence: Logo Fade In (0ms -> 600ms)
+        ivSplashLogo.animate()
+            .alpha(1f)
+            .setDuration(600)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
 
-            ivSplashLogo.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(1000).start();
-            tvCompanyName.animate().alpha(1f).setDuration(1000).setStartDelay(300).start();
-            tvSubtitle.animate().alpha(1f).setDuration(1000).setStartDelay(600).start();
-            progressBar.animate().alpha(1f).setDuration(1000).setStartDelay(900).start();
-        }
+        // Sequence: Glow Appears & Pulses (300ms -> 1300ms)
+        vGlow.animate()
+            .alpha(1f)
+            .setStartDelay(300)
+            .setDuration(1000)
+            .withEndAction(() -> {
+                ObjectAnimator glowPulse = ObjectAnimator.ofPropertyValuesHolder(
+                    vGlow,
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.5f, 1.6f, 1.5f),
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.5f, 1.6f, 1.5f)
+                );
+                glowPulse.setDuration(2000);
+                glowPulse.setRepeatCount(ObjectAnimator.INFINITE);
+                glowPulse.start();
+            }).start();
 
-        // Wait for 2 seconds (loading), then move to WelcomeActivity
+        // Sequence: Orbit fades in and rotates (400ms -> Infinite)
+        ivOrbit.animate()
+            .alpha(1f)
+            .setStartDelay(400)
+            .setDuration(600)
+            .withEndAction(() -> {
+                ObjectAnimator orbitRot = ObjectAnimator.ofFloat(ivOrbit, View.ROTATION, 0f, 360f);
+                orbitRot.setDuration(6000);
+                orbitRot.setRepeatCount(ObjectAnimator.INFINITE);
+                orbitRot.setInterpolator(new LinearInterpolator());
+                orbitRot.start();
+            }).start();
+
+        // Sequence: Company Name Appears (900ms -> 1500ms)
+        tvCompanyName.setTranslationY(20f);
+        tvCompanyName.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setStartDelay(900)
+            .setDuration(600)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
+
+        // Sequence: App Name Fades In (1200ms -> 1800ms)
+        tvAppName.setTranslationY(20f);
+        tvAppName.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setStartDelay(1200)
+            .setDuration(600)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
+
+        // Transition to Welcome after 2500ms
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
-        }, 2000);
+        }, 2800);
     }
 }
