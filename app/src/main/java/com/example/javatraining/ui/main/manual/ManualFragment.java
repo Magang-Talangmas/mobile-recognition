@@ -202,14 +202,19 @@ public class ManualFragment extends Fragment {
             String location = "Menara Thamrin, Jakarta"; // Dummy location
 
             okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), eventType);
+            okhttp3.RequestBody locationBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), location);
+            okhttp3.RequestBody reasonBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), reason);
+            okhttp3.RequestBody statusBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), status);
+            okhttp3.RequestBody timeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), combinedTime);
+
             okhttp3.MultipartBody.Part photoPart = null;
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
                 okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), currentPhotoFile);
-                photoPart = okhttp3.MultipartBody.Part.createFormData("photos", currentPhotoFile.getName(), requestFile);
+                photoPart = okhttp3.MultipartBody.Part.createFormData("photo", currentPhotoFile.getName(), requestFile);
             }
 
             ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-            apiService.submitManualAttendance(photoPart, eventTypeBody).enqueue(new Callback<BaseResponse<AttendanceData>>() {
+            apiService.submitManualAttendance(photoPart, eventTypeBody, locationBody, reasonBody, statusBody, timeBody).enqueue(new Callback<BaseResponse<AttendanceData>>() {
                 @Override
                 public void onResponse(Call<BaseResponse<AttendanceData>> call, Response<BaseResponse<AttendanceData>> response) {
                     if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {

@@ -48,8 +48,12 @@ public interface ApiService {
     @Multipart
     @POST("mobile/attendance")
     Call<BaseResponse<AttendanceData>> submitManualAttendance(
-            @Part MultipartBody.Part photos,
-            @Part("eventType") RequestBody eventType
+            @Part MultipartBody.Part photo,
+            @Part("eventType") RequestBody eventType,
+            @Part("location") RequestBody location,
+            @Part("reason") RequestBody reason,
+            @Part("status") RequestBody status,
+            @Part("time") RequestBody time
     );
 
     @GET("mobile/notifications")
