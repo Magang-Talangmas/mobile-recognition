@@ -28,8 +28,19 @@ public class ProfileActivity extends AppCompatActivity {
                     
                     if (user.getPosition() != null && user.getDepartment() != null) {
                         tvProfileEmail.setText(user.getPosition() + " • " + user.getDepartment());
+                    } else if (user.getPosition() != null) {
+                        tvProfileEmail.setText(user.getPosition());
                     } else {
                         tvProfileEmail.setText(user.getEmail());
+                    }
+                    
+                    android.widget.TextView tvProfileEmpId = findViewById(R.id.tvProfileEmpId);
+                    if (tvProfileEmpId != null && user.getId() != null) {
+                        String displayId = user.getId();
+                        if (displayId.length() > 8) {
+                            displayId = displayId.substring(0, 8).toUpperCase();
+                        }
+                        tvProfileEmpId.setText(displayId);
                     }
                     
                     // You could add faceRegistered check here if needed

@@ -213,7 +213,7 @@ public class AbsensiTMRepository {
         String email = sm.getUser() != null ? sm.getUser().getEmail() : "";
 
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getProfile(email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
+        apiService.getProfile("eq." + email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
             @Override
             public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.EmployeeData>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
