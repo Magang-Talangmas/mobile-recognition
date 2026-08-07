@@ -17,9 +17,11 @@ public class ApiClient {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             AuthInterceptor authInterceptor = new AuthInterceptor(context);
+            MockInterceptor mockInterceptor = new MockInterceptor();
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
+                    .addInterceptor(mockInterceptor)
                     .addInterceptor(authInterceptor)
                     .build();
 

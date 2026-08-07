@@ -53,4 +53,13 @@ public class AttendanceEvent {
     public void setEmployeeResponse(String employeeResponse) { this.employeeResponse = employeeResponse; }
     public void setRespondedAt(Date respondedAt) { this.respondedAt = respondedAt; }
     public void setEventType(LogType eventType) { this.eventType = eventType; }
+
+    private boolean isLate;
+    private String confirmationStatus;
+
+    public boolean isLate() { return isLate; }
+    public void setLate(boolean late) { isLate = late; }
+    
+    public String getConfirmationStatus() { return confirmationStatus; }
+    public void setConfirmationStatus(String confirmationStatus) { this.confirmationStatus = confirmationStatus; }
 }

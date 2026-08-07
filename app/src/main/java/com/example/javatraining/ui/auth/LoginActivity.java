@@ -66,9 +66,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 Toast.makeText(getApplicationContext(),
-                        "Biometrik terverifikasi!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                        "Biometrik terverifikasi! Masuk Mode Dummy...", Toast.LENGTH_SHORT).show();
+                performLogin("dummy@test.com", "dummy");
             }
 
             @Override
@@ -118,40 +117,43 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            viewModel.login(email, password).observe(this, user -> {
-                if (user != null) {
-                    Toast.makeText(this, "Welcome " + user.getName(), Toast.LENGTH_SHORT).show();
-                    
-                    // Upload FCM Token
-                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                        if (!task.isSuccessful()) {
-                            Log.w("LoginActivity", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-                        ApiService apiService = ApiClient.getClient(LoginActivity.this).create(ApiService.class);
-                        apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
-                            @Override
-                            public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
-                                Log.d("LoginActivity", "FCM Token updated successfully");
-                            }
-                            @Override
-                            public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
-                                Log.e("LoginActivity", "FCM Token update failed", t);
-                            }
-                        });
-                    });
-
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+            performLogin(email, password);
         });
 
         // tvForgotPassword removed in new sci-fi design
+    }
+
+    private void performLogin(String email, String password) {
+        viewModel.login(email, password).observe(this, user -> {
+            if (user != null) {
+                Toast.makeText(this, "Welcome " + user.getName(), Toast.LENGTH_SHORT).show();
+                
+                // Upload FCM Token
+                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("LoginActivity", "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+                    String token = task.getResult();
+                    ApiService apiService = ApiClient.getClient(LoginActivity.this).create(ApiService.class);
+                    apiService.updateFcmToken(new FcmTokenRequest(token)).enqueue(new Callback<BaseResponse<EmployeeData>>() {
+                        @Override
+                        public void onResponse(Call<BaseResponse<EmployeeData>> call, Response<BaseResponse<EmployeeData>> response) {
+                            Log.d("LoginActivity", "FCM Token updated successfully");
+                        }
+                        @Override
+                        public void onFailure(Call<BaseResponse<EmployeeData>> call, Throwable t) {
+                            Log.e("LoginActivity", "FCM Token update failed", t);
+                        }
+                    });
+                });
+
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            } else {
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

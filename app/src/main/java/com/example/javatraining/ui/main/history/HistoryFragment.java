@@ -167,6 +167,8 @@ public class HistoryFragment extends Fragment {
                                 p.getSimilarity() != null ? p.getSimilarity() : 0.0,
                                 null, null, detectedAt, detectedAt, null
                             );
+                            event.setLate(p.getIsLate());
+                            event.setConfirmationStatus(p.getConfirmationStatus());
                             
                             if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
                                 daily.setCheckInEvent(event);

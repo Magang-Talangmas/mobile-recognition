@@ -6,17 +6,17 @@ public class ScheduleData {
     @SerializedName("id")
     private String id;
     
-    @SerializedName("shiftName")
-    private String shiftName;
+    @SerializedName("name")
+    private String name;
     
-    @SerializedName("startTime")
-    private String startTime;
+    @SerializedName("checkInTime")
+    private String checkInTime;
     
-    @SerializedName("endTime")
-    private String endTime;
+    @SerializedName("checkOutTime")
+    private String checkOutTime;
 
     public String getId() { return id; }
-    public String getShiftName() { return shiftName; }
-    public String getStartTime() { return startTime; }
-    public String getEndTime() { return endTime; }
+    public String getName() { return name; }
+    public String getCheckInTime() { return checkInTime; }
+    public String getCheckOutTime() { return checkOutTime; }
 }

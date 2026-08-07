@@ -61,11 +61,11 @@ public class HomeFragment extends Fragment {
 
         // Initial Staggered Entry Animation for Cards
         View cvStatusCard = view.findViewById(R.id.cvStatusCard);
-        View llStatsGrid = view.findViewById(R.id.llStatsGrid);
+        View cvScheduleCard = view.findViewById(R.id.cvScheduleCard);
         
-        if (cvStatusCard != null && llStatsGrid != null) {
+        if (cvStatusCard != null && cvScheduleCard != null) {
             cvStatusCard.setVisibility(View.INVISIBLE);
-            llStatsGrid.setVisibility(View.INVISIBLE);
+            cvScheduleCard.setVisibility(View.INVISIBLE);
             
             Animation anim1 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
             Animation anim2 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
@@ -75,9 +75,9 @@ public class HomeFragment extends Fragment {
                 cvStatusCard.setVisibility(View.VISIBLE);
                 cvStatusCard.startAnimation(anim1);
             });
-            llStatsGrid.post(() -> {
-                llStatsGrid.setVisibility(View.VISIBLE);
-                llStatsGrid.startAnimation(anim2);
+            cvScheduleCard.post(() -> {
+                cvScheduleCard.setVisibility(View.VISIBLE);
+                cvScheduleCard.startAnimation(anim2);
             });
         }
 
@@ -131,11 +131,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Fetch Today's Schedule (API logic kept, UI update removed for now)
+        // Fetch Today's Schedule
         repository.getScheduleTodayApi().observe(getViewLifecycleOwner(), new Observer<ScheduleData>() {
             @Override
             public void onChanged(ScheduleData scheduleData) {
-                // TODO: Update Stats Grid (Work Hours, On-Time %) with real data here in the future
+                if (scheduleData != null) {
+                    TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
+                    TextView tvScheduleName = view.findViewById(R.id.tvScheduleName);
+                    
+                    if (tvScheduleTime != null && tvScheduleName != null) {
+                        tvScheduleTime.setText(scheduleData.getCheckInTime() + " - " + scheduleData.getCheckOutTime());
+                        tvScheduleName.setText(scheduleData.getName());
+                    }
+                }
             }
         });
 

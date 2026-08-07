@@ -57,15 +57,35 @@ public class AbsensiTMRepository {
                     sessionManager.saveSession(data.getToken(), data.getEmployee());
                     
                     result.setValue(data.getEmployee());
-                    
-                    initMockAttendanceData();
                 } else {
+                    try {
+                        String errBody = response.errorBody() != null ? response.errorBody().string() : "null";
+                        android.util.Log.e("LOGIN_ERROR", "Code: " + response.code() + ", Body: " + errBody);
+                        
+                        // Parse the error message if possible
+                        String displayMsg = "Login Failed: " + response.code();
+                        if (errBody.contains("message")) {
+                            try {
+                                org.json.JSONObject jObjError = new org.json.JSONObject(errBody);
+                                displayMsg = jObjError.getString("message");
+                            } catch (Exception e) {}
+                        }
+                        
+                        final String finalMsg = displayMsg;
+                        mainThreadHandler.post(() -> {
+                            android.widget.Toast.makeText(application, finalMsg, android.widget.Toast.LENGTH_LONG).show();
+                        });
+                    } catch (Exception e) {}
                     result.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, Throwable t) {
+                android.util.Log.e("LOGIN_ERROR", "Exception: " + t.getMessage());
+                mainThreadHandler.post(() -> {
+                    android.widget.Toast.makeText(application, "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+                });
                 result.setValue(null);
             }
         });
@@ -162,5 +182,26 @@ public class AbsensiTMRepository {
             }
         });
         return result;
+    }
+
+    public LiveData<com.example.javatraining.data.remote.response.EmployeeData> getProfileApi() {
+        MutableLiveData<com.example.javatraining.data.remote.response.EmployeeData> data = new MutableLiveData<>();
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getProfile().enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    data.setValue(response.body().getData());
+                } else {
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
     }
 }

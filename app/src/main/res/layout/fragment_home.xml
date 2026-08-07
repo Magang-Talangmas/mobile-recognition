@@ -224,101 +224,66 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Stats Grid Section -->
-            <LinearLayout
-                android:id="@+id/llStatsGrid"
+            <!-- Schedule Today Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvScheduleCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/ent_surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="0dp">
 
-                <!-- Left Stat Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="@color/ent_surface"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp"
-                    app:strokeWidth="0dp">
-                    
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_schedule"
                             app:tint="@color/ent_primary"
-                            android:layout_marginBottom="8dp"/>
-                            
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Work Hours"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-                            
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="38.5h"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                            android:layout_marginEnd="12dp"/>
 
-                <!-- Right Stat Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardBackgroundColor="@color/ent_surface"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp"
-                    app:strokeWidth="0dp">
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Today's Schedule"
+                            android:textColor="@color/ent_text_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvScheduleTime"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        tools:text="08:00 - 17:00"
+                        android:textColor="@color/ent_primary"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="16dp"/>
                         
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_check_circle_outline"
-                            app:tint="@color/ent_success"
-                            android:layout_marginBottom="8dp"/>
-                            
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="On-Time %"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-                            
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="98%"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvScheduleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Reguler Pagi"
+                        android:textColor="@color/ent_text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Recent Activity Section -->
             <LinearLayout

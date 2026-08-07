@@ -102,10 +102,13 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         }
 
         // Status Badge Logic
-        if (inTime != null) {
-            Calendar inCal = Calendar.getInstance();
-            inCal.setTime(inTime);
-            if (inCal.get(Calendar.HOUR_OF_DAY) > 9 || (inCal.get(Calendar.HOUR_OF_DAY) == 9 && inCal.get(Calendar.MINUTE) > 0)) {
+        if (p.getCheckInEvent() != null) {
+            String confStatus = p.getCheckInEvent().getConfirmationStatus();
+            if ("PENDING".equalsIgnoreCase(confStatus)) {
+                holder.tvStatusBadge.setText("Pending");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray); // Need to make sure this drawable exists or fallback
+            } else if (p.getCheckInEvent().isLate()) {
                 // Late
                 holder.tvStatusBadge.setText("Late");
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706"));

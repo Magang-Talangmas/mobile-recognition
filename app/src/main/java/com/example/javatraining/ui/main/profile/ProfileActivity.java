@@ -17,17 +17,30 @@ public class ProfileActivity extends AppCompatActivity {
         ImageButton btnClose = findViewById(R.id.btnClose);
         btnClose.setOnClickListener(v -> finish());
         
-        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(this);
-        com.example.javatraining.data.model.User user = sessionManager.getUser();
-        if (user != null) {
-            android.widget.TextView tvProfileName = findViewById(R.id.tvProfileName);
-            android.widget.TextView tvProfileEmail = findViewById(R.id.tvProfileEmail);
-            tvProfileName.setText(user.getName());
-            tvProfileEmail.setText(user.getUsername());
-        }
+        com.example.javatraining.data.repository.AbsensiTMRepository repository = new com.example.javatraining.data.repository.AbsensiTMRepository(getApplication());
+        repository.getProfileApi().observe(this, new androidx.lifecycle.Observer<com.example.javatraining.data.remote.response.EmployeeData>() {
+            @Override
+            public void onChanged(com.example.javatraining.data.remote.response.EmployeeData user) {
+                if (user != null) {
+                    android.widget.TextView tvProfileName = findViewById(R.id.tvProfileName);
+                    android.widget.TextView tvProfileEmail = findViewById(R.id.tvProfileEmail);
+                    tvProfileName.setText(user.getName());
+                    
+                    if (user.getPosition() != null && user.getDepartment() != null) {
+                        tvProfileEmail.setText(user.getPosition() + " • " + user.getDepartment());
+                    } else {
+                        tvProfileEmail.setText(user.getEmail());
+                    }
+                    
+                    // You could add faceRegistered check here if needed
+                }
+            }
+        });
+
 
         android.widget.Button btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> {
+            com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(ProfileActivity.this);
             sessionManager.clearSession();
             // Logout logic
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
