@@ -23,12 +23,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
         ImageView ivLogo = findViewById(R.id.ivLogo);
         TextView tvWelcome = findViewById(R.id.tvWelcome);
+        TextView tvWelcome2 = findViewById(R.id.tvWelcome2);
         TextView tvSubtitle = findViewById(R.id.tvSubtitle);
         Button btnLogin = findViewById(R.id.btnLogin);
         View darkOverlay = findViewById(R.id.darkOverlay);
 
         // Set initial states for animation
-        View[] animatedViews = {ivLogo, tvWelcome, tvSubtitle, btnLogin};
+        View[] animatedViews = {ivLogo, tvWelcome, tvWelcome2, tvSubtitle, btnLogin};
         for (View v : animatedViews) {
             v.setAlpha(0f);
             v.setTranslationY(50f);
@@ -43,7 +44,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 .setDuration(600)
                 .setStartDelay(delay)
                 .start();
-            delay += 150;
+            delay += 100; // slightly faster delay
         }
 
         btnLogin.setOnClickListener(v -> {
