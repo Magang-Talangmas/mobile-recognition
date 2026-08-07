@@ -168,6 +168,12 @@ public class WelcomeActivity extends AppCompatActivity {
         long delay = 200; // Wait for sheet to slide up
         for (int i = 0; i < llFormContainer.getChildCount(); i++) {
             View child = llFormContainer.getChildAt(i);
+            
+            // Reset state before animating
+            child.setAlpha(0f);
+            child.setTranslationY(50f);
+            child.animate().cancel();
+            
             child.animate()
                 .alpha(1f)
                 .translationY(0f)

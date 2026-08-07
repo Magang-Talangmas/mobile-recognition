@@ -11,6 +11,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,6 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
         TextView tvCompanyName = findViewById(R.id.tvCompanyName);
         TextView tvAppName = findViewById(R.id.tvAppName);
+        ProgressBar pbSplashLoading = findViewById(R.id.pbSplashLoading);
 
         // Sequence: Logo Fade In (0ms -> 600ms)
         ivSplashLogo.animate()
@@ -49,13 +51,22 @@ public class SplashActivity extends AppCompatActivity {
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
 
-        // Sequence: App Name Fades In (1200ms -> 1800ms)
+        // Sequence: App Name and Loading Appear (1300ms -> 1800ms)
         tvAppName.setTranslationY(20f);
         tvAppName.animate()
             .alpha(1f)
             .translationY(0f)
-            .setStartDelay(1200)
-            .setDuration(600)
+            .setStartDelay(1300)
+            .setDuration(500)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
+            
+        pbSplashLoading.setTranslationY(20f);
+        pbSplashLoading.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setStartDelay(1500)
+            .setDuration(500)
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
 
