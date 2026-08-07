@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_blue_white">
+    android:background="@drawable/bg_gradient_white_blue">
 
     <!-- Top Logo -->
     <ImageView
         android:id="@+id/ivLogo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:src="@drawable/logo_face_recognition"
         app:layout_constraintBottom_toTopOf="@+id/bottomContent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,19 +30,10 @@
             android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-bold"
-            android:text="Keunggulan dalam"
-            android:textColor="#0f1c2d"
-            android:textSize="32sp" />
-
-        <TextView
-            android:id="@+id/tvWelcome2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:fontFamily="sans-serif-bold"
-            android:text="Presensi"
-            android:textColor="#000666"
+            android:text="Keunggulan dalam presensi"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
             android:textSize="32sp" />
 
         <TextView
@@ -50,37 +41,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:fontFamily="sans-serif"
             android:text="Solusi manajemen waktu modern untuk PT Talangmas Anugerah Semesta."
-            android:textColor="#454652"
+            android:textColor="#c6c5d4"
             android:textSize="18sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:backgroundTint="#000666"
-            android:fontFamily="sans-serif-medium"
+            android:backgroundTint="#FEB300"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="Get started!"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="#000666"
+            android:textStyle="bold"
             android:textSize="18sp"
             app:cornerRadius="32dp"
             app:icon="@drawable/ic_arrow_forward"
             app:iconGravity="textEnd"
-            app:iconTint="#FFFFFF" />
+            app:iconTint="#000666" />
 
     </LinearLayout>
-
-    <!-- Liquid Transition Overlay -->
-    <View
-        android:id="@+id/darkOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000666"
-        android:elevation="10dp"
-        android:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

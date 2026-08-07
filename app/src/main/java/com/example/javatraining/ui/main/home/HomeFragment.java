@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.javatraining.R;
@@ -55,6 +58,28 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivity(intent);
         });
+
+        // Initial Staggered Entry Animation for Cards
+        View cvStatusCard = view.findViewById(R.id.cvStatusCard);
+        View llStatsGrid = view.findViewById(R.id.llStatsGrid);
+        
+        if (cvStatusCard != null && llStatsGrid != null) {
+            cvStatusCard.setVisibility(View.INVISIBLE);
+            llStatsGrid.setVisibility(View.INVISIBLE);
+            
+            Animation anim1 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
+            Animation anim2 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
+            anim2.setStartOffset(100); // 100ms delay for staggered effect
+
+            cvStatusCard.post(() -> {
+                cvStatusCard.setVisibility(View.VISIBLE);
+                cvStatusCard.startAnimation(anim1);
+            });
+            llStatsGrid.post(() -> {
+                llStatsGrid.setVisibility(View.VISIBLE);
+                llStatsGrid.startAnimation(anim2);
+            });
+        }
 
         loadDataAndRefreshUI(view);
     }
@@ -106,27 +131,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Fetch Today's Schedule
+        // Fetch Today's Schedule (API logic kept, UI update removed for now)
         repository.getScheduleTodayApi().observe(getViewLifecycleOwner(), new Observer<ScheduleData>() {
             @Override
             public void onChanged(ScheduleData scheduleData) {
-                TextView tvScheduleShiftName = view.findViewById(R.id.tvScheduleShiftName);
-                TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
-                TextView tvScheduleLocation = view.findViewById(R.id.tvScheduleLocation);
-                
-                if (scheduleData != null) {
-                    if (tvScheduleShiftName != null) tvScheduleShiftName.setText(scheduleData.getShiftName() != null ? scheduleData.getShiftName() : "Normal Shift");
-                    if (tvScheduleTime != null) {
-                        String start = scheduleData.getStartTime() != null ? scheduleData.getStartTime() : "--:--";
-                        String end = scheduleData.getEndTime() != null ? scheduleData.getEndTime() : "--:--";
-                        tvScheduleTime.setText(start + " - " + end);
-                    }
-                    if (tvScheduleLocation != null) tvScheduleLocation.setText("Head Office");
-                } else {
-                    if (tvScheduleShiftName != null) tvScheduleShiftName.setText("No Schedule");
-                    if (tvScheduleTime != null) tvScheduleTime.setText("--:-- - --:--");
-                    if (tvScheduleLocation != null) tvScheduleLocation.setText("-");
-                }
+                // TODO: Update Stats Grid (Work Hours, On-Time %) with real data here in the future
             }
         });
 
@@ -176,6 +185,13 @@ public class HomeFragment extends Fragment {
         if (activityAdapter == null) {
             activityAdapter = new RecentActivityAdapter(userLogs);
             rvRecentActivity.setAdapter(activityAdapter);
+            
+            // Apply LayoutAnimationController for staggered list item entry
+            Animation slideUpAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_slide_up);
+            LayoutAnimationController controller = new LayoutAnimationController(slideUpAnim);
+            controller.setDelay(0.15f); // 15% delay between items
+            rvRecentActivity.setLayoutAnimation(controller);
+            rvRecentActivity.scheduleLayoutAnimation();
         } else {
             activityAdapter.updateData(userLogs);
         }

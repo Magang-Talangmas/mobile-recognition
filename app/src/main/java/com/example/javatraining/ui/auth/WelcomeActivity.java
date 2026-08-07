@@ -23,13 +23,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
         ImageView ivLogo = findViewById(R.id.ivLogo);
         TextView tvWelcome = findViewById(R.id.tvWelcome);
-        TextView tvWelcome2 = findViewById(R.id.tvWelcome2);
         TextView tvSubtitle = findViewById(R.id.tvSubtitle);
         Button btnLogin = findViewById(R.id.btnLogin);
-        View darkOverlay = findViewById(R.id.darkOverlay);
 
         // Set initial states for animation
-        View[] animatedViews = {ivLogo, tvWelcome, tvWelcome2, tvSubtitle, btnLogin};
+        View[] animatedViews = {ivLogo, tvWelcome, tvSubtitle, btnLogin};
         for (View v : animatedViews) {
             v.setAlpha(0f);
             v.setTranslationY(50f);
@@ -48,28 +46,8 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         btnLogin.setOnClickListener(v -> {
-            int[] location = new int[2];
-            v.getLocationInWindow(location);
-            int cx = location[0] + (v.getWidth() / 2);
-            int cy = location[1] + (v.getHeight() / 2);
-            
-            // Calculate radius to cover the whole screen from the button's position
-            float finalRadius = (float) Math.hypot(Math.max(cx, darkOverlay.getWidth() - cx), Math.max(cy, darkOverlay.getHeight() - cy));
-            
-            darkOverlay.setVisibility(View.VISIBLE);
-            Animator anim = ViewAnimationUtils.createCircularReveal(darkOverlay, cx, cy, 0, finalRadius);
-            anim.setDuration(600);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-                    overridePendingTransition(0, 0); // No animation needed since overlay covered the screen
-                    
-                    // Hide overlay again after a delay so it's ready if user presses back
-                    darkOverlay.postDelayed(() -> darkOverlay.setVisibility(View.INVISIBLE), 500);
-                }
-            });
-            anim.start();
+            startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
         });
     }
 }

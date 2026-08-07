@@ -29,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
+import com.example.javatraining.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,13 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Start scanning animation
-        View vScanLine = binding.vScanLine;
-        ObjectAnimator scanAnim = ObjectAnimator.ofFloat(vScanLine, "translationY", -60f, 60f);
-        scanAnim.setDuration(1200);
-        scanAnim.setRepeatMode(ValueAnimator.REVERSE);
-        scanAnim.setRepeatCount(ValueAnimator.INFINITE);
-        scanAnim.start();
+        // Removed vScanLine animation
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
@@ -157,5 +152,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // tvForgotPassword removed in new sci-fi design
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.stay, R.anim.slide_out_down);
     }
 }

@@ -23,6 +23,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import android.widget.Toast;
+import android.view.MotionEvent;
+import android.view.HapticFeedbackConstants;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import com.example.javatraining.ui.auth.LoginActivity;
 import com.example.javatraining.ui.main.home.FaceScanActivity;
 import com.example.javatraining.ui.main.home.HomeFragment;
@@ -115,12 +121,37 @@ public class MainActivity extends AppCompatActivity {
             binding.fabManual.setVisibility(View.VISIBLE);
         });
 
-        // FAB (Manual Entry) click listener
+        // FAB (Manual Entry / Clock In) click listener
         binding.fabManual.setOnClickListener(v -> {
             loadFragment(new ManualFragment());
             selectNavTab(-1);
             binding.bottomAppBar.setVisibility(View.VISIBLE);
             binding.fabManual.setVisibility(View.VISIBLE);
+        });
+
+        // FAB Micro-interactions (Breathing & Touch Scale)
+        ObjectAnimator breathingAnim = ObjectAnimator.ofPropertyValuesHolder(
+                binding.fabManual,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.03f, 1.0f),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.03f, 1.0f)
+        );
+        breathingAnim.setDuration(3000);
+        breathingAnim.setRepeatCount(ObjectAnimator.INFINITE);
+        breathingAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        breathingAnim.start();
+
+        binding.fabManual.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().scaleX(0.92f).scaleY(0.92f).setDuration(150).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
+                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(250).setInterpolator(new OvershootInterpolator(1.2f)).start();
+                    break;
+            }
+            return false; // Let click listener handle the click event
         });
     }
 

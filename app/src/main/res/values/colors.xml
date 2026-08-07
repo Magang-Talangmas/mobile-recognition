@@ -3,6 +3,20 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
+    <!-- Enterprise Design System Colors -->
+    <color name="ent_primary">#000666</color>
+    <color name="ent_primary_container">#1a237e</color>
+    <color name="ent_secondary">#FEB300</color>
+    <color name="ent_secondary_dark">#6A4800</color>
+    <color name="ent_background">#F8F9FF</color>
+    <color name="ent_surface">#FFFFFF</color>
+    <color name="ent_surface_variant">#F5F7FB</color>
+    <color name="ent_outline">#C6C5D4</color>
+    <color name="ent_text_primary">#0F1C2D</color>
+    <color name="ent_text_secondary">#454652</color>
+    <color name="ent_success">#198754</color>
+    <color name="ent_error">#BA1A1A</color>
+
     <!-- New Dashboard Palette based on Logo -->
     <color name="dash_bg">#1A2D72</color>
     <color name="dash_bottom_nav">#141A4C</color>
