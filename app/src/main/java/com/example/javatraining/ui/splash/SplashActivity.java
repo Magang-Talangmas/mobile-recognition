@@ -30,7 +30,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
-        TextView tvCompanyName = findViewById(R.id.tvCompanyName);
         TextView tvAppName = findViewById(R.id.tvAppName);
         ProgressBar pbSplashLoading = findViewById(R.id.pbSplashLoading);
 
@@ -41,22 +40,12 @@ public class SplashActivity extends AppCompatActivity {
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
 
-        // Sequence: Company Name Appears (900ms -> 1500ms)
-        tvCompanyName.setTranslationY(20f);
-        tvCompanyName.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setStartDelay(900)
-            .setDuration(600)
-            .setInterpolator(new AccelerateDecelerateInterpolator())
-            .start();
-
-        // Sequence: App Name and Loading Appear (1300ms -> 1800ms)
+        // Sequence: App Name and Loading Appear (600ms -> 1100ms)
         tvAppName.setTranslationY(20f);
         tvAppName.animate()
             .alpha(1f)
             .translationY(0f)
-            .setStartDelay(1300)
+            .setStartDelay(600)
             .setDuration(500)
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
@@ -65,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         pbSplashLoading.animate()
             .alpha(1f)
             .translationY(0f)
-            .setStartDelay(1500)
+            .setStartDelay(800)
             .setDuration(500)
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
