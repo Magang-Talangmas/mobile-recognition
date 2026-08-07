@@ -3,39 +3,38 @@ package com.example.javatraining.data.remote.request;
 import com.google.gson.annotations.SerializedName;
 
 public class ManualAttendanceRequest {
-    @SerializedName("eventType")
-    private String eventType;
-
+    @SerializedName("camera_id")
+    public String cameraId;
+    
+    @SerializedName("track_id")
+    public long trackId;
+    
+    @SerializedName("employee_id")
+    public String employeeId;
+    
+    @SerializedName("direction")
+    public String direction;
+    
+    @SerializedName("event_type")
+    public String eventType;
+    
+    @SerializedName("similarity")
+    public double similarity;
+    
     @SerializedName("status")
-    private String status;
+    public String status;
+    
+    @SerializedName("detected_at")
+    public String detectedAt;
 
-    @SerializedName("time")
-    private String time;
-
-    @SerializedName("location")
-    private String location;
-
-    @SerializedName("reason")
-    private String reason;
-
-    public ManualAttendanceRequest(String eventType, String status, String time, String location, String reason) {
+    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt) {
+        this.cameraId = "MANUAL";
+        this.trackId = 0;
+        this.employeeId = employeeId;
+        this.direction = direction;
         this.eventType = eventType;
+        this.similarity = 1.0;
         this.status = status;
-        this.time = time;
-        this.location = location;
-        this.reason = reason;
+        this.detectedAt = detectedAt;
     }
-
-    // Getters and Setters
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
-    public String getReason() { return reason; }
-    public void setReason(String reason) { this.reason = reason; }
 }

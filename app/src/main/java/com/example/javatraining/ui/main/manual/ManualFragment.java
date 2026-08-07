@@ -199,30 +199,23 @@ public class ManualFragment extends Fragment {
             isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
             String combinedTime = isoFormat.format(Calendar.getInstance().getTime());
             
-            String reason = ""; // Removed from UI
-            String location = "Menara Thamrin, Jakarta"; // Dummy location
-
-            okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), eventType);
-            okhttp3.RequestBody locationBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), location);
-            okhttp3.RequestBody reasonBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), reason);
-            okhttp3.RequestBody statusBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), status);
-            okhttp3.RequestBody timeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), combinedTime);
-
-            okhttp3.MultipartBody.Part photoPart = null;
-            if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), currentPhotoFile);
-                photoPart = okhttp3.MultipartBody.Part.createFormData("photo", currentPhotoFile.getName(), requestFile);
-            }
-
             SessionManager sessionManager = new SessionManager(getContext());
             String empId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
-            okhttp3.RequestBody empIdBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), empId);
             
-            // For now map direction to status 
-            okhttp3.RequestBody directionBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), status);
+            String directionStr = isCheckIn ? "IN" : "OUT";
+            String statusStr = "PENDING_CONFIRMATION";
+            
+            com.example.javatraining.data.remote.request.ManualAttendanceRequest request = 
+                new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
+                    empId,
+                    directionStr,
+                    eventType,
+                    statusStr,
+                    combinedTime
+                );
 
             ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-            apiService.submitManualAttendance(photoPart, eventTypeBody, empIdBody, directionBody).enqueue(new Callback<Void>() {
+            apiService.submitManualAttendance(request).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {

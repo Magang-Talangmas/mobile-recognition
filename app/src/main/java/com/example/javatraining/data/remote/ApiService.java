@@ -46,14 +46,8 @@ public interface ApiService {
             @Body FcmTokenRequest request
     );
 
-    @Multipart
     @POST("rest/v1/attendance_events")
-    Call<Void> submitManualAttendance(
-            @Part MultipartBody.Part photo,
-            @Part("event_type") RequestBody eventType,
-            @Part("employee_id") RequestBody employeeId,
-            @Part("direction") RequestBody direction
-    );
+    Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
 
     @GET("rest/v1/notifications?select=*")
     Call<List<NotificationData>> getNotifications();
