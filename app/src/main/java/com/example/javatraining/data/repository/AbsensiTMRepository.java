@@ -168,7 +168,7 @@ public class AbsensiTMRepository {
         String employeeId = sm.getUser() != null ? sm.getUser().getId() : "";
         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getAttendances(employeeId, perPage).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
+        apiService.getAttendances("eq." + employeeId, perPage).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
             @Override
             public void onResponse(retrofit2.Call<List<AttendanceData>> call, retrofit2.Response<List<AttendanceData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
