@@ -13,7 +13,7 @@
 
                 <ImageView android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" android:src="@drawable/logo_face_recognition" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dashboard" android:textColor="@color/ent_primary" android:textSize="24sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_dashboard" android:textColor="@color/ent_primary" android:textSize="24sp" android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
@@ -57,13 +57,13 @@
 
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_centerInParent="true">
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CURRENT STATUS" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:textStyle="bold" android:letterSpacing="0.05" android:textAllCaps="true"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_current_status" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:textStyle="bold" android:letterSpacing="0.05" android:textAllCaps="true"/>
 
                             <TextView android:id="@+id/tvStatusTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Ready to Clock In" android:textColor="@color/ent_primary" android:textSize="32sp" android:textStyle="bold" android:layout_marginTop="8dp"/>
 
                             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
                                 <View android:id="@+id/vStatusDot" android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/ent_secondary" android:layout_marginEnd="6dp"/>
-                                <TextView android:id="@+id/tvStatusTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Waiting for action..." android:textColor="@color/ent_text_secondary" android:textSize="14sp"/>
+                                <TextView android:id="@+id/tvStatusTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_waiting_action" android:textColor="@color/ent_text_secondary" android:textSize="14sp"/>
                             </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>
@@ -78,7 +78,7 @@
 
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_schedule" app:tint="@color/ent_primary" android:layout_marginEnd="12dp"/>
 
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Today's Schedule" android:textColor="@color/ent_text_primary" android:textSize="16sp" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/dashboard_todays_schedule" android:textColor="@color/ent_text_primary" android:textSize="16sp" android:textStyle="bold" />
                         </LinearLayout>
 
                         <TextView android:id="@+id/tvScheduleTime" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="08:00 - 17:00" android:textColor="@color/ent_primary" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="16dp"/>
@@ -92,9 +92,9 @@
 
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Recent Log" android:textColor="@color/ent_text_primary" android:textSize="20sp" android:textStyle="bold" android:layout_centerVertical="true"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_recent_log" android:textColor="@color/ent_text_primary" android:textSize="20sp" android:textStyle="bold" android:layout_centerVertical="true"/>
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View All" android:textColor="@color/ent_primary" android:textSize="14sp" android:textStyle="bold" android:layout_alignParentEnd="true" android:layout_centerVertical="true"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_view_all" android:textColor="@color/ent_primary" android:textSize="14sp" android:textStyle="bold" android:layout_alignParentEnd="true" android:layout_centerVertical="true"/>
                     </RelativeLayout>
 
                     <!-- Recent Activity Recycler View -->

@@ -62,6 +62,22 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        // Language Toggle Logic
+        android.view.View btnLanguage = findViewById(R.id.btnLanguage);
+        if (btnLanguage != null) {
+            btnLanguage.setOnClickListener(v -> {
+                androidx.core.os.LocaleListCompat appLocale = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
+                String currentLang = appLocale.toLanguageTags();
+                
+                String newLang = "id";
+                if (currentLang.contains("id")) {
+                    newLang = "en";
+                }
+                androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                        androidx.core.os.LocaleListCompat.forLanguageTags(newLang));
+            });
+        }
+
         android.widget.Button btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {

@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="@string/title_profile"
                 android:textColor="#000666"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -196,7 +196,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Personal Info"
+                            android:text="@string/profile_personal_info"
                             android:textColor="#000666"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -211,7 +211,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Email"
+                            android:text="@string/profile_email"
                             android:textColor="#454652"
                             android:textSize="14sp" />
                         <TextView
@@ -233,7 +233,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Phone"
+                            android:text="@string/profile_phone"
                             android:textColor="#454652"
                             android:textSize="14sp" />
                         <TextView
@@ -255,7 +255,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Department"
+                            android:text="@string/profile_department"
                             android:textColor="#454652"
                             android:textSize="14sp" />
                         <TextView
@@ -272,7 +272,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="16dp"
-                        android:text="Edit Details"
+                        android:text="@string/profile_edit_details"
                         android:textAllCaps="false"
                         android:textColor="#000666"
                         app:strokeColor="#000666"
@@ -320,7 +320,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Security"
+                            android:text="@string/profile_security"
                             android:textColor="#000666"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -340,13 +340,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Face ID Check-in"
+                                android:text="@string/profile_face_id"
                                 android:textColor="#111d23"
                                 android:textSize="16sp" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Biometric scanning"
+                                android:text="@string/profile_biometric_scanning"
                                 android:textColor="#454652"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -376,7 +376,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Change Password"
+                            android:text="@string/profile_change_password"
                             android:textColor="#111d23"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -399,7 +399,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Change PIN"
+                            android:text="@string/profile_change_pin"
                             android:textColor="#111d23"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -442,7 +442,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="App Settings"
+                            android:text="@string/profile_app_settings"
                             android:textColor="#000666"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -467,7 +467,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
-                            android:text="Notifications"
+                            android:text="@string/profile_notifications"
                             android:textColor="#111d23"
                             android:textSize="14sp" />
                         <ImageView
@@ -479,6 +479,10 @@
 
                     <!-- Language -->
                     <LinearLayout
+                        android:id="@+id/btnLanguage"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_input_outline"
@@ -494,7 +498,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
-                            android:text="Language (EN)"
+                            android:text="@string/profile_language"
                             android:textColor="#111d23"
                             android:textSize="14sp" />
                         <ImageView
@@ -512,7 +516,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="24dp"
-                android:text="Logout"
+                android:text="@string/profile_logout"
                 android:textAllCaps="false"
                 android:textColor="#ba1a1a"
                 android:textSize="16sp"
