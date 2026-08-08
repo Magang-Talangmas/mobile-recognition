@@ -39,7 +39,6 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private RecentActivityAdapter activityAdapter;
     private boolean isCheckedIn = false; // Based on latest log
     private AbsensiTMRepository repository;
 
