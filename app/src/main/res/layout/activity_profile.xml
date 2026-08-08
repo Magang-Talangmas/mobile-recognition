@@ -365,7 +365,7 @@
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/bg_input_rounded"
                         android:backgroundTint="#e5eeff"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="18dp"
@@ -373,19 +373,13 @@
                             android:src="@drawable/ic_lock_outline"
                             app:tint="#111d23" />
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginStart="8dp"
                             android:text="Change Password"
                             android:textColor="#111d23"
                             android:textSize="16sp"
                             android:textStyle="bold" />
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="#767681" />
                     </LinearLayout>
 
                     <!-- Change PIN -->
@@ -399,7 +393,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@android:drawable/ic_lock_idle_lock"
+                            android:src="@drawable/ic_pin_keypad"
                             app:tint="#111d23" />
                         <TextView
                             android:layout_width="wrap_content"
