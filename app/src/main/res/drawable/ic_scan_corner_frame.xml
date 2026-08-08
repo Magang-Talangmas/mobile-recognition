@@ -6,18 +6,34 @@
     android:viewportHeight="24">
   <!-- Top Left Corner -->
   <path
-      android:fillColor="#3F51B5"
-      android:pathData="M9,2 L4,2 C2.9,2 2,2.9 2,4 L2,9 H4 L4,4 L9,4 V2 Z"/>
+      android:strokeColor="#3F51B5"
+      android:strokeWidth="1"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
+      android:fillColor="#00000000"
+      android:pathData="M 8,3 L 4,3 C 3.4,3 3,3.4 3,4 L 3,8"/>
   <!-- Top Right Corner -->
   <path
-      android:fillColor="#3F51B5"
-      android:pathData="M15,2 V4 H20 V9 H22 V4 C22,2.9 21.1,2 20,2 H15 Z"/>
+      android:strokeColor="#3F51B5"
+      android:strokeWidth="1"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
+      android:fillColor="#00000000"
+      android:pathData="M 16,3 L 20,3 C 20.6,3 21,3.4 21,4 L 21,8"/>
   <!-- Bottom Left Corner -->
   <path
-      android:fillColor="#3F51B5"
-      android:pathData="M2,15 H4 V20 H9 V22 H4 C2.9,22 2,21.1 2,20 V15 Z"/>
+      android:strokeColor="#3F51B5"
+      android:strokeWidth="1"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
+      android:fillColor="#00000000"
+      android:pathData="M 3,16 L 3,20 C 3,20.6 3.4,21 4,21 L 8,21"/>
   <!-- Bottom Right Corner -->
   <path
-      android:fillColor="#3F51B5"
-      android:pathData="M20,20 H15 V22 H20 C21.1,22 22,21.1 22,20 V15 H20 V20 Z"/>
+      android:strokeColor="#3F51B5"
+      android:strokeWidth="1"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
+      android:fillColor="#00000000"
+      android:pathData="M 21,16 L 21,20 C 21,20.6 20.6,21 20,21 L 16,21"/>
 </vector>
