@@ -319,6 +319,6 @@ public class HomeFragment extends Fragment {
             } catch (Exception ignored) {
             }
         }
-        return new Date();
+        return null; // Return null instead of new Date() to avoid fake current time logs
     }
 }

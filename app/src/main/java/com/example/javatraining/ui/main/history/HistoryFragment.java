@@ -284,6 +284,6 @@ public class HistoryFragment extends Fragment {
             } catch (Exception ignored) {
             }
         }
-        return new Date();
+        return null; // Return null to avoid fake current time
     }
 }

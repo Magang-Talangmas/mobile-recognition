@@ -304,14 +304,27 @@ public class ManualFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     AttendanceData latest = response.body().get(0);
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    String todayStr = sdf.format(Calendar.getInstance().getTime());
+                    if (latest.getTimestamp() != null) {
+                        java.util.Date d = parseIsoDate(latest.getTimestamp());
+                        if (d != null) {
+                            Calendar calEvent = Calendar.getInstance();
+                            calEvent.setTime(d);
+                            Calendar calToday = Calendar.getInstance();
 
-                    if (latest.getTimestamp() != null && latest.getTimestamp().startsWith(todayStr)) {
-                        if ("CHECK_IN".equals(latest.getEventType())) {
-                            setCheckOutState(latest);
-                        } else if ("CHECK_OUT".equals(latest.getEventType())) {
-                            setCompletedState();
+                            boolean isToday = calEvent.get(Calendar.YEAR) == calToday.get(Calendar.YEAR) &&
+                                    calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
+
+                            if (isToday) {
+                                if ("CHECK_IN".equals(latest.getEventType())) {
+                                    setCheckOutState(latest);
+                                } else if ("CHECK_OUT".equals(latest.getEventType())) {
+                                    setCompletedState();
+                                } else {
+                                    setCheckInState();
+                                }
+                            } else {
+                                setCheckInState();
+                            }
                         } else {
                             setCheckInState();
                         }
@@ -399,5 +412,48 @@ public class ManualFragment extends Fragment {
     private void updateTimeLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         etTime.setText(sdf.format(calendar.getTime()));
+    }
+
+    private java.util.Date parseIsoDate(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty())
+            return null;
+        String raw = dateStr.trim();
+        String normalized = raw.replace(" ", "T");
+
+        String[] formats = {
+                "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SXXX",
+                "yyyy-MM-dd'T'HH:mm:ssXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.SSS",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
+        };
+
+        for (String fmt : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                java.util.Date d = sdf.parse(raw);
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
+
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
+                sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                java.util.Date d = sdf.parse(normalized);
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
     }
 }
