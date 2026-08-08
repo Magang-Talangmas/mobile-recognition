@@ -6,18 +6,18 @@
     android:viewportHeight="24">
   <!-- Top Left Corner -->
   <path
-      android:fillColor="#FFFFFF"
+      android:fillColor="#FEB300"
       android:pathData="M9,2 L4,2 C2.9,2 2,2.9 2,4 L2,9 H4 L4,4 L9,4 V2 Z"/>
   <!-- Top Right Corner -->
   <path
-      android:fillColor="#FFFFFF"
+      android:fillColor="#FEB300"
       android:pathData="M15,2 V4 H20 V9 H22 V4 C22,2.9 21.1,2 20,2 H15 Z"/>
   <!-- Bottom Left Corner -->
   <path
-      android:fillColor="#FFFFFF"
+      android:fillColor="#FEB300"
       android:pathData="M2,15 H4 V20 H9 V22 H4 C2.9,22 2,21.1 2,20 V15 Z"/>
   <!-- Bottom Right Corner -->
   <path
-      android:fillColor="#FFFFFF"
+      android:fillColor="#FEB300"
       android:pathData="M20,20 H15 V22 H20 C21.1,22 22,21.1 22,20 V15 H20 V20 Z"/>
 </vector>
