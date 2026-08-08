@@ -17,21 +17,43 @@
         app:layout_constraintVertical_chainStyle="packed"
         android:layout_marginBottom="32dp">
 
+        <!-- Outer Glowing Ring -->
+        <View
+            android:id="@+id/vGlowRing"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_primary"
+            android:backgroundTint="#1A00E5FF"
+            android:alpha="0" />
+
         <!-- Main Logo -->
         <ImageView
             android:id="@+id/ivSplashLogo"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_gravity="center"
             android:src="@drawable/logo_face_recognition"
             android:alpha="0"/>
+
+        <!-- Laser Scanning Beam -->
+        <View
+            android:id="@+id/vScanLine"
+            android:layout_width="140dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_laser_line_cyan"
+            android:alpha="0" />
     </FrameLayout>
 
+    <!-- Custom Styled Progress Bar -->
     <ProgressBar
         android:id="@+id/pbSplashLoading"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:indeterminateTint="#FFFFFF"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:indeterminate="true"
+        android:indeterminateTint="#00E5FF"
         app:layout_constraintTop_toBottomOf="@id/flLogoContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
