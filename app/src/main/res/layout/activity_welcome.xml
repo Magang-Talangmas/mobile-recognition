@@ -34,38 +34,9 @@
             app:layout_constraintBottom_toTopOf="@+id/llBottomSection"
             app:layout_constraintVertical_weight="0.45">
 
-            <!-- AI Badge Pill -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/bg_chip_active"
-                android:backgroundTint="#10000666"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="6dp"
-                android:layout_marginBottom="16dp">
-
-                <View
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:background="@drawable/bg_circle_primary"
-                    android:backgroundTint="#FEB300"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AI RECOGNITION SYSTEM"
-                    android:textColor="#000666"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.08"/>
-            </LinearLayout>
-
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:src="@drawable/logo_face_recognition" />
 
             <TextView
@@ -373,37 +344,6 @@
                             android:visibility="gone"/>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- Divider -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="32dp">
-                    <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="1dp" android:background="#c6c5d4"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Or continue with" android:textColor="#767683" android:layout_marginHorizontal="16dp"/>
-                    <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="1dp" android:background="#c6c5d4"/>
-                </LinearLayout>
-
-                <!-- Biometric Container -->
-                <FrameLayout
-                    android:id="@+id/flBiometric"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="32dp"
-                    android:background="@drawable/bg_input_outline"
-                    android:clickable="true"
-                    android:focusable="true">
-                    
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_fingerprint_clean"
-                        app:tint="#0f1c2d"/>
-                </FrameLayout>
 
             </LinearLayout>
 

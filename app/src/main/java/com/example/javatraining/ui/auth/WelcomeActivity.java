@@ -62,7 +62,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private FrameLayout btnLoginContainer;
     private TextView tvLoginText;
     private ProgressBar pbLoginLoading;
-    private FrameLayout flBiometric;
     
     private boolean isPasswordVisible = false;
 
@@ -92,7 +91,6 @@ public class WelcomeActivity extends AppCompatActivity {
         btnLoginContainer = findViewById(R.id.btnLoginContainer);
         tvLoginText = findViewById(R.id.tvLoginText);
         pbLoginLoading = findViewById(R.id.pbLoginLoading);
-        flBiometric = findViewById(R.id.flBiometric);
 
         // Initial states
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -162,8 +160,6 @@ public class WelcomeActivity extends AppCompatActivity {
             v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS);
             attemptLogin();
         });
-
-        setupBiometrics();
     }
 
     private void triggerBottomSheetStagger() {
@@ -236,43 +232,6 @@ public class WelcomeActivity extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         }, 500);
-    }
-
-    private void setupBiometrics() {
-        Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(WelcomeActivity.this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                handleLoginSuccess();
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                flBiometric.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-        });
-
-        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Login Biometrik")
-                .setSubtitle("Gunakan Face ID atau Fingerprint untuk masuk")
-                .setNegativeButtonText("Batal")
-                .build();
-
-        flBiometric.setOnClickListener(v -> {
-            v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
-            v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100).withEndAction(() -> {
-                v.animate().scaleX(1f).scaleY(1f).setDuration(150).start();
-                biometricPrompt.authenticate(promptInfo);
-            }).start();
-        });
     }
 
     private void registerFCM() {
