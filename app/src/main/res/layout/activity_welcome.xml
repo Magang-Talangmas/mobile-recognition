@@ -346,14 +346,7 @@
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Flowing Navy Ribbon Waves Decoration (Full Edge-to-Edge & Pinned to Bottom) -->
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginHorizontal="-24dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/bg_flowing_navy_ribbon_waves" />
+
 
             </LinearLayout>
 
