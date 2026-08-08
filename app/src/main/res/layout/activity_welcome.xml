@@ -34,9 +34,38 @@
             app:layout_constraintBottom_toTopOf="@+id/llBottomSection"
             app:layout_constraintVertical_weight="0.45">
 
+            <!-- AI Badge Pill -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_chip_active"
+                android:backgroundTint="#10000666"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_circle_primary"
+                    android:backgroundTint="#FEB300"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI RECOGNITION SYSTEM"
+                    android:textColor="#000666"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"/>
+            </LinearLayout>
+
             <ImageView
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:src="@drawable/logo_face_recognition" />
 
             <TextView
@@ -47,7 +76,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -155,25 +184,52 @@
                 android:background="#c6c5d4"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Header -->
-            <TextView
-                android:id="@+id/bsHeader"
-                android:layout_width="wrap_content"
+            <!-- Center Header Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome Back"
-                android:textColor="#000666"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="24dp">
 
-            <TextView
-                android:id="@+id/bsSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Please sign in to continue"
-                android:textColor="#454652"
-                android:textSize="16sp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="32dp"/>
+                <!-- Mini Glowing Logo Badge -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E5EEFF"
+                    app:cardBackgroundColor="#F8F9FF"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/logo_face_recognition"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/bsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome Back"
+                    android:textColor="#000666"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/bsSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign in to your employee account"
+                    android:textColor="#454652"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
 
             <!-- Form Container (Staggered Animation target) -->
             <LinearLayout
