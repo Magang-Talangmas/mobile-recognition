@@ -345,13 +345,13 @@
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Abstract Minimalist Curved Ribbon Decoration -->
+                <!-- Flowing Navy Ribbon Waves Decoration -->
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_height="140dp"
+                    android:layout_marginTop="32dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/bg_curved_ribbon_indigo" />
+                    android:src="@drawable/bg_flowing_navy_ribbon_waves" />
 
             </LinearLayout>
 
