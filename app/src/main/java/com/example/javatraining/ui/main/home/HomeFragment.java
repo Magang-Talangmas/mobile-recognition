@@ -60,6 +60,16 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+        // View All Recent Log
+        View tvViewAll = view.findViewById(R.id.tvViewAll);
+        if (tvViewAll != null) {
+            tvViewAll.setOnClickListener(v -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).selectNavTab(1);
+                }
+            });
+        }
+
         // Initial Staggered Entry Animation for Cards
         View cvStatusCard = view.findViewById(R.id.cvStatusCard);
         View cvScheduleCard = view.findViewById(R.id.cvScheduleCard);

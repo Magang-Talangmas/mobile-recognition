@@ -48,16 +48,16 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         if (event.getEventType() == LogType.CHECK_IN) {
             holder.tvAction.setText("Checked In");
             holder.ivIcon.setImageResource(android.R.drawable.ic_input_add); // Or some login icon
-            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
+            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_primary));
             holder.flIconBg.setBackgroundTintList(ColorStateList
-                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_container)));
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_surface_variant)));
         } else if (event.getEventType() == LogType.CHECK_OUT) {
             holder.tvAction.setText("Checked Out");
             holder.ivIcon.setImageResource(android.R.drawable.ic_menu_revert);
             holder.ivIcon.setColorFilter(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_text_secondary));
             holder.flIconBg.setBackgroundTintList(ColorStateList
-                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_background)));
         } else {
             holder.tvAction.setText(event.getEventType().name());
         }
@@ -92,10 +92,10 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
 
         // Update Time text color based on date
         if (isToday) {
-            holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface));
+            holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_text_primary));
         } else {
             holder.tvTime.setTextColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.ent_text_secondary));
         }
 
         // Accuracy
