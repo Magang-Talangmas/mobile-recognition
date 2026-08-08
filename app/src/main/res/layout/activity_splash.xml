@@ -8,46 +8,31 @@
     <!-- Center Container -->
     <FrameLayout
         android:id="@+id/flLogoContainer"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvAppName"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toTopOf="@+id/pbSplashLoading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="32dp">
 
         <!-- Main Logo -->
         <ImageView
             android:id="@+id/ivSplashLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:layout_gravity="center"
             android:src="@drawable/logo_face_recognition"
             android:alpha="0"/>
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tvAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Attendance App"
-        android:textColor="#333333"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/pbSplashLoading"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flLogoContainer"
-        android:layout_marginBottom="24dp"
-        android:alpha="0"/>
-
     <ProgressBar
         android:id="@+id/pbSplashLoading"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:indeterminateTint="#000666"
-        app:layout_constraintTop_toBottomOf="@id/tvAppName"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:indeterminateTint="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/flLogoContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
