@@ -124,27 +124,58 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<AttendanceData> attendanceDataList) {
                 if (attendanceDataList != null) {
-                    List<AttendanceEvent> userLogs = new ArrayList<>();
-
-                    for (AttendanceData data : attendanceDataList) {
-                        try {
-                            Date detectedAt = parseIsoDate(data.getTimestamp());
-                            if (detectedAt != null) {
-                                userLogs.add(new AttendanceEvent(
-                                        0, data.getCameraId(), 0, data.getEmployeeId(), null,
-                                        null,
-                                        "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN
-                                                : LogType.CHECK_OUT,
-                                        data.getSimilarity() != null ? data.getSimilarity() : 0.0,
-                                        null, null, detectedAt, detectedAt, null));
+                    java.util.Map<String, com.example.javatraining.data.model.DailyAttendance> dailyMap = new java.util.HashMap<>();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                    
+                    for (AttendanceData p : attendanceDataList) {
+                        if (p.getTimestamp() != null) {
+                            try {
+                                Date detectedAt = parseIsoDate(p.getTimestamp());
+                                if (detectedAt != null) {
+                                    String dateKey = sdf.format(detectedAt);
+                                    com.example.javatraining.data.model.DailyAttendance daily = dailyMap.get(dateKey);
+                                    if (daily == null) {
+                                        daily = new com.example.javatraining.data.model.DailyAttendance(detectedAt);
+                                        dailyMap.put(dateKey, daily);
+                                    }
+                                    
+                                    AttendanceEvent event = new AttendanceEvent(
+                                            0, p.getCameraId(), 0, p.getEmployeeId(), null,
+                                            null,
+                                            "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                            p.getSimilarity() != null ? p.getSimilarity() : 0.0,
+                                            null, null, detectedAt, detectedAt, null);
+                                    event.setLate(p.getIsLate());
+                                    event.setConfirmationStatus(p.getConfirmationStatus());
+                                    
+                                    if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                                        daily.setCheckInEvent(event);
+                                    } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                                        daily.setCheckOutEvent(event);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
 
-                    // Update UI with logs
-                    updateDashboard(view, userLogs);
+                    List<com.example.javatraining.data.model.DailyAttendance> groupedLogs = new ArrayList<>(dailyMap.values());
+                    java.util.Collections.sort(groupedLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+
+                    // We need a flat list of events for the Live Status (Checked In/Out)
+                    List<AttendanceEvent> flatLogs = new ArrayList<>();
+                    for (AttendanceData data : attendanceDataList) {
+                        Date detectedAt = parseIsoDate(data.getTimestamp());
+                        if (detectedAt != null) {
+                            flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
+                                "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt, detectedAt, null));
+                        }
+                    }
+                    java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
+
+                    updateDashboard(view, groupedLogs, flatLogs);
                 }
 
                 androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
@@ -199,7 +230,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void updateDashboard(View view, List<AttendanceEvent> userLogs) {
+    private void updateDashboard(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs, List<AttendanceEvent> flatLogs) {
         // Live Status Logic
         TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
@@ -207,8 +238,8 @@ public class HomeFragment extends Fragment {
 
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
 
-        if (!userLogs.isEmpty()) {
-            AttendanceEvent latestLog = userLogs.get(0);
+        if (!flatLogs.isEmpty()) {
+            AttendanceEvent latestLog = flatLogs.get(0);
             if (latestLog.getEventType() == LogType.CHECK_OUT) {
                 isCheckedIn = false;
                 tvStatusTitle.setText("Checked Out");
@@ -230,20 +261,22 @@ public class HomeFragment extends Fragment {
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        if (activityAdapter == null) {
-            activityAdapter = new RecentActivityAdapter(userLogs);
-            rvRecentActivity.setAdapter(activityAdapter);
-
-            // Apply LayoutAnimationController for staggered list item entry
-            Animation slideUpAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_slide_up);
-            LayoutAnimationController controller = new LayoutAnimationController(slideUpAnim);
-            controller.setDelay(0.15f); // 15% delay between items
-            rvRecentActivity.setLayoutAnimation(controller);
-            rvRecentActivity.scheduleLayoutAnimation();
-        } else {
-            activityAdapter.updateData(userLogs);
+        
+        // Take up to 3 grouped logs
+        List<com.example.javatraining.data.model.DailyAttendance> recentLogs = new ArrayList<>();
+        for (int i = 0; i < Math.min(groupedLogs.size(), 3); i++) {
+            recentLogs.add(groupedLogs.get(i));
         }
+
+        com.example.javatraining.ui.main.history.HistoryLogAdapter dashboardLogAdapter = new com.example.javatraining.ui.main.history.HistoryLogAdapter(recentLogs);
+        rvRecentActivity.setAdapter(dashboardLogAdapter);
+
+        // Apply LayoutAnimationController for staggered list item entry
+        Animation slideUpAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_slide_up);
+        LayoutAnimationController controller = new LayoutAnimationController(slideUpAnim);
+        controller.setDelay(0.15f); // 15% delay between items
+        rvRecentActivity.setLayoutAnimation(controller);
+        rvRecentActivity.scheduleLayoutAnimation();
     }
 
     private Date parseIsoDate(String dateStr) {
