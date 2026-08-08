@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     public void switchToFragment(Fragment fragment) {
         loadFragment(fragment);
         selectNavTab(-1); // Deselect bottom nav if it's a hidden fragment like Manual
-
+        
         if (fragment instanceof com.example.javatraining.ui.main.notifications.NotificationsFragment) {
             binding.bottomAppBar.setVisibility(View.GONE);
             binding.fabManual.setVisibility(View.GONE);
@@ -206,5 +206,12 @@ public class MainActivity extends AppCompatActivity {
             binding.bottomAppBar.setVisibility(View.VISIBLE);
             binding.fabManual.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void navigateToHistory() {
+        loadFragment(new HistoryFragment());
+        selectNavTab(1);
+        binding.bottomAppBar.setVisibility(View.VISIBLE);
+        binding.fabManual.setVisibility(View.VISIBLE);
     }
 }

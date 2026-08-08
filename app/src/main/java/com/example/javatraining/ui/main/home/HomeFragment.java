@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
         if (tvViewAll != null) {
             tvViewAll.setOnClickListener(v -> {
                 if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).selectNavTab(1);
+                    ((MainActivity) getActivity()).navigateToHistory();
                 }
             });
         }
