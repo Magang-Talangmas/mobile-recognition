@@ -14,8 +14,11 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        ImageButton btnClose = findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(v -> finish());
+        // We use btnBack as a back button
+        android.widget.ImageView btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
         com.example.javatraining.data.repository.AbsensiTMRepository repository = new com.example.javatraining.data.repository.AbsensiTMRepository(
                 getApplication());
@@ -26,14 +29,25 @@ public class ProfileActivity extends AppCompatActivity {
                         if (user != null) {
                             android.widget.TextView tvProfileName = findViewById(R.id.tvProfileName);
                             android.widget.TextView tvProfileEmail = findViewById(R.id.tvProfileEmail);
-                            tvProfileName.setText(user.getName());
+                            android.widget.TextView tvDepartment = findViewById(R.id.tvDepartment);
+                            android.widget.TextView tvEmail = findViewById(R.id.tvEmail);
+                            
+                            if (tvProfileName != null) tvProfileName.setText(user.getName());
 
-                            if (user.getPosition() != null && user.getDepartment() != null) {
-                                tvProfileEmail.setText(user.getPosition() + " • " + user.getDepartment());
-                            } else if (user.getPosition() != null) {
-                                tvProfileEmail.setText(user.getPosition());
-                            } else {
-                                tvProfileEmail.setText(user.getEmail());
+                            if (tvProfileEmail != null) {
+                                if (user.getPosition() != null) {
+                                    tvProfileEmail.setText(user.getPosition());
+                                }
+                            }
+                            
+                            if (tvDepartment != null) {
+                                if (user.getDepartment() != null) {
+                                    tvDepartment.setText(user.getDepartment());
+                                }
+                            }
+                            
+                            if (tvEmail != null) {
+                                tvEmail.setText(user.getEmail());
                             }
 
                             android.widget.TextView tvProfileEmpId = findViewById(R.id.tvProfileEmpId);
@@ -42,23 +56,23 @@ public class ProfileActivity extends AppCompatActivity {
                                 if (displayId.length() > 8) {
                                     displayId = displayId.substring(0, 8).toUpperCase();
                                 }
-                                tvProfileEmpId.setText(displayId);
+                                tvProfileEmpId.setText("ID: " + displayId);
                             }
-
-                            // You could add faceRegistered check here if needed
                         }
                     }
                 });
 
         android.widget.Button btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(
-                    ProfileActivity.this);
-            sessionManager.clearSession();
-            // Logout logic
-            Intent intent = new Intent(ProfileActivity.this, com.example.javatraining.ui.auth.WelcomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(
+                        ProfileActivity.this);
+                sessionManager.clearSession();
+                // Logout logic
+                Intent intent = new Intent(ProfileActivity.this, com.example.javatraining.ui.auth.WelcomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
+        }
     }
 }

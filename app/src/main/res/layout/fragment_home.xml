@@ -25,7 +25,7 @@
                     <View android:id="@+id/vUnreadNotificationBadge" android:layout_width="8dp" android:layout_height="8dp" android:layout_gravity="top|end" android:layout_marginTop="8dp" android:layout_marginEnd="8dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/ent_error" />
                 </FrameLayout>
 
-                <com.google.android.material.imageview.ShapeableImageView android:id="@+id/imgAvatar" android:layout_width="44dp" android:layout_height="44dp" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackgroundBorderless" android:scaleType="centerCrop" android:src="@drawable/ic_avatar" app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" app:strokeColor="@color/ent_outline" app:strokeWidth="1dp" />
+                <com.google.android.material.imageview.ShapeableImageView android:id="@+id/imgAvatar" android:layout_width="44dp" android:layout_height="44dp" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackgroundBorderless" android:scaleType="centerCrop" android:src="@drawable/img_profile_pic" app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" app:strokeColor="@color/ent_outline" app:strokeWidth="1dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -34,7 +34,7 @@
 
         <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:paddingBottom="100dp" android:clipToPadding="false">
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" android:paddingBottom="32dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" android:paddingBottom="32dp" android:clipToPadding="false" android:clipChildren="false">
 
                 <!-- Welcome Section -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="24dp">

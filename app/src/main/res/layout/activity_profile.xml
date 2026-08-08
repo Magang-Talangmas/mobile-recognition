@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/html_background"
+    android:background="#f4faff"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="#f4faff"
         app:elevation="0dp">
 
         <!-- Top Header -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:paddingHorizontal="16dp">
+            android:layout_height="64dp"
+            android:paddingHorizontal="20dp"
+            android:background="@drawable/bg_bottom_line">
 
-            <ImageButton
-                android:id="@+id/btnClose"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_avatar_circle"
-                android:backgroundTint="@color/html_surface_container"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/html_on_surface"
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_back"
+                android:padding="2dp"
+                app:tint="#000666"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
 
+            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile"
-                android:textColor="@color/html_primary"
-                android:textSize="24sp"
+                android:textColor="#000666"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -49,7 +54,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingTop="16dp"
         android:paddingBottom="100dp"
+        android:paddingHorizontal="20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -57,238 +64,473 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Profile Identity Section -->
-            <LinearLayout
+            <!-- Profile Header Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="32dp"
-                android:paddingBottom="24dp">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#c6c5d4"
+                app:strokeWidth="1dp">
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:paddingBottom="24dp">
 
-                    <!-- Outer Glow Effect (Simulated) -->
+                    <!-- Top Blue Background -->
                     <View
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_circle_primary"
-                        android:backgroundTint="@color/html_primary_container"
-                        android:alpha="0.3" />
+                        android:id="@+id/topBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="#331a237e"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_gravity="center"
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivProfilePic"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/bg_circle_white"
+                        android:padding="4dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_avatar"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_surface_container"
-                        android:padding="4dp" />
+                        android:src="@drawable/img_profile_pic"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- Active Status Indicator -->
-                    <FrameLayout
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_secondary">
+                    <TextView
+                        android:id="@+id/tvProfileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Marcus Chen"
+                        android:textColor="#000666"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivProfilePic" />
+
+                    <TextView
+                        android:id="@+id/tvProfileEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Senior Developer"
+                        android:textColor="#454652"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvProfileName" />
+
+                    <!-- Badge -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_capsule"
+                        android:backgroundTint="#e9f6fd"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvProfileEmail">
+
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/checkbox_on_background"
-                            app:tint="@color/html_on_secondary" />
-                    </FrameLayout>
-                </FrameLayout>
+                            android:src="@drawable/ic_nav_profile"
+                            app:tint="#835400" />
 
-                <TextView
-                    android:id="@+id/tvProfileName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Budi Santoso"
-                    android:textColor="@color/html_on_background"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="-0.01" />
+                        <TextView
+                            android:id="@+id/tvProfileEmpId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="ID: EMP-4421"
+                            android:textColor="#111d23"
+                            android:textSize="12sp"
+                            android:letterSpacing="0.05" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tvProfileEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Senior Staff"
-                    android:textColor="@color/html_on_surface_variant"
-                    android:textSize="18sp" />
-
-                <!-- Employee Badge -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/bg_badge"
-                    android:backgroundTint="@color/html_primary_container"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="6dp">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@android:drawable/ic_menu_info_details"
-                        app:tint="@color/html_on_primary_container" />
-
-                    <TextView
-                        android:id="@+id/tvProfileEmpId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="EMP-2024-001"
-                        android:textColor="@color/html_on_primary_container"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Navigation Menu Cards -->
-            <LinearLayout
+            <!-- Personal Info Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#c6c5d4"
+                app:strokeWidth="1dp">
 
-                <!-- Personal Info -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/bg_input_rounded"
-                    android:backgroundTint="@color/html_surface_container_lowest"
-                    android:elevation="2dp"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_surface_container">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_myplaces"
-                            app:tint="@color/html_primary" />
-                    </FrameLayout>
-                    
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Title -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/bg_bottom_line">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_nav_profile"
+                            app:tint="#000666" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:text="Personal Info"
-                            android:textColor="@color/html_on_surface"
+                            android:textColor="#000666"
                             android:textSize="18sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Email -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp">
                         <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Email"
+                            android:textColor="#454652"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Update your details"
-                            android:textColor="@color/html_on_surface_variant"
-                            android:textSize="14sp"/>
+                            android:text="m.chen@company.com"
+                            android:textColor="#111d23"
+                            android:textSize="14sp" />
                     </LinearLayout>
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline_variant" />
-                </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#e3f0f8" />
 
-                <!-- Work Schedule -->
+                    <!-- Phone -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Phone"
+                            android:textColor="#454652"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+1 (555) 019-8234"
+                            android:textColor="#111d23"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#e3f0f8" />
+
+                    <!-- Department -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Department"
+                            android:textColor="#454652"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvDepartment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Engineering"
+                            android:textColor="#111d23"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Edit Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Edit Details"
+                        android:textAllCaps="false"
+                        android:textColor="#000666"
+                        app:strokeColor="#000666"
+                        app:strokeWidth="1dp"
+                        app:cornerRadius="8dp"
+                        app:icon="@android:drawable/ic_menu_edit"
+                        app:iconTint="#000666"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Security Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#c6c5d4"
+                app:strokeWidth="1dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/bg_input_rounded"
-                    android:backgroundTint="@color/html_surface_container_lowest"
-                    android:elevation="2dp"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        android:backgroundTint="@color/html_tertiary_container">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_month"
-                            app:tint="@color/html_on_tertiary_container" />
-                    </FrameLayout>
-                    
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Title -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/bg_bottom_line">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_lock_outline"
+                            app:tint="#000666" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Work Schedule"
-                            android:textColor="@color/html_on_surface"
+                            android:layout_marginStart="8dp"
+                            android:text="Security"
+                            android:textColor="#000666"
                             android:textSize="18sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Face ID Check-in -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="12dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Face ID Check-in"
+                                android:textColor="#111d23"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Biometric scanning"
+                                android:textColor="#454652"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:thumbTint="#ffffff"
+                            app:trackTint="#835400" />
+                    </LinearLayout>
+
+                    <!-- Change Password -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/bg_input_rounded"
+                        android:backgroundTint="#e5eeff"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_lock_outline"
+                            app:tint="#111d23" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="Change Password"
+                            android:textColor="#111d23"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="#767681" />
+                    </LinearLayout>
+
+                    <!-- Change PIN -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input_rounded"
+                        android:backgroundTint="#e5eeff"
+                        android:gravity="center"
+                        android:paddingHorizontal="16dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@android:drawable/ic_lock_idle_lock"
+                            app:tint="#111d23" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View shifts &amp; rotations"
-                            android:textColor="@color/html_on_surface_variant"
-                            android:textSize="14sp"/>
+                            android:layout_marginStart="8dp"
+                            android:text="Change PIN"
+                            android:textColor="#111d23"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_media_next"
-                        app:tint="@color/html_outline_variant" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                
-                <!-- Sign Out Button -->
-                <Button
-                    android:id="@+id/btnLogout"
+            <!-- App Settings Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#c6c5d4"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Sign Out"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/html_error"
-                    android:backgroundTint="@color/html_surface_container"
-                    app:cornerRadius="12dp"
-                    app:icon="@android:drawable/ic_lock_power_off"
-                    app:iconGravity="textStart"
-                    app:iconTint="@color/html_error" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            </LinearLayout>
+                    <!-- Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="12dp"
+                        android:background="@drawable/bg_bottom_line">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_preferences"
+                            app:tint="#000666" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="App Settings"
+                            android:textColor="#000666"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Notifications -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_input_outline"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_notifications"
+                            app:tint="#767683" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="Notifications"
+                            android:textColor="#111d23"
+                            android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="#767681" />
+                    </LinearLayout>
+
+                    <!-- Language -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input_outline"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@android:drawable/ic_menu_sort_by_size"
+                            app:tint="#767683" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="Language (EN)"
+                            android:textColor="#111d23"
+                            android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="#767681" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sign Out Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="24dp"
+                android:text="Logout"
+                android:textAllCaps="false"
+                android:textColor="#ba1a1a"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp"
+                app:strokeColor="#ba1a1a"
+                app:strokeWidth="1dp"
+                app:icon="@drawable/ic_exit"
+                app:iconTint="#ba1a1a"
+                app:iconGravity="textStart"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
