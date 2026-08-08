@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,16 +29,26 @@ public class SplashActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        ImageView ivScanFrame = findViewById(R.id.ivScanFrame);
         ImageView ivSplashLogo = findViewById(R.id.ivSplashLogo);
-        View vGlowRing = findViewById(R.id.vGlowRing);
         View vScanLine = findViewById(R.id.vScanLine);
-        ProgressBar pbSplashLoading = findViewById(R.id.pbSplashLoading);
 
         float density = getResources().getDisplayMetrics().density;
-        float startY = -55f * density;
-        float endY = 55f * density;
+        float startY = -75f * density;
+        float endY = 75f * density;
 
-        // 1. Logo & Glow Ring Animation (0ms -> 500ms)
+        // 1. Frame Fade In & Scale
+        ivScanFrame.setScaleX(0.85f);
+        ivScanFrame.setScaleY(0.85f);
+        ivScanFrame.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(500)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
+
+        // 2. Logo Fade In & Scale
         ivSplashLogo.setScaleX(0.8f);
         ivSplashLogo.setScaleY(0.8f);
         ivSplashLogo.animate()
@@ -50,12 +59,7 @@ public class SplashActivity extends AppCompatActivity {
             .setInterpolator(new AccelerateDecelerateInterpolator())
             .start();
 
-        vGlowRing.animate()
-            .alpha(1f)
-            .setDuration(600)
-            .start();
-
-        // 2. Start Laser Scanning Beam Sweep (at 300ms)
+        // 3. Laser Scan Bar Animation Inside Frame
         vScanLine.setTranslationY(startY);
         vScanLine.animate()
             .alpha(1f)
@@ -63,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
             .setDuration(300)
             .withEndAction(() -> {
                 scanAnimator = ObjectAnimator.ofFloat(vScanLine, "translationY", startY, endY);
-                scanAnimator.setDuration(1000);
+                scanAnimator.setDuration(1100);
                 scanAnimator.setRepeatCount(ValueAnimator.INFINITE);
                 scanAnimator.setRepeatMode(ValueAnimator.REVERSE);
                 scanAnimator.setInterpolator(new LinearInterpolator());
@@ -71,15 +75,7 @@ public class SplashActivity extends AppCompatActivity {
             })
             .start();
 
-        // 3. Loading Spinner Animation (at 400ms)
-        pbSplashLoading.setAlpha(0f);
-        pbSplashLoading.animate()
-            .alpha(1f)
-            .setStartDelay(400)
-            .setDuration(500)
-            .start();
-
-        // Transition to Welcome after 2800ms
+        // Transition to Welcome after 2600ms
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (scanAnimator != null) {
                 scanAnimator.cancel();
@@ -87,6 +83,6 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
-        }, 2800);
+        }, 2600);
     }
 }
