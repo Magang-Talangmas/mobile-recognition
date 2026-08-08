@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.navQuickIzin.setOnClickListener(v -> {
-            loadFragment(new com.example.javatraining.ui.main.manual.ManualFragment()); // temporary Izin fragment fallback
+            loadFragment(new com.example.javatraining.ui.main.izin.IzinFragment());
             selectNavTab(2);
             binding.bottomAppBar.setVisibility(View.VISIBLE);
             binding.fabManual.setVisibility(View.VISIBLE);
