@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingBottom="48dp"
+            android:paddingBottom="0dp"
             android:paddingTop="12dp">
 
             <!-- Drag Handle -->
@@ -345,11 +345,12 @@
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Flowing Navy Ribbon Waves Decoration -->
+                <!-- Flowing Navy Ribbon Waves Decoration (Full Edge-to-Edge) -->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="-24dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/bg_flowing_navy_ribbon_waves" />
 
