@@ -62,26 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
-        // Language Toggle Logic
-        android.view.View btnLanguage = findViewById(R.id.btnLanguage);
-        if (btnLanguage != null) {
-            btnLanguage.setOnClickListener(v -> {
-                String[] languages = {"English", "Bahasa Indonesia"};
-                androidx.core.os.LocaleListCompat appLocale = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales();
-                String currentLang = appLocale.toLanguageTags();
-                int checkedItem = currentLang.contains("id") ? 1 : 0;
-
-                new androidx.appcompat.app.AlertDialog.Builder(ProfileActivity.this)
-                        .setTitle("Select Language")
-                        .setSingleChoiceItems(languages, checkedItem, (dialog, which) -> {
-                            String newLang = (which == 1) ? "id" : "en";
-                            androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
-                                    androidx.core.os.LocaleListCompat.forLanguageTags(newLang));
-                            dialog.dismiss();
-                        })
-                        .show();
-            });
-        }
 
         android.widget.Button btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
