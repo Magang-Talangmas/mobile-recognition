@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f4faff"
+    android:background="@color/ent_background"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f4faff"
+        android:background="@color/ent_background"
         app:elevation="0dp">
 
         <!-- Top Header -->
@@ -26,7 +26,7 @@
                 android:layout_height="28dp"
                 android:src="@drawable/ic_arrow_back"
                 android:padding="2dp"
-                app:tint="#000666"
+                app:tint="@color/ent_primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_profile"
-                android:textColor="#000666"
+                android:textColor="@color/ent_primary"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -69,11 +69,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="#ffffff"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#c6c5d4"
-                app:strokeWidth="1dp">
+                app:cardBackgroundColor="@color/ent_surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/ent_outline"
+                app:strokeWidth="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                         android:id="@+id/topBg"
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
-                        android:background="#331a237e"
+                        android:background="@android:color/transparent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="Marcus Chen"
-                        android:textColor="#000666"
+                        android:textColor="@color/ent_primary"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Senior Developer"
-                        android:textColor="#454652"
+                        android:textColor="@color/ent_text_secondary"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +133,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:background="@drawable/bg_input_capsule"
-                        android:backgroundTint="#e9f6fd"
+                        android:backgroundTint="@color/ent_surface_variant"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="6dp"
@@ -145,7 +145,7 @@
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@drawable/ic_nav_profile"
-                            app:tint="#835400" />
+                            app:tint="@color/ent_secondary_dark" />
 
                         <TextView
                             android:id="@+id/tvProfileEmpId"
@@ -154,7 +154,7 @@
                             android:layout_marginStart="6dp"
                             android:fontFamily="sans-serif-medium"
                             android:text="ID: EMP-4421"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="12sp"
                             android:letterSpacing="0.05" />
                     </LinearLayout>
@@ -166,11 +166,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#ffffff"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#c6c5d4"
-                app:strokeWidth="1dp">
+                app:cardBackgroundColor="@color/ent_surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/ent_outline"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,14 +190,14 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_nav_profile"
-                            app:tint="#000666" />
+                            app:tint="@color/ent_primary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/profile_personal_info"
-                            android:textColor="#000666"
+                            android:textColor="@color/ent_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -212,17 +212,17 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/profile_email"
-                            android:textColor="#454652"
+                            android:textColor="@color/ent_text_secondary"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="m.chen@company.com"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#e3f0f8" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/ent_outline" />
 
                     <!-- Phone -->
                     <LinearLayout
@@ -234,17 +234,17 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/profile_phone"
-                            android:textColor="#454652"
+                            android:textColor="@color/ent_text_secondary"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="+1 (555) 019-8234"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#e3f0f8" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/ent_outline" />
 
                     <!-- Department -->
                     <LinearLayout
@@ -256,14 +256,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/profile_department"
-                            android:textColor="#454652"
+                            android:textColor="@color/ent_text_secondary"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/tvDepartment"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Engineering"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -274,12 +274,12 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/profile_edit_details"
                         android:textAllCaps="false"
-                        android:textColor="#000666"
-                        app:strokeColor="#000666"
-                        app:strokeWidth="1dp"
+                        android:textColor="@color/ent_primary"
+                        app:strokeColor="@color/ent_primary"
+                        app:strokeWidth="0dp"
                         app:cornerRadius="8dp"
                         app:icon="@android:drawable/ic_menu_edit"
-                        app:iconTint="#000666"
+                        app:iconTint="@color/ent_primary"
                         app:iconGravity="textStart"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
                 </LinearLayout>
@@ -290,11 +290,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#ffffff"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#c6c5d4"
-                app:strokeWidth="1dp">
+                app:cardBackgroundColor="@color/ent_surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/ent_outline"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -314,14 +314,14 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_lock_outline"
-                            app:tint="#000666" />
+                            app:tint="@color/ent_primary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/profile_security"
-                            android:textColor="#000666"
+                            android:textColor="@color/ent_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -341,13 +341,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_face_id"
-                                android:textColor="#111d23"
+                                android:textColor="@color/ent_text_primary"
                                 android:textSize="16sp" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_biometric_scanning"
-                                android:textColor="#454652"
+                                android:textColor="@color/ent_text_secondary"
                                 android:textSize="14sp" />
                         </LinearLayout>
                         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -355,7 +355,7 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             app:thumbTint="#ffffff"
-                            app:trackTint="#835400" />
+                            app:trackTint="@color/ent_secondary" />
                     </LinearLayout>
 
                     <!-- Change Password -->
@@ -364,20 +364,20 @@
                         android:layout_height="48dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/bg_input_rounded"
-                        android:backgroundTint="#e5eeff"
+                        android:backgroundTint="@color/ent_surface_variant"
                         android:gravity="center"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_lock_outline"
-                            app:tint="#111d23" />
+                            app:tint="@color/ent_text_primary" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/profile_change_password"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -387,20 +387,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_input_rounded"
-                        android:backgroundTint="#e5eeff"
+                        android:backgroundTint="@color/ent_surface_variant"
                         android:gravity="center"
                         android:paddingHorizontal="16dp">
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_pin_keypad"
-                            app:tint="#111d23" />
+                            app:tint="@color/ent_text_primary" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/profile_change_pin"
-                            android:textColor="#111d23"
+                            android:textColor="@color/ent_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -422,7 +422,7 @@
                 android:textStyle="bold"
                 app:cornerRadius="12dp"
                 app:strokeColor="#ba1a1a"
-                app:strokeWidth="1dp"
+                app:strokeWidth="0dp"
                 app:icon="@drawable/ic_exit"
                 app:iconTint="#ba1a1a"
                 app:iconGravity="textStart"
