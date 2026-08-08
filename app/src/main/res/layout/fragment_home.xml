@@ -1,338 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/ent_background"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/ent_background" android:fitsSystemWindows="true">
 
     <!-- Fixed Top Navbar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp">
+    <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@android:color/transparent" app:elevation="0dp">
 
         <!-- Top Header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:paddingHorizontal="16dp">
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="72dp" android:paddingHorizontal="16dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/logo_face_recognition" />
+                <ImageView android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" android:src="@drawable/logo_face_recognition" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dashboard"
-                    android:textColor="@color/ent_primary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dashboard" android:textColor="@color/ent_primary" android:textSize="24sp" android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
 
-                <FrameLayout
-                    android:id="@+id/btnNotifications"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless">
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/ent_text_secondary" />
-                    
-                    <View
-                        android:id="@+id/vUnreadNotificationBadge"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_circle_primary"
-                        android:backgroundTint="@color/ent_error" />
+                <FrameLayout android:id="@+id/btnNotifications" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_notifications" app:tint="@color/ent_text_secondary" />
+
+                    <View android:id="@+id/vUnreadNotificationBadge" android:layout_width="8dp" android:layout_height="8dp" android:layout_gravity="top|end" android:layout_marginTop="8dp" android:layout_marginEnd="8dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/ent_error" />
                 </FrameLayout>
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgAvatar"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_avatar"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                    app:strokeColor="@color/ent_outline"
-                    app:strokeWidth="1dp" />
+                <com.google.android.material.imageview.ShapeableImageView android:id="@+id/imgAvatar" android:layout_width="44dp" android:layout_height="44dp" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackgroundBorderless" android:scaleType="centerCrop" android:src="@drawable/ic_avatar" app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" app:strokeColor="@color/ent_outline" app:strokeWidth="1dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipeRefreshLayout" android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="100dp"
-            android:clipToPadding="false">
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:paddingBottom="100dp" android:clipToPadding="false">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="32dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="20dp" android:paddingTop="16dp" android:paddingBottom="32dp">
 
-            <!-- Welcome Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                <!-- Welcome Section -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="24dp">
 
-                <TextView
-                    android:id="@+id/tvGreeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Good morning, Alex."
-                    android:textColor="@color/ent_text_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <TextView android:id="@+id/tvGreeting" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Good morning, Alex." android:textColor="@color/ent_text_primary" android:textSize="20sp" android:textStyle="bold" />
 
-                <!-- Hero Live Clock Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="16dp"
-                    android:gravity="start">
+                    <!-- Hero Live Clock Section -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="16dp" android:gravity="start">
 
-                    <TextClock
-                        android:id="@+id/tcLiveClock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:format12Hour="hh:mm:ss a"
-                        android:format24Hour="HH:mm:ss"
-                        android:textColor="@color/ent_primary"
-                        android:textSize="40sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.02" />
+                        <TextClock android:id="@+id/tcLiveClock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:format12Hour="hh:mm:ss a" android:format24Hour="HH:mm:ss" android:textColor="@color/ent_primary" android:textSize="40sp" android:textStyle="bold" android:letterSpacing="-0.02" />
 
-                    <TextClock
-                        android:id="@+id/tcLiveDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:format12Hour="EEEE, MMMM d, yyyy"
-                        android:format24Hour="EEEE, MMMM d, yyyy"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="16sp"
-                        android:layout_marginTop="4dp" />
+                        <TextClock android:id="@+id/tcLiveDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:format12Hour="EEEE, MMMM d, yyyy" android:format24Hour="EEEE, MMMM d, yyyy" android:textColor="@color/ent_text_secondary" android:textSize="16sp" android:layout_marginTop="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <!-- Primary Action: Check In/Out Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvStatusCard"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/ent_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeWidth="0dp">
+                <!-- Primary Action: Check In/Out Card -->
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cvStatusCard" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginBottom="24dp" app:cardBackgroundColor="@color/ent_surface" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:strokeWidth="0dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:layout_centerInParent="true">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_centerInParent="true">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CURRENT STATUS"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.05"
-                            android:textAllCaps="true"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CURRENT STATUS" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:textStyle="bold" android:letterSpacing="0.05" android:textAllCaps="true"/>
 
-                        <TextView
-                            android:id="@+id/tvStatusTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="Ready to Clock In"
-                            android:textColor="@color/ent_primary"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="8dp"/>
+                            <TextView android:id="@+id/tvStatusTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Ready to Clock In" android:textColor="@color/ent_primary" android:textSize="32sp" android:textStyle="bold" android:layout_marginTop="8dp"/>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="8dp">
-                            <View
-                                android:id="@+id/vStatusDot"
-                                android:layout_width="8dp"
-                                android:layout_height="8dp"
-                                android:background="@drawable/bg_circle_primary"
-                                android:backgroundTint="@color/ent_secondary"
-                                android:layout_marginEnd="6dp"/>
-                            <TextView
-                                android:id="@+id/tvStatusTime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Waiting for action..."
-                                android:textColor="@color/ent_text_secondary"
-                                android:textSize="14sp"/>
+                            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
+                                <View android:id="@+id/vStatusDot" android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/ent_secondary" android:layout_marginEnd="6dp"/>
+                                <TextView android:id="@+id/tvStatusTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Waiting for action..." android:textColor="@color/ent_text_secondary" android:textSize="14sp"/>
+                            </LinearLayout>
                         </LinearLayout>
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Schedule Today Card -->
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cvScheduleCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" app:cardBackgroundColor="@color/ent_surface" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:strokeWidth="0dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_schedule" app:tint="@color/ent_primary" android:layout_marginEnd="12dp"/>
+
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Today's Schedule" android:textColor="@color/ent_text_primary" android:textSize="16sp" android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView android:id="@+id/tvScheduleTime" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="08:00 - 17:00" android:textColor="@color/ent_primary" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="16dp"/>
+
+                        <TextView android:id="@+id/tvScheduleName" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Reguler Pagi" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:layout_marginTop="4dp"/>
                     </LinearLayout>
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
-            <!-- Schedule Today Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvScheduleCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/ent_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeWidth="0dp">
+                <!-- Recent Activity Section -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Recent Log" android:textColor="@color/ent_text_primary" android:textSize="20sp" android:textStyle="bold" android:layout_centerVertical="true"/>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_schedule"
-                            app:tint="@color/ent_primary"
-                            android:layout_marginEnd="12dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="View All" android:textColor="@color/ent_primary" android:textSize="14sp" android:textStyle="bold" android:layout_alignParentEnd="true" android:layout_centerVertical="true"/>
+                    </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Today's Schedule"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    <!-- Recent Activity Recycler View -->
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvRecentActivity" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" android:clipToPadding="false"/>
 
-                    <TextView
-                        android:id="@+id/tvScheduleTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="08:00 - 17:00"
-                        android:textColor="@color/ent_primary"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="16dp"/>
-                        
-                    <TextView
-                        android:id="@+id/tvScheduleName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Reguler Pagi"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Recent Activity Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
-                    
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Recent Log"
-                        android:textColor="@color/ent_text_primary"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_centerVertical="true"/>
-                        
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="View All"
-                        android:textColor="@color/ent_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"/>
-                </RelativeLayout>
-
-                <!-- Recent Activity Recycler View -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRecentActivity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"/>
-                    
             </LinearLayout>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

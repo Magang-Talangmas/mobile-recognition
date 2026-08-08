@@ -53,16 +53,17 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         if (p.getDate() != null) {
             // Set Date Text
             holder.tvDate.setText(dateFormat.format(p.getDate()));
-            
+
             // Set Relative Date Text
             Calendar today = Calendar.getInstance();
             Calendar cal = Calendar.getInstance();
             cal.setTime(p.getDate());
-            
+
             long diffInMillis = today.getTimeInMillis() - cal.getTimeInMillis();
             long diffDays = diffInMillis / (24 * 60 * 60 * 1000);
-            
-            if (today.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
+
+            if (today.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
+                    && today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
                 holder.tvRelativeDate.setText("Today");
             } else if (diffDays == 1 || (today.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR) == 1)) {
                 holder.tvRelativeDate.setText("Yesterday");
@@ -81,10 +82,10 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         } else {
             holder.tvCheckInTime.setText("--:--");
         }
-        
+
         if (outTime != null) {
             holder.tvCheckOutTime.setText(timeFormat.format(outTime));
-            
+
             // Calculate Total Hours
             if (inTime != null) {
                 long duration = outTime.getTime() - inTime.getTime();
@@ -107,7 +108,9 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             if ("PENDING".equalsIgnoreCase(confStatus)) {
                 holder.tvStatusBadge.setText("Pending");
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
-                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray); // Need to make sure this drawable exists or fallback
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray); // Need to make sure this
+                                                                                            // drawable exists or
+                                                                                            // fallback
             } else if (p.getCheckInEvent().isLate()) {
                 // Late
                 holder.tvStatusBadge.setText("Late");
@@ -122,7 +125,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         } else {
             holder.tvStatusBadge.setText("Pending");
         }
-        
+
         // Accuracy
         if (inTime != null && p.getCheckInEvent() != null) {
             double acc = p.getCheckInEvent().getSimilarity() * 100;
@@ -157,7 +160,8 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View vLineTop, vLineBottom, vInnerDot;
         FrameLayout flDotContainer;
-        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation, tvAccuracy;
+        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation,
+                tvAccuracy;
         LinearLayout llStatusBadge;
         com.google.android.material.card.MaterialCardView cardContainer;
 
@@ -167,14 +171,14 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             vLineBottom = itemView.findViewById(R.id.vLineBottom);
             flDotContainer = itemView.findViewById(R.id.flDotContainer);
             vInnerDot = itemView.findViewById(R.id.vInnerDot);
-            
+
             tvRelativeDate = itemView.findViewById(R.id.tvRelativeDate);
             cardContainer = itemView.findViewById(R.id.cardContainer);
-            
+
             tvDate = itemView.findViewById(R.id.tvDate);
             llStatusBadge = itemView.findViewById(R.id.llStatusBadge);
             tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
-            
+
             tvCheckInTime = itemView.findViewById(R.id.tvCheckInTime);
             tvCheckOutTime = itemView.findViewById(R.id.tvCheckOutTime);
             tvTotalHours = itemView.findViewById(R.id.tvTotalHours);

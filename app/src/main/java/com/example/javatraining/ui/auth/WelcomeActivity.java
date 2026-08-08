@@ -62,14 +62,14 @@ public class WelcomeActivity extends AppCompatActivity {
     private FrameLayout btnLoginContainer;
     private TextView tvLoginText;
     private ProgressBar pbLoginLoading;
-    
+
     private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -81,9 +81,9 @@ public class WelcomeActivity extends AppCompatActivity {
         vDimOverlay = findViewById(R.id.vDimOverlay);
         NestedScrollView bottomSheet = findViewById(R.id.bottomSheetLogin);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        
+
         FrameLayout btnGetStartedContainer = findViewById(R.id.btnGetStartedContainer);
-        
+
         llFormContainer = findViewById(R.id.llFormContainer);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -94,7 +94,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Initial states
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        
+
         // Hide form fields initially for staggered entry
         for (int i = 0; i < llFormContainer.getChildCount(); i++) {
             View child = llFormContainer.getChildAt(i);
@@ -107,7 +107,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     vDimOverlay.animate().alpha(0f).setDuration(300)
-                        .withEndAction(() -> vDimOverlay.setVisibility(View.GONE)).start();
+                            .withEndAction(() -> vDimOverlay.setVisibility(View.GONE)).start();
                     clWelcomeContent.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
                 }
             }
@@ -128,11 +128,11 @@ public class WelcomeActivity extends AppCompatActivity {
         btnGetStartedContainer.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
             v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
-                .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(150).start()).start();
+                    .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(150).start()).start();
 
             // Sequence Timeline
             vDimOverlay.setVisibility(View.VISIBLE);
-            
+
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 triggerBottomSheetStagger();
@@ -144,7 +144,8 @@ public class WelcomeActivity extends AppCompatActivity {
             ivTogglePassword.animate().scaleX(0.7f).scaleY(0.7f).setDuration(100).withEndAction(() -> {
                 isPasswordVisible = !isPasswordVisible;
                 if (isPasswordVisible) {
-                    etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
+                    etPassword
+                            .setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
                     ivTogglePassword.setImageResource(R.drawable.ic_eye_off);
                 } else {
                     etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
@@ -166,19 +167,19 @@ public class WelcomeActivity extends AppCompatActivity {
         long delay = 200; // Wait for sheet to slide up
         for (int i = 0; i < llFormContainer.getChildCount(); i++) {
             View child = llFormContainer.getChildAt(i);
-            
+
             // Reset state before animating
             child.setAlpha(0f);
             child.setTranslationY(50f);
             child.animate().cancel();
-            
+
             child.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setStartDelay(delay)
-                .setDuration(400)
-                .setInterpolator(new OvershootInterpolator(0.8f))
-                .start();
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setStartDelay(delay)
+                    .setDuration(400)
+                    .setInterpolator(new OvershootInterpolator(0.8f))
+                    .start();
             delay += 50;
         }
     }
@@ -190,7 +191,8 @@ public class WelcomeActivity extends AppCompatActivity {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             // Shake animation
-            ObjectAnimator shake = ObjectAnimator.ofFloat(btnLoginContainer, "translationX", 0, 20, -20, 20, -20, 10, -10, 5, -5, 0);
+            ObjectAnimator shake = ObjectAnimator.ofFloat(btnLoginContainer, "translationX", 0, 20, -20, 20, -20, 10,
+                    -10, 5, -5, 0);
             shake.setDuration(400);
             shake.start();
             return;
@@ -208,11 +210,12 @@ public class WelcomeActivity extends AppCompatActivity {
                 pbLoginLoading.animate().alpha(0f).setDuration(200).start();
                 tvLoginText.setText("Success");
                 tvLoginText.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-                btnLoginContainer.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
+                btnLoginContainer
+                        .setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.holo_green_dark));
                 tvLoginText.animate().alpha(1f).setDuration(200).withEndAction(() -> {
                     handleLoginSuccess();
                 }).start();
-                
+
                 // Upload FCM Token
                 registerFCM();
             } else {
@@ -226,7 +229,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void handleLoginSuccess() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        
+
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -236,16 +239,20 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void registerFCM() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) return;
+            if (!task.isSuccessful())
+                return;
             String token = task.getResult();
             ApiService apiService = ApiClient.getClient(WelcomeActivity.this).create(ApiService.class);
             SessionManager sessionManager = new SessionManager(WelcomeActivity.this);
             String email = sessionManager.getUser() != null ? sessionManager.getUser().getEmail() : "";
             apiService.updateFcmToken(email, new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {}
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                }
+
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {}
+                public void onFailure(Call<Void> call, Throwable t) {
+                }
             });
         });
     }

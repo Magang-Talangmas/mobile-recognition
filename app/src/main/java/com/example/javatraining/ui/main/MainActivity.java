@@ -29,7 +29,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import com.example.javatraining.ui.auth.LoginActivity;
+
 import com.example.javatraining.ui.main.home.FaceScanActivity;
 import com.example.javatraining.ui.main.home.HomeFragment;
 import com.example.javatraining.data.remote.ApiClient;
@@ -48,9 +48,9 @@ import com.example.javatraining.data.model.User;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     startActivity(new Intent(this, FaceScanActivity.class));
                 } else {
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         // Force fully rounded corners on BottomAppBar
         MaterialShapeDrawable bottomBarBackground = (MaterialShapeDrawable) binding.bottomAppBar.getBackground();
         bottomBarBackground.setShapeAppearanceModel(
@@ -89,16 +89,18 @@ public class MainActivity extends AppCompatActivity {
                 User user = sessionManager.getUser();
                 if (user != null) {
                     ApiService apiService = ApiClient.getClient(MainActivity.this).create(ApiService.class);
-                    apiService.updateFcmToken(user.getEmail(), new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            Log.d("MainActivity", "FCM Token registered on server for user: " + user.getId());
-                        }
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Log.e("MainActivity", "FCM Token registration failed", t);
-                        }
-                    });
+                    apiService.updateFcmToken(user.getEmail(), new FcmTokenRequest(token))
+                            .enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    Log.d("MainActivity", "FCM Token registered on server for user: " + user.getId());
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.e("MainActivity", "FCM Token registration failed", t);
+                                }
+                            });
                 } else {
                     Log.e("MainActivity", "User is null, cannot register FCM Token");
                 }
@@ -133,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
         ObjectAnimator breathingAnim = ObjectAnimator.ofPropertyValuesHolder(
                 binding.fabManual,
                 PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.03f, 1.0f),
-                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.03f, 1.0f)
-        );
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.03f, 1.0f));
         breathingAnim.setDuration(3000);
         breathingAnim.setRepeatCount(ObjectAnimator.INFINITE);
         breathingAnim.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -143,12 +144,14 @@ public class MainActivity extends AppCompatActivity {
         binding.fabManual.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    v.animate().scaleX(0.92f).scaleY(0.92f).setDuration(150).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                    v.animate().scaleX(0.92f).scaleY(0.92f).setDuration(150)
+                            .setInterpolator(new AccelerateDecelerateInterpolator()).start();
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
-                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(250).setInterpolator(new OvershootInterpolator(1.2f)).start();
+                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(250)
+                            .setInterpolator(new OvershootInterpolator(1.2f)).start();
                     break;
             }
             return false; // Let click listener handle the click event
@@ -185,16 +188,17 @@ public class MainActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in,
+                        android.R.anim.fade_out)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
-    
+
     // Public method to allow fragments to navigate programmatically
     public void switchToFragment(Fragment fragment) {
         loadFragment(fragment);
         selectNavTab(-1); // Deselect bottom nav if it's a hidden fragment like Manual
-        
+
         if (fragment instanceof com.example.javatraining.ui.main.notifications.NotificationsFragment) {
             binding.bottomAppBar.setVisibility(View.GONE);
             binding.fabManual.setVisibility(View.GONE);

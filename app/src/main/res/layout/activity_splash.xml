@@ -1,46 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_mesh_premium">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_mesh_premium">
 
     <!-- Center Container -->
-    <FrameLayout
-        android:id="@+id/flLogoContainer"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <FrameLayout android:id="@+id/flLogoContainer" android:layout_width="220dp" android:layout_height="220dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
 
         <!-- Corner Scanning Brackets Frame in Brand Gold #FEB300 -->
-        <ImageView
-            android:id="@+id/ivScanFrame"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_scan_corner_frame"
-            android:alpha="0" />
+        <ImageView android:id="@+id/ivScanFrame" android:layout_width="200dp" android:layout_height="200dp" android:layout_gravity="center" android:src="@drawable/ic_scan_corner_frame" android:alpha="0" />
 
         <!-- Main Face Recognition Logo inside Frame -->
-        <ImageView
-            android:id="@+id/ivSplashLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo_face_recognition"
-            android:alpha="0"/>
+        <ImageView android:id="@+id/ivSplashLogo" android:layout_width="120dp" android:layout_height="120dp" android:layout_gravity="center" android:src="@drawable/logo_face_recognition" android:alpha="0"/>
 
         <!-- Scan Beam Line inside Frame -->
-        <View
-            android:id="@+id/vScanLine"
-            android:layout_width="160dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_laser_line_gold"
-            android:alpha="0" />
+        <View android:id="@+id/vScanLine" android:layout_width="160dp" android:layout_height="4dp" android:layout_gravity="center" android:background="@drawable/bg_laser_line_gold" android:alpha="0" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -85,7 +85,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
                 dotBg.setColor(Color.parseColor("#ba1a1a"));
                 ringBg.setColor(Color.parseColor("#ffdad6")); // error_container
                 holder.itemView.setAlpha(0.75f);
-                
+
                 // Grayscale filter
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);

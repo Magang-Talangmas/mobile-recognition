@@ -37,7 +37,7 @@ public class SelfEnrollActivity extends AppCompatActivity {
     private static final String TAG = "SelfEnrollActivity";
     private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA};
+    private static final String[] REQUIRED_PERMISSIONS = new String[] { Manifest.permission.CAMERA };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,8 @@ public class SelfEnrollActivity extends AppCompatActivity {
     }
 
     private void takePhoto() {
-        if (imageCapture == null) return;
+        if (imageCapture == null)
+            return;
 
         File photoFile = new File(
                 getOutputDirectory(),
@@ -126,7 +127,8 @@ public class SelfEnrollActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {

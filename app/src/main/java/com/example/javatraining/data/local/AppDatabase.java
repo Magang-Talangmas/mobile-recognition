@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.javatraining.data.local.dao.AttendanceDao;
 
-@Database(entities = {AttendanceEntity.class}, version = 1, exportSchema = false)
+@Database(entities = { AttendanceEntity.class }, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;

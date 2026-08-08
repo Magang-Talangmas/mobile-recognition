@@ -33,14 +33,14 @@ public class TechBackgroundView extends View {
     private void init() {
         dotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dotPaint.setColor(Color.parseColor("#334155")); // Slate 700
-        
+
         scannerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        
+
         int width = getWidth();
         int height = getHeight();
 
@@ -54,9 +54,9 @@ public class TechBackgroundView extends View {
 
         // Setup gradient for scanner line if not done
         if (scannerPaint.getShader() == null) {
-            scannerPaint.setShader(new LinearGradient(0, 0, 0, 40, 
-                new int[]{Color.TRANSPARENT, Color.parseColor("#00E5FF"), Color.TRANSPARENT}, 
-                null, Shader.TileMode.CLAMP));
+            scannerPaint.setShader(new LinearGradient(0, 0, 0, 40,
+                    new int[] { Color.TRANSPARENT, Color.parseColor("#00E5FF"), Color.TRANSPARENT },
+                    null, Shader.TileMode.CLAMP));
         }
 
         // Draw glowing scanner line
@@ -65,10 +65,12 @@ public class TechBackgroundView extends View {
         // Update position
         if (movingDown) {
             scannerY += 4; // speed
-            if (scannerY > height) movingDown = false;
+            if (scannerY > height)
+                movingDown = false;
         } else {
             scannerY -= 4;
-            if (scannerY < 0) movingDown = true;
+            if (scannerY < 0)
+                movingDown = true;
         }
 
         // Trigger next frame

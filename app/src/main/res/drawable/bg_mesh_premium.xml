@@ -6,15 +6,11 @@
             <solid android:color="#F8F9FF" />
         </shape>
     </item>
-    
+
     <!-- Top left soft blue gradient -->
     <item android:top="-100dp" android:left="-100dp" android:right="150dp" android:bottom="200dp">
         <shape android:shape="oval">
-            <gradient
-                android:type="radial"
-                android:gradientRadius="300dp"
-                android:startColor="#66d6e3fb"
-                android:endColor="#00d6e3fb" />
+            <gradient android:type="radial" android:gradientRadius="300dp" android:startColor="#66d6e3fb" android:endColor="#00d6e3fb" />
         </shape>
     </item>
 

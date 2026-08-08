@@ -1,231 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/html_surface_new"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/html_surface_new" android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp">
+    <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@android:color/transparent" app:elevation="0dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
             <!-- Top Header -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:paddingHorizontal="16dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="72dp" android:paddingHorizontal="16dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/logo_face_recognition" />
+                    <ImageView android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" android:src="@drawable/logo_face_recognition" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Employee"
-                        android:textColor="@color/html_primary"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Employee" android:textColor="@color/html_primary" android:textSize="24sp" android:textStyle="bold" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageButton
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/html_on_surface_variant_new" />
+                    <ImageButton android:layout_width="48dp" android:layout_height="48dp" android:layout_marginEnd="8dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_notifications" app:tint="@color/html_on_surface_variant_new" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_avatar"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                        app:strokeColor="@color/html_primary_container_new"
-                        app:strokeWidth="2dp" />
+                    <com.google.android.material.imageview.ShapeableImageView android:layout_width="44dp" android:layout_height="44dp" android:clickable="true" android:focusable="true" android:foreground="?attr/selectableItemBackgroundBorderless" android:scaleType="centerCrop" android:src="@drawable/ic_avatar" app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" app:strokeColor="@color/html_primary_container_new" app:strokeWidth="2dp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Search and Filter Bar -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/html_surface_new"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/html_surface_new" android:orientation="horizontal" android:paddingHorizontal="16dp" android:paddingVertical="8dp">
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_input_rounded"
-                    android:backgroundTint="@color/html_surface_container_new">
+                <FrameLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_marginEnd="12dp" android:layout_weight="1" android:background="@drawable/bg_input_rounded" android:backgroundTint="@color/html_surface_container_new">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/ic_search"
-                        app:tint="@color/html_on_surface_variant_new" />
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center_vertical" android:layout_marginStart="12dp" android:src="@drawable/ic_search" app:tint="@color/html_on_surface_variant_new" />
 
-                    <EditText
-                        android:id="@+id/etSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:hint="Search employees..."
-                        android:paddingStart="44dp"
-                        android:paddingEnd="16dp"
-                        android:textColor="@color/html_on_surface_new"
-                        android:textColorHint="@color/html_on_surface_variant_new"
-                        android:textSize="16sp" />
+                    <EditText android:id="@+id/etSearch" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:hint="Search employees..." android:paddingStart="44dp" android:paddingEnd="16dp" android:textColor="@color/html_on_surface_new" android:textColorHint="@color/html_on_surface_variant_new" android:textSize="16sp" />
                 </FrameLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.Icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:insetLeft="0dp"
-                    android:insetTop="0dp"
-                    android:insetRight="0dp"
-                    android:insetBottom="0dp"
-                    app:backgroundTint="@color/html_primary_container_new"
-                    app:cornerRadius="24dp"
-                    app:icon="@drawable/ic_filter_list"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:iconTint="@color/html_on_primary_container_new" />
+                <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.Icon" android:layout_width="48dp" android:layout_height="48dp" android:insetLeft="0dp" android:insetTop="0dp" android:insetRight="0dp" android:insetBottom="0dp" app:backgroundTint="@color/html_primary_container_new" app:cornerRadius="24dp" app:icon="@drawable/ic_filter_list" app:iconGravity="textStart" app:iconPadding="0dp" app:iconTint="@color/html_on_primary_container_new" />
             </LinearLayout>
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingBottom="100dp" app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="16dp" android:paddingTop="16dp">
 
             <!-- Department Tabs -->
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:scrollbars="none">
+            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:scrollbars="none">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/chipEngineering"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_inactive"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Engineering"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                    <TextView android:id="@+id/chipEngineering" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_chip_inactive" android:paddingHorizontal="16dp" android:paddingVertical="6dp" android:text="Engineering" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/chipDesign"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_inactive"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Design"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                    <TextView android:id="@+id/chipDesign" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_chip_inactive" android:paddingHorizontal="16dp" android:paddingVertical="6dp" android:text="Design" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/chipMarketing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_chip_inactive"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="Marketing"
-                        android:textColor="@color/html_on_surface_variant"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                    <TextView android:id="@+id/chipMarketing" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_chip_inactive" android:paddingHorizontal="16dp" android:paddingVertical="6dp" android:text="Marketing" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" />
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Employee List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEmployees"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvEmployees" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingHorizontal="16dp" android:paddingTop="8dp" android:paddingBottom="100dp" app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!-- Add Employee FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="110dp"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/html_primary"
-        app:tint="@color/html_on_primary" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fabAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="bottom|end" android:layout_marginEnd="16dp" android:layout_marginBottom="110dp" android:src="@android:drawable/ic_input_add" app:backgroundTint="@color/html_primary" app:tint="@color/html_on_primary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -45,29 +45,31 @@ public class HistoryFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         rvHistory = view.findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         tvSelectedDate = view.findViewById(R.id.tvSelectedDate);
         tvActivityLogTitle = view.findViewById(R.id.tvActivityLogTitle);
         View btnPickDate = view.findViewById(R.id.btnPickDate);
-        
+
         if (btnPickDate != null) {
             btnPickDate.setOnClickListener(v -> showDatePicker());
         }
 
         allLogs = new ArrayList<>();
         filteredLogs = new ArrayList<>();
-        
+
         adapter = new HistoryLogAdapter(filteredLogs);
         rvHistory.setAdapter(adapter);
 
         repository = new AbsensiTMRepository(requireActivity().getApplication());
-        
-        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
+                .findViewById(R.id.swipeRefreshLayout);
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setOnRefreshListener(() -> {
                 fetchAttendanceHistory();
@@ -79,7 +81,8 @@ public class HistoryFragment extends Fragment {
         View ivProfile = view.findViewById(R.id.ivProfile);
         if (ivProfile != null) {
             ivProfile.setOnClickListener(v -> {
-                android.content.Intent intent = new android.content.Intent(getActivity(), com.example.javatraining.ui.main.profile.ProfileActivity.class);
+                android.content.Intent intent = new android.content.Intent(getActivity(),
+                        com.example.javatraining.ui.main.profile.ProfileActivity.class);
                 startActivity(intent);
             });
         }
@@ -89,7 +92,7 @@ public class HistoryFragment extends Fragment {
 
         return view;
     }
-    
+
     private void showDatePicker() {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select Date")
@@ -101,10 +104,10 @@ public class HistoryFragment extends Fragment {
             updateDateLabels();
             applyFilter();
         });
-        
+
         datePicker.show(getParentFragmentManager(), "DATE_PICKER");
     }
-    
+
     private void updateDateLabels() {
         if (tvSelectedDate != null) {
             tvSelectedDate.setText(dateFormat.format(selectedDate));
@@ -114,7 +117,7 @@ public class HistoryFragment extends Fragment {
             Calendar selected = Calendar.getInstance();
             selected.setTime(selectedDate);
             if (today.get(Calendar.YEAR) == selected.get(Calendar.YEAR) &&
-                today.get(Calendar.DAY_OF_YEAR) == selected.get(Calendar.DAY_OF_YEAR)) {
+                    today.get(Calendar.DAY_OF_YEAR) == selected.get(Calendar.DAY_OF_YEAR)) {
                 tvActivityLogTitle.setText("Activity Log");
             } else {
                 tvActivityLogTitle.setText(titleDateFormat.format(selectedDate) + " Activity");
@@ -137,7 +140,9 @@ public class HistoryFragment extends Fragment {
                     allLogs = attendanceDataList;
                     applyFilter();
                 }
-                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null ? getView().findViewById(R.id.swipeRefreshLayout) : null;
+                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null
+                        ? getView().findViewById(R.id.swipeRefreshLayout)
+                        : null;
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -149,12 +154,12 @@ public class HistoryFragment extends Fragment {
         filteredLogs.clear();
         Calendar selectedCal = Calendar.getInstance();
         selectedCal.setTime(selectedDate);
-        
+
         java.util.Map<String, DailyAttendance> dailyMap = new java.util.HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-        
+
         for (AttendanceData p : allLogs) {
             if (p.getTimestamp() != null) {
                 try {
@@ -163,25 +168,25 @@ public class HistoryFragment extends Fragment {
                         Calendar pCal = Calendar.getInstance();
                         pCal.setTime(detectedAt);
                         if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
-                            pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) { 
-                            
+                                pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) {
+
                             String dateKey = sdf.format(detectedAt);
                             DailyAttendance daily = dailyMap.get(dateKey);
                             if (daily == null) {
                                 daily = new DailyAttendance(detectedAt);
                                 dailyMap.put(dateKey, daily);
                             }
-                            
+
                             AttendanceEvent event = new AttendanceEvent(
-                                0, p.getCameraId(), 0, p.getEmployeeId(), null,
-                                null, 
-                                "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
-                                p.getSimilarity() != null ? p.getSimilarity() : 0.0,
-                                null, null, detectedAt, detectedAt, null
-                            );
+                                    0, p.getCameraId(), 0, p.getEmployeeId(), null,
+                                    null,
+                                    "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN
+                                            : LogType.CHECK_OUT,
+                                    p.getSimilarity() != null ? p.getSimilarity() : 0.0,
+                                    null, null, detectedAt, detectedAt, null);
                             event.setLate(p.getIsLate());
                             event.setConfirmationStatus(p.getConfirmationStatus());
-                            
+
                             if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
                                 daily.setCheckInEvent(event);
                             } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
@@ -194,10 +199,11 @@ public class HistoryFragment extends Fragment {
                 }
             }
         }
-        
+
         filteredLogs.addAll(dailyMap.values());
-        
-        // If month filter returned no logs but allLogs has data, show all available logs
+
+        // If month filter returned no logs but allLogs has data, show all available
+        // logs
         if (filteredLogs.isEmpty() && !allLogs.isEmpty()) {
             java.util.Map<String, DailyAttendance> fallbackMap = new java.util.HashMap<>();
             for (AttendanceData p : allLogs) {
@@ -211,12 +217,11 @@ public class HistoryFragment extends Fragment {
                             fallbackMap.put(dateKey, daily);
                         }
                         AttendanceEvent event = new AttendanceEvent(
-                            0, p.getCameraId(), 0, p.getEmployeeId(), null,
-                            null, 
-                            "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
-                            p.getSimilarity() != null ? p.getSimilarity() : 0.0,
-                            null, null, detectedAt, detectedAt, null
-                        );
+                                0, p.getCameraId(), 0, p.getEmployeeId(), null,
+                                null,
+                                "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                p.getSimilarity() != null ? p.getSimilarity() : 0.0,
+                                null, null, detectedAt, detectedAt, null);
                         event.setLate(p.getIsLate());
                         event.setConfirmationStatus(p.getConfirmationStatus());
                         if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
@@ -229,10 +234,10 @@ public class HistoryFragment extends Fragment {
             }
             filteredLogs.addAll(fallbackMap.values());
         }
-        
+
         // Sort newest first
         Collections.sort(filteredLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
-        
+
         adapter.notifyDataSetChanged();
         if (rvHistory != null) {
             rvHistory.scheduleLayoutAnimation();
@@ -240,39 +245,44 @@ public class HistoryFragment extends Fragment {
     }
 
     private Date parseIsoDate(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) return null;
+        if (dateStr == null || dateStr.trim().isEmpty())
+            return null;
         String raw = dateStr.trim();
         String normalized = raw.replace(" ", "T");
-        
+
         String[] formats = {
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SXXX",
-            "yyyy-MM-dd'T'HH:mm:ssXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss.SSS",
-            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd HH:mm:ss.SSS",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd"
+                "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SXXX",
+                "yyyy-MM-dd'T'HH:mm:ssXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.SSS",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
         };
-        
+
         for (String fmt : formats) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
                 sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                 Date d = sdf.parse(raw);
-                if (d != null) return d;
-            } catch (Exception ignored) {}
-            
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
+
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
                 sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                 Date d = sdf.parse(normalized);
-                if (d != null) return d;
-            } catch (Exception ignored) {}
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
         }
         return new Date();
     }

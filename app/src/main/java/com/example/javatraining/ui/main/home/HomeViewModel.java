@@ -18,7 +18,7 @@ public class HomeViewModel extends AndroidViewModel {
     public LiveData<AttendanceEntity> getTodayAttendance(String date) {
         return repository.getTodayAttendance(date);
     }
-    
+
     public void performCheckIn(String source) {
         repository.performCheckIn(source);
     }

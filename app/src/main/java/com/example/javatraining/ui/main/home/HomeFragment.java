@@ -45,7 +45,8 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -62,11 +63,11 @@ public class HomeFragment extends Fragment {
         // Initial Staggered Entry Animation for Cards
         View cvStatusCard = view.findViewById(R.id.cvStatusCard);
         View cvScheduleCard = view.findViewById(R.id.cvScheduleCard);
-        
+
         if (cvStatusCard != null && cvScheduleCard != null) {
             cvStatusCard.setVisibility(View.INVISIBLE);
             cvScheduleCard.setVisibility(View.INVISIBLE);
-            
+
             Animation anim1 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
             Animation anim2 = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade);
             anim2.setStartOffset(100); // 100ms delay for staggered effect
@@ -81,7 +82,8 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
+                .findViewById(R.id.swipeRefreshLayout);
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setOnRefreshListener(() -> {
                 loadDataAndRefreshUI(view);
@@ -90,10 +92,11 @@ public class HomeFragment extends Fragment {
 
         loadDataAndRefreshUI(view);
     }
-    
+
     private void loadDataAndRefreshUI(View view) {
         // Initialize Data
-        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(requireContext());
+        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(
+                requireContext());
         User currentUser = sessionManager.getUser();
         String karyawanId = currentUser != null ? currentUser.getId() : "";
 
@@ -112,29 +115,30 @@ public class HomeFragment extends Fragment {
             public void onChanged(List<AttendanceData> attendanceDataList) {
                 if (attendanceDataList != null) {
                     List<AttendanceEvent> userLogs = new ArrayList<>();
-                    
+
                     for (AttendanceData data : attendanceDataList) {
                         try {
                             Date detectedAt = parseIsoDate(data.getTimestamp());
                             if (detectedAt != null) {
                                 userLogs.add(new AttendanceEvent(
                                         0, data.getCameraId(), 0, data.getEmployeeId(), null,
-                                        null, 
-                                        "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                        null,
+                                        "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN
+                                                : LogType.CHECK_OUT,
                                         data.getSimilarity() != null ? data.getSimilarity() : 0.0,
-                                        null, null, detectedAt, detectedAt, null
-                                ));
+                                        null, null, detectedAt, detectedAt, null));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    
+
                     // Update UI with logs
                     updateDashboard(view, userLogs);
                 }
-                
-                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
+                        .findViewById(R.id.swipeRefreshLayout);
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -148,7 +152,7 @@ public class HomeFragment extends Fragment {
                 if (scheduleData != null) {
                     TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
                     TextView tvScheduleName = view.findViewById(R.id.tvScheduleName);
-                    
+
                     if (tvScheduleTime != null && tvScheduleName != null) {
                         tvScheduleTime.setText(scheduleData.getCheckInTime() + " - " + scheduleData.getCheckOutTime());
                         tvScheduleName.setText(scheduleData.getName());
@@ -184,13 +188,13 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    
+
     private void updateDashboard(View view, List<AttendanceEvent> userLogs) {
         // Live Status Logic
         TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
         View vStatusDot = view.findViewById(R.id.vStatusDot);
-        
+
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
 
         if (!userLogs.isEmpty()) {
@@ -216,11 +220,11 @@ public class HomeFragment extends Fragment {
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         if (activityAdapter == null) {
             activityAdapter = new RecentActivityAdapter(userLogs);
             rvRecentActivity.setAdapter(activityAdapter);
-            
+
             // Apply LayoutAnimationController for staggered list item entry
             Animation slideUpAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_slide_up);
             LayoutAnimationController controller = new LayoutAnimationController(slideUpAnim);
@@ -233,39 +237,44 @@ public class HomeFragment extends Fragment {
     }
 
     private Date parseIsoDate(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) return null;
+        if (dateStr == null || dateStr.trim().isEmpty())
+            return null;
         String raw = dateStr.trim();
         String normalized = raw.replace(" ", "T");
-        
+
         String[] formats = {
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SXXX",
-            "yyyy-MM-dd'T'HH:mm:ssXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss.SSS",
-            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd HH:mm:ss.SSS",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd"
+                "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SXXX",
+                "yyyy-MM-dd'T'HH:mm:ssXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.SSS",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
         };
-        
+
         for (String fmt : formats) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
                 sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                 Date d = sdf.parse(raw);
-                if (d != null) return d;
-            } catch (Exception ignored) {}
-            
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
+
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.US);
                 sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                 Date d = sdf.parse(normalized);
-                if (d != null) return d;
-            } catch (Exception ignored) {}
+                if (d != null)
+                    return d;
+            } catch (Exception ignored) {
+            }
         }
         return new Date();
     }

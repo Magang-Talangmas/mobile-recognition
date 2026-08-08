@@ -43,53 +43,59 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AttendanceEvent event = presensiList.get(position);
-        
+
         // Icon & Colors
         if (event.getEventType() == LogType.CHECK_IN) {
             holder.tvAction.setText("Checked In");
             holder.ivIcon.setImageResource(android.R.drawable.ic_input_add); // Or some login icon
             holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
-            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_container)));
+            holder.flIconBg.setBackgroundTintList(ColorStateList
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_container)));
         } else if (event.getEventType() == LogType.CHECK_OUT) {
             holder.tvAction.setText("Checked Out");
             holder.ivIcon.setImageResource(android.R.drawable.ic_menu_revert);
-            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
-            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
+            holder.ivIcon.setColorFilter(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
+            holder.flIconBg.setBackgroundTintList(ColorStateList
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
         } else {
             holder.tvAction.setText(event.getEventType().name());
         }
-        
+
         // Date Logic for Subtitle
         Calendar calEvent = Calendar.getInstance();
         calEvent.setTime(event.getDetectedAt());
         Calendar calToday = Calendar.getInstance();
-        
+
         boolean isToday = calEvent.get(Calendar.YEAR) == calToday.get(Calendar.YEAR) &&
-                          calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
-        
+                calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
+
         calToday.add(Calendar.DAY_OF_YEAR, -1);
         boolean isYesterday = calEvent.get(Calendar.YEAR) == calToday.get(Calendar.YEAR) &&
-                              calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
+                calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
 
-        String dayStr = isToday ? "Today" : (isYesterday ? "Yesterday" : new SimpleDateFormat("dd MMM", Locale.getDefault()).format(event.getDetectedAt()));
-        
+        String dayStr = isToday ? "Today"
+                : (isYesterday ? "Yesterday"
+                        : new SimpleDateFormat("dd MMM", Locale.getDefault()).format(event.getDetectedAt()));
+
         holder.tvSubtitle.setText(dayStr + " • Main Office");
-        
+
         // Time
         holder.tvTime.setText(timeFormat.format(event.getDetectedAt()));
-        
+
         // Indicator dot for today's check in
         if (isToday && event.getEventType() == LogType.CHECK_IN) {
             holder.vStatusIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.vStatusIndicator.setVisibility(View.GONE);
         }
-        
+
         // Update Time text color based on date
         if (isToday) {
             holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface));
         } else {
-            holder.tvTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
+            holder.tvTime.setTextColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_surface_variant));
         }
 
         // Accuracy

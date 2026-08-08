@@ -1,112 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/dash_card_bg"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeColor="#2B52AB"
-    app:strokeWidth="1dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardBackgroundColor="@color/dash_card_bg" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeColor="#2B52AB" app:strokeWidth="1dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="16dp" android:paddingBottom="16dp">
 
         <!-- Header Day -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="12dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Senin, 3 Agu 2026"
-                    android:textColor="@color/dash_text_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                    
-                <TextView
-                    android:id="@+id/tvAttendanceSummary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="4/5 hadir"
-                    android:textColor="@color/dash_text_light_blue"
-                    android:textSize="14sp"
-                    android:layout_marginTop="2dp" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+
+                <TextView android:id="@+id/tvDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Senin, 3 Agu 2026" android:textColor="@color/dash_text_white" android:textSize="16sp" android:textStyle="bold" />
+
+                <TextView android:id="@+id/tvAttendanceSummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4/5 hadir" android:textColor="@color/dash_text_light_blue" android:textSize="14sp" android:layout_marginTop="2dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#34D399"
-                    android:layout_marginEnd="4dp" />
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#FBBF24"
-                    android:layout_marginEnd="4dp" />
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#34D399"
-                    android:layout_marginEnd="4dp" />
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#C084FC"
-                    android:layout_marginEnd="4dp" />
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:backgroundTint="#60A5FA"
-                    android:layout_marginEnd="8dp" />
-                    
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/arrow_down_float"
-                    app:tint="@color/dash_text_light_blue" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:orientation="horizontal" android:gravity="center_vertical">
+
+                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_avatar_circle" android:backgroundTint="#34D399" android:layout_marginEnd="4dp" />
+                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_avatar_circle" android:backgroundTint="#FBBF24" android:layout_marginEnd="4dp" />
+                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_avatar_circle" android:backgroundTint="#34D399" android:layout_marginEnd="4dp" />
+                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_avatar_circle" android:backgroundTint="#C084FC" android:layout_marginEnd="4dp" />
+                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_avatar_circle" android:backgroundTint="#60A5FA" android:layout_marginEnd="8dp" />
+
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/arrow_down_float" app:tint="@color/dash_text_light_blue" />
             </LinearLayout>
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#2B52AB" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#2B52AB" />
 
         <!-- Nested RecyclerView for Employees in this day -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEmployees"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvEmployees" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

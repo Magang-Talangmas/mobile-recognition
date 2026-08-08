@@ -30,7 +30,8 @@ public class EmployeesFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_employees, container, false);
 
         RecyclerView rvEmployees = view.findViewById(R.id.rvEmployees);
@@ -40,7 +41,7 @@ public class EmployeesFragment extends Fragment {
         filteredData = new ArrayList<>();
         adapter = new EmployeeAdapter(filteredData);
         rvEmployees.setAdapter(adapter);
-        
+
         repository = new AbsensiTMRepository(requireActivity().getApplication());
         fetchEmployees();
 
@@ -48,13 +49,17 @@ public class EmployeesFragment extends Fragment {
         android.widget.EditText etSearch = view.findViewById(R.id.etSearch);
         etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 filterList(s.toString(), currentFilter);
             }
+
             @Override
-            public void afterTextChanged(android.text.Editable s) {}
+            public void afterTextChanged(android.text.Editable s) {
+            }
         });
 
         // Filter Chips
@@ -67,7 +72,7 @@ public class EmployeesFragment extends Fragment {
             if (currentFilter.equals(selectedFilter)) {
                 currentFilter = ""; // deselect
                 v.setBackgroundResource(R.drawable.bg_chip_inactive);
-                ((android.widget.TextView)v).setTextColor(getResources().getColor(R.color.html_on_surface_variant));
+                ((android.widget.TextView) v).setTextColor(getResources().getColor(R.color.html_on_surface_variant));
             } else {
                 currentFilter = selectedFilter;
                 chipEngineering.setBackgroundResource(R.drawable.bg_chip_inactive);
@@ -78,7 +83,7 @@ public class EmployeesFragment extends Fragment {
                 chipMarketing.setTextColor(getResources().getColor(R.color.html_on_surface_variant));
 
                 v.setBackgroundResource(R.drawable.bg_chip_active);
-                ((android.widget.TextView)v).setTextColor(getResources().getColor(R.color.html_on_primary));
+                ((android.widget.TextView) v).setTextColor(getResources().getColor(R.color.html_on_primary));
             }
             filterList(etSearch.getText().toString(), currentFilter);
         };
@@ -103,7 +108,7 @@ public class EmployeesFragment extends Fragment {
                         } else {
                             st = EmployeeAdapter.StatusType.TRACKING_PAUSE;
                         }
-                        
+
                         String initials = "";
                         String name = data.getName() != null ? data.getName() : "Unknown";
                         if (name.contains(" ")) {
@@ -116,11 +121,11 @@ public class EmployeesFragment extends Fragment {
                         } else if (name.length() == 1) {
                             initials = name.toUpperCase();
                         }
-                        
+
                         String role = data.getPosition() != null ? data.getPosition() : "Staff";
                         allEmployeesData.add(new EmployeeAdapter.Employee(name, role, "Active Employee", initials, st));
                     }
-                    
+
                     android.widget.EditText etSearch = getView().findViewById(R.id.etSearch);
                     filterList(etSearch != null ? etSearch.getText().toString() : "", currentFilter);
                 }
@@ -131,7 +136,8 @@ public class EmployeesFragment extends Fragment {
     private void filterList(String query, String filterDept) {
         filteredData.clear();
         for (EmployeeAdapter.Employee emp : allEmployeesData) {
-            boolean matchesQuery = emp.name.toLowerCase().contains(query.toLowerCase()) || emp.role.toLowerCase().contains(query.toLowerCase());
+            boolean matchesQuery = emp.name.toLowerCase().contains(query.toLowerCase())
+                    || emp.role.toLowerCase().contains(query.toLowerCase());
             boolean matchesDept = filterDept.isEmpty() || emp.role.contains(filterDept);
             if (matchesQuery && matchesDept) {
                 filteredData.add(emp);

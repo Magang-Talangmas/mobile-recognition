@@ -40,13 +40,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         if (item.isWarning()) {
             holder.ivNotifIcon.setImageResource(android.R.drawable.ic_dialog_alert);
-            holder.ivNotifIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.statusAbsent)));
-            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
+            holder.ivNotifIcon.setImageTintList(
+                    ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.statusAbsent)));
+            holder.flIconBg.setBackgroundTintList(ColorStateList
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_surface_variant)));
             holder.tvNotifTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.statusAbsent));
         } else {
             holder.ivNotifIcon.setImageResource(android.R.drawable.ic_dialog_info);
-            holder.ivNotifIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_primary_container)));
-            holder.flIconBg.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary_container)));
+            holder.ivNotifIcon.setImageTintList(ColorStateList
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_on_primary_container)));
+            holder.flIconBg.setBackgroundTintList(ColorStateList
+                    .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary_container)));
             holder.tvNotifTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
         }
     }

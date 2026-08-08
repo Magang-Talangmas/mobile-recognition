@@ -1,94 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/html_surface_container_lowest"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/html_outline_variant"
-    app:strokeWidth="1dp">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardBackgroundColor="@color/html_surface_container_lowest" app:cardCornerRadius="8dp" app:cardElevation="0dp" app:strokeColor="@color/html_outline_variant" app:strokeWidth="1dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
 
-        <FrameLayout
-            android:id="@+id/flIconBg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_circle_primary"
-            android:backgroundTint="@color/html_surface_container">
-            
-            <ImageView
-                android:id="@+id/ivIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_agenda"
-                app:tint="@color/html_primary" />
-                
-            <View
-                android:id="@+id/vStatusIndicator"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:background="@drawable/bg_circle_primary"
-                android:backgroundTint="@color/html_secondary_container_new_2"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="-2dp"
-                android:layout_marginBottom="-2dp"
-                android:visibility="gone"/>
+        <FrameLayout android:id="@+id/flIconBg" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/html_surface_container">
+
+            <ImageView android:id="@+id/ivIcon" android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@android:drawable/ic_menu_agenda" app:tint="@color/html_primary" />
+
+            <View android:id="@+id/vStatusIndicator" android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/html_secondary_container_new_2" android:layout_gravity="bottom|end" android:layout_marginEnd="-2dp" android:layout_marginBottom="-2dp" android:visibility="gone"/>
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="16dp">
 
-            <TextView
-                android:id="@+id/tvAction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Checked In"
-                android:textColor="@color/html_on_surface"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            <TextView android:id="@+id/tvAction" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Checked In" android:textColor="@color/html_on_surface" android:textSize="14sp" android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Today • Main Office"
-                android:textColor="@color/html_on_surface_variant"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
+            <TextView android:id="@+id/tvSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Today • Main Office" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:layout_marginTop="2dp" />
 
-            <TextView
-                android:id="@+id/tvAccuracy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Acc: 98%"
-                android:textColor="#10B981"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp" />
+            <TextView android:id="@+id/tvAccuracy" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Acc: 98%" android:textColor="#10B981" android:textSize="12sp" android:textStyle="bold" android:layout_marginTop="2dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="08:30 AM"
-            android:textColor="@color/html_on_surface"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-            
+        <TextView android:id="@+id/tvTime" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="08:30 AM" android:textColor="@color/html_on_surface" android:textSize="14sp" android:textStyle="bold" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

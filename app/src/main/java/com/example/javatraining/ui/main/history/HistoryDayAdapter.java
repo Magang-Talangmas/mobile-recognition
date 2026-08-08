@@ -31,10 +31,10 @@ public class HistoryDayAdapter extends RecyclerView.Adapter<HistoryDayAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryDay day = dayList.get(position);
-        
+
         holder.tvDate.setText(day.date);
         holder.tvAttendanceSummary.setText(day.summary);
-        
+
         HistoryEmployeeAdapter employeeAdapter = new HistoryEmployeeAdapter(day.employees);
         holder.rvEmployees.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.rvEmployees.setAdapter(employeeAdapter);

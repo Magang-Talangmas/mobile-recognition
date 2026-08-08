@@ -45,7 +45,7 @@ public class FaceScanActivity extends AppCompatActivity {
         vScanningLine = findViewById(R.id.vScanningLine);
         ivFaceBracket = findViewById(R.id.ivFaceBracket);
         tvInstruction = findViewById(R.id.tvInstruction);
-        
+
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         startCamera();
@@ -77,56 +77,58 @@ public class FaceScanActivity extends AppCompatActivity {
         breathingAnimator = ObjectAnimator.ofPropertyValuesHolder(
                 ivFaceBracket,
                 PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.05f, 1.0f),
-                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.05f, 1.0f)
-        );
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.05f, 1.0f));
         breathingAnimator.setDuration(2000);
         breathingAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         breathingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         breathingAnimator.start();
     }
-    
+
     private void triggerSuccessState() {
-        if (scanningAnimator != null) scanningAnimator.cancel();
-        if (breathingAnimator != null) breathingAnimator.cancel();
-        
+        if (scanningAnimator != null)
+            scanningAnimator.cancel();
+        if (breathingAnimator != null)
+            breathingAnimator.cancel();
+
         vScanningLine.setVisibility(View.GONE);
         ivFaceBracket.setColorFilter(Color.parseColor("#198754")); // Enterprise Green
         tvInstruction.setText("Wajah Terverifikasi!");
         tvInstruction.setTextColor(Color.parseColor("#198754"));
-        
+
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
-        
+
         ivFaceBracket.animate()
-            .scaleX(1.1f).scaleY(1.1f)
-            .setDuration(200)
-            .setInterpolator(new OvershootInterpolator())
-            .withEndAction(() -> {
-                Karyawan currentUser = MockDatabase.getInstance().getCurrentKaryawan();
-                if (currentUser != null) {
-                    if (MockDatabase.getInstance().isCheckedIn(currentUser.getId())) {
-                        MockDatabase.getInstance().checkOut(currentUser.getId());
-                        Toast.makeText(this, "Check Out Sukses", Toast.LENGTH_SHORT).show();
-                    } else {
-                        MockDatabase.getInstance().checkIn(currentUser.getId());
-                        Toast.makeText(this, "Check In Sukses", Toast.LENGTH_SHORT).show();
+                .scaleX(1.1f).scaleY(1.1f)
+                .setDuration(200)
+                .setInterpolator(new OvershootInterpolator())
+                .withEndAction(() -> {
+                    Karyawan currentUser = MockDatabase.getInstance().getCurrentKaryawan();
+                    if (currentUser != null) {
+                        if (MockDatabase.getInstance().isCheckedIn(currentUser.getId())) {
+                            MockDatabase.getInstance().checkOut(currentUser.getId());
+                            Toast.makeText(this, "Check Out Sukses", Toast.LENGTH_SHORT).show();
+                        } else {
+                            MockDatabase.getInstance().checkIn(currentUser.getId());
+                            Toast.makeText(this, "Check In Sukses", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-                new Handler(Looper.getMainLooper()).postDelayed(this::finish, 500);
-            }).start();
+                    new Handler(Looper.getMainLooper()).postDelayed(this::finish, 500);
+                }).start();
     }
-    
+
     private void triggerFailureState() {
         ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); // Enterprise Red
         tvInstruction.setText("Wajah Tidak Dikenali!");
         tvInstruction.setTextColor(Color.parseColor("#BA1A1A"));
-        
+
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-        
+
         // Shake Animation
-        ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
+        ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15, 6,
+                -6, 0);
         shake.setDuration(400);
         shake.start();
-        
+
         // Reset after 2 seconds
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             ivFaceBracket.clearColorFilter();
@@ -145,7 +147,8 @@ public class FaceScanActivity extends AppCompatActivity {
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-                // Try front camera first, fallback to back camera if emulator doesn't have front camera
+                // Try front camera first, fallback to back camera if emulator doesn't have
+                // front camera
                 CameraSelector cameraSelector;
                 if (cameraProvider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)) {
                     cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
