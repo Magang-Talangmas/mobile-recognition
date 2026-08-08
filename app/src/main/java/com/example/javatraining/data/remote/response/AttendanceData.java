@@ -6,16 +6,16 @@ public class AttendanceData {
     @SerializedName("id")
     private String id;
 
-    @SerializedName("externalEventId")
+    @SerializedName(value = "externalEventId", alternate = {"external_event_id"})
     private String externalEventId;
 
-    @SerializedName("employeeId")
+    @SerializedName(value = "employeeId", alternate = {"employee_id"})
     private String employeeId;
 
-    @SerializedName("cameraId")
+    @SerializedName(value = "cameraId", alternate = {"camera_id"})
     private String cameraId;
 
-    @SerializedName("eventType")
+    @SerializedName(value = "eventType", alternate = {"event_type"})
     private String eventType;
 
     @SerializedName("similarity")
@@ -24,16 +24,16 @@ public class AttendanceData {
     @SerializedName(value = "timestamp", alternate = {"createdAt", "detected_at"})
     private String timestamp;
 
-    @SerializedName("confirmationStatus")
+    @SerializedName(value = "confirmationStatus", alternate = {"confirmation_status", "status"})
     private String confirmationStatus;
     
-    @SerializedName("isLate")
+    @SerializedName(value = "isLate", alternate = {"is_late"})
     private Boolean isLate;
     
-    @SerializedName("photoUrl")
+    @SerializedName(value = "photoUrl", alternate = {"photo_url"})
     private String photoUrl;
     
-    @SerializedName("updatedAt")
+    @SerializedName(value = "updatedAt", alternate = {"updated_at"})
     private String updatedAt;
 
     @SerializedName("employee")

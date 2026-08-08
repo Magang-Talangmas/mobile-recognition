@@ -22,10 +22,10 @@ public class EmployeeData {
     @SerializedName("status")
     private String status;
 
-    @SerializedName("faceRegistered")
+    @SerializedName(value = "faceRegistered", alternate = {"face_registered"})
     private boolean faceRegistered;
 
-    @SerializedName("joinedAt")
+    @SerializedName(value = "joinedAt", alternate = {"joined_at"})
     private String joinedAt;
 
     @SerializedName("photos")
