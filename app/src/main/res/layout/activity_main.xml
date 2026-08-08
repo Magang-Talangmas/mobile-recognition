@@ -55,13 +55,39 @@
                     android:visibility="invisible" />
             </RelativeLayout>
 
+            <!-- Item 2: Quick Izin -->
+            <RelativeLayout
+                android:id="@+id/navQuickIzin"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconQuickIzin"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_calendar" />
+                <View
+                    android:id="@+id/dotQuickIzin"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_below="@id/iconQuickIzin"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
             <!-- Spacer for FAB -->
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <!-- Item 2: History -->
+            <!-- Item 3: History -->
             <RelativeLayout
                 android:id="@+id/navHistory"
                 android:layout_width="0dp"
@@ -81,6 +107,32 @@
                     android:layout_width="4dp"
                     android:layout_height="4dp"
                     android:layout_below="@id/iconHistory"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_nav_dot"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <!-- Item 4: Profile -->
+            <RelativeLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_nav_profile" />
+                <View
+                    android:id="@+id/dotProfile"
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_below="@id/iconProfile"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/bg_nav_dot"

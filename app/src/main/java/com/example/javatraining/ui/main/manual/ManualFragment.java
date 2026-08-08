@@ -315,9 +315,10 @@ public class ManualFragment extends Fragment {
                                     calEvent.get(Calendar.DAY_OF_YEAR) == calToday.get(Calendar.DAY_OF_YEAR);
 
                             if (isToday) {
-                                if ("CHECK_IN".equals(latest.getEventType())) {
+                                String eventType = latest.getEventType();
+                                if ("CHECK_IN".equalsIgnoreCase(eventType) || "IN".equalsIgnoreCase(eventType)) {
                                     setCheckOutState(latest);
-                                } else if ("CHECK_OUT".equals(latest.getEventType())) {
+                                } else if ("CHECK_OUT".equalsIgnoreCase(eventType) || "OUT".equalsIgnoreCase(eventType)) {
                                     setCompletedState();
                                 } else {
                                     setCheckInState();

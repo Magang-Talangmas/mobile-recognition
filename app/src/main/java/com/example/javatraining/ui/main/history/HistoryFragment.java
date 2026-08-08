@@ -177,19 +177,21 @@ public class HistoryFragment extends Fragment {
                                 dailyMap.put(dateKey, daily);
                             }
 
+                            String evtType = p.getEventType();
+                            LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType)) ? LogType.CHECK_IN : LogType.CHECK_OUT;
+                            
                             AttendanceEvent event = new AttendanceEvent(
                                     0, p.getCameraId(), 0, p.getEmployeeId(), null,
                                     null,
-                                    "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN
-                                            : LogType.CHECK_OUT,
+                                    type,
                                     p.getSimilarity() != null ? p.getSimilarity() : 0.0,
                                     null, null, detectedAt, detectedAt, null);
                             event.setLate(p.getIsLate());
                             event.setConfirmationStatus(p.getConfirmationStatus());
 
-                            if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                            if (type == LogType.CHECK_IN) {
                                 daily.setCheckInEvent(event);
-                            } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                            } else {
                                 daily.setCheckOutEvent(event);
                             }
                         }
@@ -216,17 +218,20 @@ public class HistoryFragment extends Fragment {
                             daily = new DailyAttendance(detectedAt);
                             fallbackMap.put(dateKey, daily);
                         }
+                        String evtType = p.getEventType();
+                        LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType)) ? LogType.CHECK_IN : LogType.CHECK_OUT;
+                        
                         AttendanceEvent event = new AttendanceEvent(
                                 0, p.getCameraId(), 0, p.getEmployeeId(), null,
                                 null,
-                                "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                type,
                                 p.getSimilarity() != null ? p.getSimilarity() : 0.0,
                                 null, null, detectedAt, detectedAt, null);
                         event.setLate(p.getIsLate());
                         event.setConfirmationStatus(p.getConfirmationStatus());
-                        if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                        if (type == LogType.CHECK_IN) {
                             daily.setCheckInEvent(event);
-                        } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                        } else {
                             daily.setCheckOutEvent(event);
                         }
                     }

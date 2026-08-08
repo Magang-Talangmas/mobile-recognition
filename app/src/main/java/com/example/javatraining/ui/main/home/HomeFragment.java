@@ -167,8 +167,10 @@ public class HomeFragment extends Fragment {
                     for (AttendanceData data : attendanceDataList) {
                         Date detectedAt = parseIsoDate(data.getTimestamp());
                         if (detectedAt != null) {
+                            String evtType = data.getEventType();
+                            LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType)) ? LogType.CHECK_IN : LogType.CHECK_OUT;
                             flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
-                                "CHECK_IN".equalsIgnoreCase(data.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                type,
                                 data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt, detectedAt, null));
                         }
                     }

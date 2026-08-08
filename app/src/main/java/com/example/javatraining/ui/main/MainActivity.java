@@ -123,6 +123,18 @@ public class MainActivity extends AppCompatActivity {
             binding.fabManual.setVisibility(View.VISIBLE);
         });
 
+        binding.navQuickIzin.setOnClickListener(v -> {
+            loadFragment(new com.example.javatraining.ui.main.manual.ManualFragment()); // temporary Izin fragment fallback
+            selectNavTab(2);
+            binding.bottomAppBar.setVisibility(View.VISIBLE);
+            binding.fabManual.setVisibility(View.VISIBLE);
+        });
+
+        binding.navProfile.setOnClickListener(v -> {
+            startActivity(new android.content.Intent(MainActivity.this, com.example.javatraining.ui.main.profile.ProfileActivity.class));
+            // No tab change since Profile is an Activity
+        });
+
         // FAB (Manual Entry / Clock In) click listener
         binding.fabManual.setOnClickListener(v -> {
             loadFragment(new ManualFragment());
@@ -165,9 +177,13 @@ public class MainActivity extends AppCompatActivity {
 
         binding.iconDashboard.setColorFilter(inactiveColor);
         binding.iconHistory.setColorFilter(inactiveColor);
+        binding.iconQuickIzin.setColorFilter(inactiveColor);
+        binding.iconProfile.setColorFilter(inactiveColor);
 
         binding.dotDashboard.setVisibility(View.INVISIBLE);
         binding.dotHistory.setVisibility(View.INVISIBLE);
+        binding.dotQuickIzin.setVisibility(View.INVISIBLE);
+        binding.dotProfile.setVisibility(View.INVISIBLE);
 
         // Highlight selected
         switch (index) {
@@ -178,6 +194,14 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 binding.iconHistory.setColorFilter(activeColor);
                 binding.dotHistory.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                binding.iconQuickIzin.setColorFilter(activeColor);
+                binding.dotQuickIzin.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                binding.iconProfile.setColorFilter(activeColor);
+                binding.dotProfile.setVisibility(View.VISIBLE);
                 break;
             case -1:
                 // No tab selected
