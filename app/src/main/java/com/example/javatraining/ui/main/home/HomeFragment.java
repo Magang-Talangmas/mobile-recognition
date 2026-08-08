@@ -166,6 +166,23 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
+        // Fetch notifications to update Unread Badge
+        repository.getNotificationsApi().observe(getViewLifecycleOwner(), notifications -> {
+            View vUnreadBadge = view.findViewById(R.id.vUnreadNotificationBadge);
+            if (vUnreadBadge != null) {
+                boolean hasUnread = false;
+                if (notifications != null) {
+                    for (com.example.javatraining.data.remote.response.NotificationData n : notifications) {
+                        if (!n.isRead()) {
+                            hasUnread = true;
+                            break;
+                        }
+                    }
+                }
+                vUnreadBadge.setVisibility(hasUnread ? View.VISIBLE : View.GONE);
+            }
+        });
     }
     
     private void updateDashboard(View view, List<AttendanceEvent> userLogs) {

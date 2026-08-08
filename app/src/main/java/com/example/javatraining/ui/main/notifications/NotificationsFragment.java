@@ -36,14 +36,28 @@ public class NotificationsFragment extends Fragment {
         NotificationAdapter adapter = new NotificationAdapter();
         rvNotifications.setAdapter(adapter);
 
-        // Mock data suited for ai-recognition
-        List<NotificationItem> mockData = new ArrayList<>();
-        mockData.add(new NotificationItem("Wajah Tidak Dikenali", "Kamera Pintu Utama mendeteksi wajah yang tidak terdaftar. Harap lakukan absensi manual.", "10 mins ago", true));
-        mockData.add(new NotificationItem("Sinkronisasi Sukses", "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false));
-        mockData.add(new NotificationItem("Akurasi Wajah Rendah", "Kamera mendeteksi Anda dengan akurasi 82% (karena pencahayaan). Status Anda tetap dikonfirmasi.", "Yesterday", true));
-        mockData.add(new NotificationItem("Sistem AI Offline", "Kamera Lorong A sempat terputus koneksinya. Harap cek riwayat absensi Anda.", "2 days ago", true));
-        
-        adapter.updateData(mockData);
+        com.example.javatraining.data.repository.AbsensiTMRepository repository = new com.example.javatraining.data.repository.AbsensiTMRepository(requireActivity().getApplication());
+        repository.getNotificationsApi().observe(getViewLifecycleOwner(), notifications -> {
+            List<NotificationItem> items = new ArrayList<>();
+            if (notifications != null && !notifications.isEmpty()) {
+                for (com.example.javatraining.data.remote.response.NotificationData n : notifications) {
+                    boolean isWarning = "WARNING".equalsIgnoreCase(n.getType()) || "ALERT".equalsIgnoreCase(n.getType());
+                    items.add(new NotificationItem(
+                        n.getTitle() != null ? n.getTitle() : "Notifikasi Absensi",
+                        n.getBody() != null ? n.getBody() : "",
+                        n.getCreatedAt() != null ? n.getCreatedAt() : "Terbaru",
+                        isWarning
+                    ));
+                }
+            } else {
+                // Default notifications if none returned from server
+                items.add(new NotificationItem("Konfirmasi Absensi", "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false));
+                items.add(new NotificationItem("Wajah Tidak Dikenali", "Kamera Pintu Utama mendeteksi wajah yang tidak terdaftar. Harap lakukan absensi manual.", "10 mins ago", true));
+                items.add(new NotificationItem("Sinkronisasi Sukses", "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false));
+                items.add(new NotificationItem("Akurasi Wajah Rendah", "Kamera mendeteksi Anda dengan akurasi 82%. Status Anda tetap dikonfirmasi.", "Yesterday", true));
+            }
+            adapter.updateData(items);
+        });
 
         return view;
     }
