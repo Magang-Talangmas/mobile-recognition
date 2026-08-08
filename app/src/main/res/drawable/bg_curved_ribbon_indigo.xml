@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="120dp"
+    android:viewportWidth="360"
+    android:viewportHeight="120">
+  
+  <!-- Outer Soft Gradient Wave Ribbon -->
+  <path
+      android:fillColor="#103F51B5"
+      android:pathData="M 0,60 C 90,120 270,0 360,60 L 360,120 L 0,120 Z" />
+
+  <!-- Mid Indigo Wave Ribbon -->
+  <path
+      android:fillColor="#1F000666"
+      android:pathData="M 0,80 C 120,40 240,110 360,70 L 360,120 L 0,120 Z" />
+
+  <!-- Bottom Accent Curved Line -->
+  <path
+      android:strokeColor="#333F51B5"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:pathData="M 0,55 C 90,115 270,-5 360,55" />
+</vector>
