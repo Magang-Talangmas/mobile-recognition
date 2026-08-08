@@ -27,10 +27,10 @@ public class ManualAttendanceRequest {
     @SerializedName("detected_at")
     public String detectedAt;
 
-    @SerializedName("image_url")
-    public String imageUrl;
+    @SerializedName("photoUrl")
+    public String photoUrl;
 
-    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String imageUrl) {
+    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String photoUrl) {
         this.cameraId = "MANUAL";
         this.trackId = 0;
         this.employeeId = employeeId;
@@ -39,7 +39,7 @@ public class ManualAttendanceRequest {
         this.similarity = 1.0;
         this.status = status;
         this.detectedAt = detectedAt;
-        this.imageUrl = imageUrl;
+        this.photoUrl = photoUrl;
     }
 
     public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt) {
