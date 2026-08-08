@@ -162,6 +162,27 @@ public class AbsensiTMRepository {
         return result;
     }
 
+    public LiveData<Boolean> submitLeaveRequest(com.example.javatraining.data.remote.request.LeaveRequest request) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.submitLeaveRequest(request).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    result.setValue(true);
+                } else {
+                    result.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                result.setValue(false);
+            }
+        });
+        return result;
+    }
+
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
         SessionManager sm = new SessionManager(application);

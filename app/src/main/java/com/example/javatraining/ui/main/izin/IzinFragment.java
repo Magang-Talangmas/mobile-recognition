@@ -39,8 +39,42 @@ public class IzinFragment extends Fragment {
         binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
         
         binding.btnSubmitIzin.setOnClickListener(v -> {
-            // TODO: Implement API logic to save leave request
-            requireActivity().onBackPressed();
+            String type = binding.spinnerJenisIzin.getText().toString();
+            String date = binding.etTanggalIzin.getText().toString();
+            String reason = binding.etKeterangan.getText().toString();
+
+            if (type.isEmpty() || date.isEmpty() || reason.isEmpty()) {
+                android.widget.Toast.makeText(requireContext(), "Semua kolom harus diisi", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            android.app.ProgressDialog progress = new android.app.ProgressDialog(requireContext());
+            progress.setMessage("Mengirim pengajuan izin...");
+            progress.setCancelable(false);
+            progress.show();
+
+            com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(requireContext());
+            String employeeId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
+
+            // Create timestamp for createdAt and updatedAt
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
+            sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+            String now = sdf.format(new java.util.Date());
+
+            com.example.javatraining.data.remote.request.LeaveRequest req = new com.example.javatraining.data.remote.request.LeaveRequest(
+                employeeId, date, type, reason, null, "PENDING"
+            );
+
+            com.example.javatraining.data.repository.AbsensiTMRepository repo = new com.example.javatraining.data.repository.AbsensiTMRepository(requireActivity().getApplication());
+            repo.submitLeaveRequest(req).observe(getViewLifecycleOwner(), success -> {
+                progress.dismiss();
+                if (success != null && success) {
+                    android.widget.Toast.makeText(requireContext(), "Pengajuan Izin berhasil dikirim", android.widget.Toast.LENGTH_SHORT).show();
+                    requireActivity().onBackPressed();
+                } else {
+                    android.widget.Toast.makeText(requireContext(), "Gagal mengirim pengajuan izin", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
@@ -51,12 +85,8 @@ public class IzinFragment extends Fragment {
     }
 
     private void setupDatePickers() {
-        binding.etTanggalMulai.setOnClickListener(v -> showDatePicker(date -> {
-            binding.etTanggalMulai.setText(date);
-        }));
-
-        binding.etTanggalSelesai.setOnClickListener(v -> showDatePicker(date -> {
-            binding.etTanggalSelesai.setText(date);
+        binding.etTanggalIzin.setOnClickListener(v -> showDatePicker(date -> {
+            binding.etTanggalIzin.setText(date);
         }));
     }
 

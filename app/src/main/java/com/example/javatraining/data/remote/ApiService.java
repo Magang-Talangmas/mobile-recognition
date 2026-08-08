@@ -49,6 +49,9 @@ public interface ApiService {
     @POST("rest/v1/attendance_events")
     Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
 
+    @POST("rest/v1/attendance_permissions")
+    Call<Void> submitLeaveRequest(@Body com.example.javatraining.data.remote.request.LeaveRequest request);
+
     @POST("storage/v1/object/{bucket}/{path}")
     Call<okhttp3.ResponseBody> uploadStorageObject(
             @Path("bucket") String bucket,
