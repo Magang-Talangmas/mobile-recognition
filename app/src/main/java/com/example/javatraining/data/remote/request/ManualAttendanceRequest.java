@@ -43,7 +43,7 @@ public class ManualAttendanceRequest {
         this.eventType = eventType;
         this.similarity = 1.0;
         this.status = status;
-        this.confirmationStatus = "PENDING";
+        this.confirmationStatus = "CONFIRMED";
         this.timestamp = detectedAt;
         this.createdAt = detectedAt;
         this.updatedAt = detectedAt;

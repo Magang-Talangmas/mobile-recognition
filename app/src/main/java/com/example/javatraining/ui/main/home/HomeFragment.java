@@ -55,10 +55,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Header
-        view.findViewById(R.id.imgAvatar).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ProfileActivity.class);
-            startActivity(intent);
-        });
+
 
         // View All Recent Log
         View tvViewAll = view.findViewById(R.id.tvViewAll);
