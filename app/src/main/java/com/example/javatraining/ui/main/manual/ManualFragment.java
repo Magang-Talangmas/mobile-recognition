@@ -216,8 +216,7 @@ public class ManualFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
                                             + "storage/v1/object/public/recognition/" + filename;
-                                    com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
-                                    boolean isLate = switchLate != null && switchLate.isChecked();
+                                    boolean isLate = false;
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
                                             publicUrl, isLate);
                                 } else {
@@ -228,8 +227,7 @@ public class ManualFragment extends Fragment {
                                     // Make sure we show a Toast to the user so they know image failed
                                     Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                                     
-                                    com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
-                                    boolean isLate = switchLate != null && switchLate.isChecked();
+                                    boolean isLate = false;
                                     
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
                                             null, isLate);
@@ -238,15 +236,13 @@ public class ManualFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
-                                com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
-                                boolean isLate = switchLate != null && switchLate.isChecked();
+                                boolean isLate = false;
                                 sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
                                         null, isLate);
                             }
                         });
             } else {
-                com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
-                boolean isLate = switchLate != null && switchLate.isChecked();
+                boolean isLate = false;
                 sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null, isLate);
             }
         });
