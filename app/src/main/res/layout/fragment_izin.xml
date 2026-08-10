@@ -93,16 +93,22 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:boxStrokeWidth="0dp">
+                    app:boxBackgroundColor="@color/html_surface"
+                    app:boxStrokeColor="@android:color/transparent"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="false">
 
                     <AutoCompleteTextView
                         android:id="@+id/spinnerJenisIzin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@null"
                         android:inputType="none"
                         android:paddingTop="14dp"
                         android:paddingBottom="14dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:hint="Pilih Jenis"
                         android:textColor="@color/html_on_surface"
                         android:popupBackground="@color/html_surface"
