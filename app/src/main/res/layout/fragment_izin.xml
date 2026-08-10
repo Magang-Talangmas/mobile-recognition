@@ -1,226 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/html_background">
 
-    <!-- Header -->
-    <RelativeLayout
+    <!-- Top App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingHorizontal="24dp">
-        
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="Back"
-            app:tint="@color/ent_text_primary" />
-            
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/hanken_grotesk"
-            android:text="Pengajuan Izin"
-            android:textColor="@color/ent_text_primary"
-            android:textSize="18sp" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-    <ScrollView
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:tint="@color/html_on_background" />
+                    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Pengajuan Izin"
+                    android:textColor="@color/html_on_background"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="100dp">
+            android:padding="24dp">
 
-            <!-- Card Formulir -->
-            <androidx.cardview.widget.CardView
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Formulir Izin / Cuti"
+                android:textColor="@color/html_on_background"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Jenis Izin -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jenis Izin"
+                android:textColor="@color/html_on_surface_variant"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/ent_background">
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxStrokeWidth="0dp"
+                app:boxBackgroundColor="@color/html_surface"
+                android:layout_marginBottom="16dp">
 
-                <LinearLayout
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerJenisIzin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:hint="Pilih Jenis"
+                    android:textColor="@color/html_on_surface"
+                    android:textSize="16sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Tanggal Izin -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tanggal Izin"
+                android:textColor="@color/html_on_surface_variant"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/html_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/etTanggalIzin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@android:drawable/ic_menu_today"
+                    android:hint="Pilih Tanggal"
+                    android:textColor="@color/html_on_surface"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Keterangan -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keterangan / Alasan"
+                android:textColor="@color/html_on_surface_variant"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/html_surface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <EditText
+                    android:id="@+id/etKeterangan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:minLines="3"
+                    android:padding="16dp"
+                    android:hint="Tuliskan keterangan..."
+                    android:textColor="@color/html_on_surface"
+                    android:textColorHint="@color/html_on_surface_variant"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Lampiran (Opsional) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lampiran (Opsional)"
+                android:textColor="@color/html_on_surface_variant"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <FrameLayout
+                android:id="@+id/btnUpload"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/bg_photo_upload"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <!-- Jenis Izin -->
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                    <ImageView
+                        android:id="@+id/ivPreviewLampiran"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@android:drawable/ic_menu_gallery"
+                        app:tint="@color/html_outline"/>
                     <TextView
+                        android:id="@+id/tvNamaFile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jenis Izin"
-                        android:fontFamily="@font/hanken_grotesk"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxStrokeColor="@color/ent_text_secondary"
-                        app:boxBackgroundColor="@color/white"
-                        android:layout_marginBottom="16dp">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/spinnerJenisIzin"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="16dp"
-                            android:fontFamily="@font/hanken_grotesk"
-                            android:textSize="15sp"
-                            android:textColor="@color/ent_text_primary"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Tanggal Izin -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tanggal Izin"
-                        android:fontFamily="@font/hanken_grotesk"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxStrokeColor="@color/ent_text_secondary"
-                        app:boxBackgroundColor="@color/white"
-                        android:layout_marginBottom="16dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTanggalIzin"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:focusable="false"
-                            android:inputType="none"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="16dp"
-                            android:drawableEnd="@drawable/ic_email_outline"
-                            android:drawableTint="@color/ent_text_secondary"
-                            android:hint="Pilih Tanggal"
-                            android:fontFamily="@font/hanken_grotesk"
-                            android:textSize="15sp"
-                            android:textColor="@color/ent_text_primary"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <!-- Keterangan -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Keterangan / Alasan"
-                        android:fontFamily="@font/hanken_grotesk"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxStrokeColor="@color/ent_text_secondary"
-                        app:boxBackgroundColor="@color/white"
-                        android:layout_marginBottom="16dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etKeterangan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|start"
-                            android:inputType="textMultiLine"
-                            android:lines="4"
-                            android:minLines="3"
-                            android:padding="16dp"
-                            android:hint="Tuliskan keterangan lebih lanjut..."
-                            android:fontFamily="@font/hanken_grotesk"
-                            android:textSize="15sp"
-                            android:textColor="@color/ent_text_primary"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Lampiran -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lampiran (Opsional)"
-                        android:fontFamily="@font/hanken_grotesk"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <LinearLayout
-                        android:id="@+id/btnUpload"
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:background="@drawable/bg_input_outline">
-                        
-                        <ImageView
-                            android:id="@+id/ivPreviewLampiran"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_email_outline"
-                            app:tint="@color/ent_text_secondary"
-                            android:layout_marginBottom="8dp"/>
-
-                        <TextView
-                            android:id="@+id/tvNamaFile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Unggah File / Foto"
-                            android:fontFamily="@font/hanken_grotesk"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="13sp"/>
-                    </LinearLayout>
-
+                        android:text="Tap to upload a file/photo"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/html_on_surface_variant"
+                        android:layout_marginTop="12dp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-            <!-- Submit Button -->
-            <com.google.android.material.button.MaterialButton
+            </FrameLayout>
+
+            <Button
                 android:id="@+id/btnSubmitIzin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="32dp"
                 android:text="Kirim Pengajuan"
-                android:textAllCaps="false"
-                android:fontFamily="@font/hanken_grotesk"
+                android:backgroundTint="@color/html_primary"
+                android:textColor="@color/html_on_primary"
                 android:textSize="16sp"
-                app:cornerRadius="28dp"
-                app:backgroundTint="@color/ent_primary"
-                android:textColor="@color/white"/>
+                android:layout_marginTop="32dp"
+                app:cornerRadius="28dp"/>
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
