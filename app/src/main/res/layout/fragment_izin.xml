@@ -101,6 +101,7 @@
                     android:paddingBottom="14dp"
                     android:hint="Pilih Jenis"
                     android:textColor="@color/html_on_surface"
+                    android:popupBackground="@color/html_surface"
                     android:textSize="16sp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
