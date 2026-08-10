@@ -31,7 +31,7 @@ public interface ApiService {
     @GET("rest/v1/employees?select=*")
     Call<List<EmployeeData>> getProfile(@Query("email") String email);
 
-    @GET("rest/v1/attendance_events?select=*,employees(*)&order=detected_at.desc")
+    @GET("rest/v1/attendances?select=*,employees(*)&order=detected_at.desc")
     Call<List<AttendanceData>> getAttendances(
             @Query("employee_id") String employeeId,
             @Query("limit") Integer limit
@@ -46,7 +46,7 @@ public interface ApiService {
             @Body FcmTokenRequest request
     );
 
-    @POST("rest/v1/attendance_events")
+    @POST("rest/v1/attendances")
     Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
 
     @POST("rest/v1/attendance_permissions")
