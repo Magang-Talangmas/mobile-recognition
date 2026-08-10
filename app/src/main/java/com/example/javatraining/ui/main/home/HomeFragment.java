@@ -207,11 +207,11 @@ public class HomeFragment extends Fragment {
         repository.getScheduleTodayApi().observe(getViewLifecycleOwner(), new Observer<ScheduleData>() {
             @Override
             public void onChanged(ScheduleData scheduleData) {
-                if (scheduleData != null) {
-                    TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
-                    TextView tvScheduleName = view.findViewById(R.id.tvScheduleName);
-                    TextView tvScheduleTolerance = view.findViewById(R.id.tvScheduleTolerance);
+                TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
+                TextView tvScheduleName = view.findViewById(R.id.tvScheduleName);
+                TextView tvScheduleTolerance = view.findViewById(R.id.tvScheduleTolerance);
 
+                if (scheduleData != null) {
                     if (tvScheduleTime != null && tvScheduleName != null) {
                         tvScheduleTime.setText(scheduleData.getCheckInTime() + " - " + scheduleData.getCheckOutTime());
                         tvScheduleName.setText(scheduleData.getName());
@@ -220,6 +220,17 @@ public class HomeFragment extends Fragment {
                         tvScheduleTolerance.setText("Toleransi Terlambat: " + scheduleData.getToleranceMinutes() + " menit");
                         tvScheduleTolerance.setVisibility(View.VISIBLE);
                     } else if (tvScheduleTolerance != null) {
+                        tvScheduleTolerance.setVisibility(View.GONE);
+                    }
+                } else {
+                    // No schedule found for this user
+                    if (tvScheduleTime != null) {
+                        tvScheduleTime.setText("Tidak ada jadwal");
+                    }
+                    if (tvScheduleName != null) {
+                        tvScheduleName.setText("-");
+                    }
+                    if (tvScheduleTolerance != null) {
                         tvScheduleTolerance.setVisibility(View.GONE);
                     }
                 }
