@@ -260,7 +260,7 @@ public class HomeFragment extends Fragment {
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
         View vStatusDot = view.findViewById(R.id.vStatusDot);
 
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault());
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
 
         if (!flatLogs.isEmpty()) {
             AttendanceEvent latestLog = flatLogs.get(0);
