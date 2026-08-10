@@ -3,19 +3,13 @@ package com.example.javatraining.data.remote.request;
 import com.google.gson.annotations.SerializedName;
 
 public class ManualAttendanceRequest {
-    @SerializedName("camera_id")
+    @SerializedName("cameraId")
     public String cameraId;
     
-    @SerializedName("track_id")
-    public long trackId;
-    
-    @SerializedName("employee_id")
+    @SerializedName("employeeId")
     public String employeeId;
     
-    @SerializedName("direction")
-    public String direction;
-    
-    @SerializedName("event_type")
+    @SerializedName("eventType")
     public String eventType;
     
     @SerializedName("similarity")
@@ -24,21 +18,23 @@ public class ManualAttendanceRequest {
     @SerializedName("status")
     public String status;
     
-    @SerializedName("detected_at")
-    public String detectedAt;
+    @SerializedName("confirmationStatus")
+    public String confirmationStatus;
+    
+    @SerializedName("timestamp")
+    public String timestamp;
 
     @SerializedName("photoUrl")
     public String photoUrl;
 
     public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String photoUrl) {
         this.cameraId = "MANUAL";
-        this.trackId = 0;
         this.employeeId = employeeId;
-        this.direction = direction;
         this.eventType = eventType;
         this.similarity = 1.0;
-        this.status = status;
-        this.detectedAt = detectedAt;
+        this.status = "PRESENT";
+        this.confirmationStatus = "PENDING";
+        this.timestamp = detectedAt;
         this.photoUrl = photoUrl;
     }
 
