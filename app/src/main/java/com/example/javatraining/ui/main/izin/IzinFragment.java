@@ -130,7 +130,7 @@ public class IzinFragment extends Fragment {
                 if (isGranted) {
                     launchCamera();
                 } else {
-                    Toast.makeText(getContext(), "Camera permission required for selfie", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Izin kamera diperlukan untuk foto selfie", Toast.LENGTH_SHORT).show();
                 }
             });
 

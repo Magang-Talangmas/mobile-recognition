@@ -23,7 +23,7 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingTop="8dp">
 
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Use this form to log your attendance if the biometric scanner is offline or unable to process your request." android:textColor="@color/html_on_surface_variant" android:textSize="16sp" android:layout_marginTop="8dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gunakan formulir ini untuk merekam kehadiran jika pemindai biometrik offline atau tidak dapat memproses permintaan Anda." android:textColor="@color/html_on_surface_variant" android:textSize="16sp" android:layout_marginTop="8dp" />
 
             <!-- Info Card -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:background="@drawable/bg_surface_container" android:padding="16dp" android:layout_marginTop="24dp" android:gravity="top">
@@ -33,8 +33,8 @@
                 </FrameLayout>
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="When to use this" android:textColor="@color/html_on_surface" android:textSize="18sp" android:textStyle="bold"/>
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Manual entries require supervisor approval. Please ensure your selfie clearly shows your face and current location." android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:layout_marginTop="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kapan menggunakan ini" android:textColor="@color/html_on_surface" android:textSize="18sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Entri manual memerlukan persetujuan atasan. Pastikan foto selfie Anda menunjukkan wajah dan lokasi dengan jelas." android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:layout_marginTop="4dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -42,7 +42,7 @@
             <LinearLayout android:id="@+id/loadingState" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="64dp" android:visibility="visible">
 
                 <ProgressBar android:layout_width="48dp" android:layout_height="48dp" android:indeterminateTint="@color/html_primary"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Checking your status..." android:textColor="@color/html_on_surface_variant" android:layout_marginTop="16dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Memeriksa status Anda..." android:textColor="@color/html_on_surface_variant" android:layout_marginTop="16dp"/>
             </LinearLayout>
 
             <!-- Form Container -->
@@ -55,7 +55,7 @@
 
                     <!-- Date -->
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Date" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tanggal" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
 
                         <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="52dp" app:cardBackgroundColor="@color/html_surface" app:cardCornerRadius="8dp" app:cardElevation="2dp" app:strokeWidth="0dp">
                             <TextView android:id="@+id/etDate" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingHorizontal="16dp" android:drawablePadding="12dp" android:drawableStart="@android:drawable/ic_menu_today" android:textColor="@color/html_on_surface" android:textSize="16sp"/>
@@ -64,7 +64,7 @@
 
                     <!-- Time -->
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Time" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Waktu" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
 
                         <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="52dp" app:cardBackgroundColor="@color/html_surface" app:cardCornerRadius="8dp" app:cardElevation="2dp" app:strokeWidth="0dp">
                             <TextView android:id="@+id/etTime" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingHorizontal="16dp" android:drawablePadding="12dp" android:drawableStart="@android:drawable/ic_menu_recent_history" android:textColor="@color/html_on_surface" android:textSize="16sp"/>
@@ -76,9 +76,9 @@
 
 
                 <!-- Verification (Photo) -->
-                <TextView android:id="@+id/tvVerificationTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verification" android:textColor="@color/html_on_background" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="32dp" android:layout_marginBottom="16dp"/>
+                <TextView android:id="@+id/tvVerificationTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verifikasi" android:textColor="@color/html_on_background" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="32dp" android:layout_marginBottom="16dp"/>
 
-                <TextView android:id="@+id/tvSelfieLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Selfie Upload" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                <TextView android:id="@+id/tvSelfieLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Unggah Selfie" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
 
 
 
@@ -86,7 +86,7 @@
 
                     <LinearLayout android:id="@+id/llUploadPlaceholder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_gravity="center" android:gravity="center">
                         <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@android:drawable/ic_menu_camera" app:tint="@color/html_outline"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tap to take a selfie\nRequired for verification" android:textAlignment="center" android:textSize="16sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="12dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ketuk untuk selfie\nDiperlukan untuk verifikasi" android:textAlignment="center" android:textSize="16sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="12dp"/>
                     </LinearLayout>
 
                     <ImageView android:id="@+id/ivPhotoPreview" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:visibility="gone" />
@@ -94,7 +94,7 @@
                     <ImageButton android:id="@+id/btnRemovePhoto" android:layout_width="36dp" android:layout_height="36dp" android:layout_gravity="top|end" android:layout_margin="12dp" android:src="@android:drawable/ic_menu_close_clear_cancel" android:background="@drawable/bg_circle_inverse" android:visibility="gone" app:tint="@android:color/white"/>
                 </FrameLayout>
 
-                <Button android:id="@+id/btnSubmit" android:layout_width="match_parent" android:layout_height="56dp" android:text="Submit Request" android:backgroundTint="@color/html_primary" android:textColor="@color/html_on_primary" android:textSize="16sp" android:layout_marginTop="32dp" app:cornerRadius="28dp"/>
+                <Button android:id="@+id/btnSubmit" android:layout_width="match_parent" android:layout_height="56dp" android:text="Kirim Pengajuan" android:backgroundTint="@color/html_primary" android:textColor="@color/html_on_primary" android:textSize="16sp" android:layout_marginTop="32dp" app:cornerRadius="28dp"/>
             </LinearLayout>
 
             <!-- Success State -->
@@ -104,9 +104,9 @@
                     <ImageView android:id="@+id/ivSuccessAnim" android:layout_width="40dp" android:layout_height="40dp" android:layout_gravity="center" android:src="@drawable/avd_anim_success_check" />
                 </FrameLayout>
 
-                <TextView android:id="@+id/tvSuccessTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="All done for today!" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/html_on_background"/>
+                <TextView android:id="@+id/tvSuccessTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Selesai untuk hari ini!" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/html_on_background"/>
 
-                <TextView android:id="@+id/tvSuccessSubtitle" android:layout_width="300dp" android:layout_height="wrap_content" android:text="You've successfully completed your attendance for today." android:textAlignment="center" android:textSize="18sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="12dp"/>
+                <TextView android:id="@+id/tvSuccessSubtitle" android:layout_width="300dp" android:layout_height="wrap_content" android:text="Anda telah berhasil menyelesaikan absensi hari ini." android:textAlignment="center" android:textSize="18sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="12dp"/>
 
                 <!-- Submit Another button removed since it's conditional now -->
             </LinearLayout>

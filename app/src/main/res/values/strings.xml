@@ -2,61 +2,61 @@
     <string name="app_name">AbsensiTM</string>
 
     <!-- Navigation -->
-    <string name="nav_dashboard">Dashboard</string>
-    <string name="nav_scan">Scan</string>
-    <string name="nav_history">History</string>
-    <string name="nav_profile">Profile</string>
+    <string name="nav_dashboard">Beranda</string>
+    <string name="nav_scan">Pindai</string>
+    <string name="nav_history">Riwayat</string>
+    <string name="nav_profile">Profil</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_company_name">PT Talangmas Anugerah Semesta</string>
-    <string name="welcome_subtitle">Fast, Secure and Intelligent\nAttendance Management</string>
-    <string name="welcome_get_started">Get Started</string>
-    <string name="welcome_version">v1.0.0 • Privacy Policy</string>
-    <string name="welcome_back">Welcome Back</string>
-    <string name="welcome_sign_in_prompt">Sign in to your account</string>
-    <string name="welcome_email">Email Address</string>
-    <string name="welcome_password">Password</string>
-    <string name="welcome_remember_me">Remember me</string>
-    <string name="welcome_forgot_password">Forgot Password?</string>
-    <string name="welcome_sign_in">Sign In</string>
+    <string name="welcome_subtitle">Manajemen Absensi\nCepat, Aman, dan Cerdas</string>
+    <string name="welcome_get_started">Mulai</string>
+    <string name="welcome_version">v1.0.0 • Kebijakan Privasi</string>
+    <string name="welcome_back">Selamat Datang</string>
+    <string name="welcome_sign_in_prompt">Masuk ke akun Anda</string>
+    <string name="welcome_email">Alamat Email</string>
+    <string name="welcome_password">Kata Sandi</string>
+    <string name="welcome_remember_me">Ingat saya</string>
+    <string name="welcome_forgot_password">Lupa Kata Sandi?</string>
+    <string name="welcome_sign_in">Masuk</string>
 
     <!-- Dashboard -->
-    <string name="title_dashboard">Dashboard</string>
-    <string name="dashboard_current_status">CURRENT STATUS</string>
-    <string name="dashboard_waiting_action">Waiting for action...</string>
-    <string name="dashboard_todays_schedule">Today\'s Schedule</string>
-    <string name="dashboard_recent_log">Recent Log</string>
-    <string name="dashboard_view_all">View All</string>
+    <string name="title_dashboard">Beranda</string>
+    <string name="dashboard_current_status">STATUS SAAT INI</string>
+    <string name="dashboard_waiting_action">Menunggu tindakan...</string>
+    <string name="dashboard_todays_schedule">Jadwal Hari Ini</string>
+    <string name="dashboard_recent_log">Riwayat Terakhir</string>
+    <string name="dashboard_view_all">Lihat Semua</string>
 
     <!-- History -->
-    <string name="title_history">History</string>
+    <string name="title_history">Riwayat</string>
 
     <!-- Profile -->
-    <string name="title_profile">Profile</string>
-    <string name="profile_personal_info">Personal Info</string>
+    <string name="title_profile">Profil</string>
+    <string name="profile_personal_info">Info Pribadi</string>
     <string name="profile_email">Email</string>
-    <string name="profile_phone">Phone</string>
-    <string name="profile_department">Department</string>
-    <string name="profile_edit_details">Edit Details</string>
-    <string name="profile_security">Security</string>
-    <string name="profile_face_id">Face ID Check-in</string>
-    <string name="profile_biometric_scanning">Biometric scanning</string>
-    <string name="profile_change_password">Change Password</string>
-    <string name="profile_change_pin">Change PIN</string>
-    <string name="profile_app_settings">App Settings</string>
-    <string name="profile_notifications">Notifications</string>
-    <string name="profile_language">Language (EN)</string>
-    <string name="profile_logout">Logout</string>
+    <string name="profile_phone">Telepon</string>
+    <string name="profile_department">Departemen</string>
+    <string name="profile_edit_details">Ubah Detail</string>
+    <string name="profile_security">Keamanan</string>
+    <string name="profile_face_id">Absen Face ID</string>
+    <string name="profile_biometric_scanning">Pemindaian biometrik</string>
+    <string name="profile_change_password">Ubah Kata Sandi</string>
+    <string name="profile_change_pin">Ubah PIN</string>
+    <string name="profile_app_settings">Pengaturan Aplikasi</string>
+    <string name="profile_notifications">Notifikasi</string>
+    <string name="profile_language">Bahasa (ID)</string>
+    <string name="profile_logout">Keluar</string>
     
     <!-- Face Scan -->
-    <string name="scan_instruction">Position your face in the frame</string>
+    <string name="scan_instruction">Posisikan wajah di dalam bingkai</string>
 
     <!-- Employee -->
-    <string name="title_employee">Employee</string>
-    <string name="employee_engineering">Engineering</string>
-    <string name="employee_design">Design</string>
-    <string name="employee_marketing">Marketing</string>
+    <string name="title_employee">Karyawan</string>
+    <string name="employee_engineering">Teknik</string>
+    <string name="employee_design">Desain</string>
+    <string name="employee_marketing">Pemasaran</string>
 
     <!-- Manual Entry -->
-    <string name="title_manual_entry">Manual Entry</string>
+    <string name="title_manual_entry">Entri Manual</string>
 </resources>

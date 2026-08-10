@@ -160,7 +160,7 @@ public class ManualFragment extends Fragment {
                 if (isGranted) {
                     launchCamera();
                 } else {
-                    Toast.makeText(getContext(), "Camera permission required for selfie", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Izin kamera diperlukan untuk foto selfie", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -246,7 +246,7 @@ public class ManualFragment extends Fragment {
 
         btnSubmit.setOnClickListener(v -> {
             if (isCheckIn && !hasPhoto) {
-                Toast.makeText(getContext(), "Please take a selfie for verification", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Harap ambil foto selfie untuk verifikasi", Toast.LENGTH_SHORT).show();
                 return;
             }
 

@@ -105,7 +105,7 @@ public class AbsensiTMRepository {
             public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.LoginData> call, Throwable t) {
                 android.util.Log.e("LOGIN_ERROR", "Exception: " + t.getMessage());
                 mainThreadHandler.post(() -> {
-                    android.widget.Toast.makeText(application, "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+                    android.widget.Toast.makeText(application, "Kesalahan Jaringan: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
                 });
                 result.setValue(null);
             }

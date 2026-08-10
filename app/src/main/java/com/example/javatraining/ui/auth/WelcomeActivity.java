@@ -189,7 +189,7 @@ public class WelcomeActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Harap isi semua bidang", Toast.LENGTH_SHORT).show();
             // Shake animation
             ObjectAnimator shake = ObjectAnimator.ofFloat(btnLoginContainer, "translationX", 0, 20, -20, 20, -20, 10,
                     -10, 5, -5, 0);
@@ -222,7 +222,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 // Failure
                 pbLoginLoading.animate().alpha(0f).setDuration(200).start();
                 tvLoginText.animate().alpha(1f).setDuration(200).start();
-                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Login Gagal", Toast.LENGTH_SHORT).show();
             }
         });
     }

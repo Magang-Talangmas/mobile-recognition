@@ -14,9 +14,9 @@
 
             <ImageView android:layout_width="160dp" android:layout_height="160dp" android:src="@drawable/logo_face_recognition" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PT Talangmas Anugerah Semesta" android:textColor="#000666" android:textSize="20sp" android:textStyle="bold" android:textAlignment="center" android:layout_marginTop="20dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_company_name" android:textColor="#000666" android:textSize="20sp" android:textStyle="bold" android:textAlignment="center" android:layout_marginTop="20dp"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fast, Secure and Intelligent\nAttendance Management" android:textColor="#454652" android:textSize="14sp" android:textAlignment="center" android:layout_marginTop="8dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_subtitle" android:textColor="#454652" android:textSize="14sp" android:textAlignment="center" android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <!-- Bottom Section (25%) -->
@@ -26,13 +26,13 @@
 
                 <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_button_primary">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="Get Started" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/welcome_get_started" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold"/>
 
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center_vertical|end" android:layout_marginEnd="20dp" android:src="@drawable/ic_arrow_forward" app:tint="#FFFFFF"/>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="v1.0.0 • Privacy Policy" android:textColor="#767683" android:textSize="12sp" android:layout_marginTop="16dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_version" android:textColor="#767683" android:textSize="12sp" android:layout_marginTop="16dp"/>
         </LinearLayout>
 
         <!-- Dim Overlay when Bottom Sheet opens -->
@@ -56,22 +56,22 @@
                     <ImageView android:layout_width="32dp" android:layout_height="32dp" android:layout_gravity="center" android:src="@drawable/logo_face_recognition"/>
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView android:id="@+id/bsHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Welcome Back" android:textColor="#000666" android:textSize="26sp" android:textStyle="bold" android:textAlignment="center"/>
+                <TextView android:id="@+id/bsHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_back" android:textColor="#000666" android:textSize="26sp" android:textStyle="bold" android:textAlignment="center"/>
 
-                <TextView android:id="@+id/bsSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sign in to your account" android:textColor="#454652" android:textSize="14sp" android:textAlignment="center" android:layout_marginTop="4dp"/>
+                <TextView android:id="@+id/bsSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_sign_in_prompt" android:textColor="#454652" android:textSize="14sp" android:textAlignment="center" android:layout_marginTop="4dp"/>
             </LinearLayout>
 
             <!-- Form Container (Staggered Animation target) -->
             <LinearLayout android:id="@+id/llFormContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email Address" android:textColor="#0f1c2d" android:textSize="14sp" android:textStyle="bold" android:layout_marginStart="4dp" android:layout_marginBottom="8dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_email" android:textColor="#0f1c2d" android:textSize="14sp" android:textStyle="bold" android:layout_marginStart="4dp" android:layout_marginBottom="8dp"/>
 
                 <LinearLayout android:id="@+id/llEmailWrapper" android:layout_width="match_parent" android:layout_height="56dp" android:background="@drawable/bg_input_outline" android:gravity="center_vertical" android:paddingHorizontal="16dp">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_nav_profile" app:tint="#767683" />
                     <EditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginStart="12dp" android:background="@null" android:hint="name@talangmas.co.id" android:inputType="textEmailAddress" android:textColor="#0f1c2d" android:textColorHint="#c6c5d4" android:textSize="16sp" />
                 </LinearLayout>
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:textColor="#0f1c2d" android:textSize="14sp" android:textStyle="bold" android:layout_marginStart="4dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_password" android:textColor="#0f1c2d" android:textSize="14sp" android:textStyle="bold" android:layout_marginStart="4dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"/>
 
                 <LinearLayout android:id="@+id/llPasswordWrapper" android:layout_width="match_parent" android:layout_height="56dp" android:background="@drawable/bg_input_outline" android:gravity="center_vertical" android:paddingHorizontal="16dp">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_lock_outline" app:tint="#767683" />
@@ -80,8 +80,8 @@
                 </LinearLayout>
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
-                    <CheckBox android:id="@+id/cbRemember" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Remember me" android:textColor="#454652" android:buttonTint="#000666"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Forgot Password?" android:textColor="#000666" android:textStyle="bold" android:layout_alignParentEnd="true" android:layout_centerVertical="true"/>
+                    <CheckBox android:id="@+id/cbRemember" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_remember_me" android:textColor="#454652" android:buttonTint="#000666"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/welcome_forgot_password" android:textColor="#000666" android:textStyle="bold" android:layout_alignParentEnd="true" android:layout_centerVertical="true"/>
                 </RelativeLayout>
 
                 <!-- Login Action -->
@@ -89,7 +89,7 @@
 
                     <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_button_primary">
 
-                        <TextView android:id="@+id/tvLoginText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="Sign In" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold"/>
+                        <TextView android:id="@+id/tvLoginText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/welcome_sign_in" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold"/>
 
                         <ProgressBar android:id="@+id/pbLoginLoading" android:layout_width="32dp" android:layout_height="32dp" android:layout_gravity="center" android:indeterminateTint="#FFFFFF" android:visibility="gone"/>
                     </FrameLayout>
