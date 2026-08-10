@@ -183,34 +183,51 @@
             <FrameLayout
                 android:id="@+id/btnUpload"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="220dp"
                 android:background="@drawable/bg_photo_upload"
                 android:clickable="true"
                 android:focusable="true">
 
                 <LinearLayout
+                    android:id="@+id/llUploadPlaceholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
                     android:gravity="center">
                     <ImageView
-                        android:id="@+id/ivPreviewLampiran"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_gallery"
+                        android:src="@android:drawable/ic_menu_camera"
                         app:tint="@color/html_outline"/>
                     <TextView
                         android:id="@+id/tvNamaFile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tap to upload a file/photo"
+                        android:text="Tap to take a selfie\nRequired for verification"
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:textColor="@color/html_on_surface_variant"
                         android:layout_marginTop="12dp"/>
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/ivPreviewLampiran"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btnRemovePhoto"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="12dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:background="@drawable/bg_circle_inverse"
+                    android:visibility="gone"
+                    app:tint="@android:color/white"/>
             </FrameLayout>
 
             <Button
