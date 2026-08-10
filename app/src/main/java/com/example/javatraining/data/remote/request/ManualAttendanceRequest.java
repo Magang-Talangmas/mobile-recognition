@@ -32,7 +32,7 @@ public class ManualAttendanceRequest {
         this.employeeId = employeeId;
         this.eventType = eventType;
         this.similarity = 1.0;
-        this.status = "PRESENT";
+        this.status = status;
         this.confirmationStatus = "PENDING";
         this.timestamp = detectedAt;
         this.photoUrl = photoUrl;
