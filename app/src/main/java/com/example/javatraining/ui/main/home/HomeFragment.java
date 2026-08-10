@@ -194,10 +194,17 @@ public class HomeFragment extends Fragment {
                 if (scheduleData != null) {
                     TextView tvScheduleTime = view.findViewById(R.id.tvScheduleTime);
                     TextView tvScheduleName = view.findViewById(R.id.tvScheduleName);
+                    TextView tvScheduleTolerance = view.findViewById(R.id.tvScheduleTolerance);
 
                     if (tvScheduleTime != null && tvScheduleName != null) {
                         tvScheduleTime.setText(scheduleData.getCheckInTime() + " - " + scheduleData.getCheckOutTime());
                         tvScheduleName.setText(scheduleData.getName());
+                    }
+                    if (tvScheduleTolerance != null && scheduleData.getToleranceMinutes() != null) {
+                        tvScheduleTolerance.setText("Toleransi Terlambat: " + scheduleData.getToleranceMinutes() + " menit");
+                        tvScheduleTolerance.setVisibility(View.VISIBLE);
+                    } else if (tvScheduleTolerance != null) {
+                        tvScheduleTolerance.setVisibility(View.GONE);
                     }
                 }
             }

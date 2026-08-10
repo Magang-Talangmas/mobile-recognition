@@ -58,11 +58,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    private final ActivityResultLauncher<String> requestNotificationLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    Toast.makeText(this, "Izin notifikasi disarankan untuk info jadwal", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        requestNotificationPermission();
 
         // Force fully rounded corners on BottomAppBar
         MaterialShapeDrawable bottomBarBackground = (MaterialShapeDrawable) binding.bottomAppBar.getBackground();
@@ -89,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 User user = sessionManager.getUser();
                 if (user != null) {
                     ApiService apiService = ApiClient.getClient(MainActivity.this).create(ApiService.class);
-                    apiService.updateFcmToken(user.getEmail(), new FcmTokenRequest(token))
+                    apiService.updateFcmToken("eq." + user.getEmail(), new FcmTokenRequest(token))
                             .enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {

@@ -9,37 +9,28 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.javatraining.R;
+import com.example.javatraining.data.local.SessionManager;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import com.example.javatraining.ui.main.MainActivity;
-import com.example.javatraining.data.remote.ApiClient;
-import com.example.javatraining.data.remote.ApiService;
-import com.example.javatraining.data.remote.request.FcmTokenRequest;
-import com.example.javatraining.data.remote.response.BaseResponse;
-import com.example.javatraining.data.remote.response.EmployeeData;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import java.util.HashMap;
+import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-public class FCMService extends FirebaseMessagingService {
-
-    private static final String TAG = "FCMService";
+    private static final String TAG = "MyFirebaseMsgService";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
 
-        // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
@@ -49,49 +40,37 @@ public class FCMService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // FCM registration token to your app server.
         sendRegistrationToServer(token);
     }
 
     private void sendRegistrationToServer(String token) {
-        com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(this);
-        com.example.javatraining.data.model.User user = sessionManager.getUser();
-        if (user == null || user.getId() == null) {
-            Log.d(TAG, "User not logged in, skipping FCM token upload");
-            return;
-        }
-        ApiService apiService = ApiClient.getClient(this).create(ApiService.class);
-        apiService.updateFcmToken("eq." + user.getEmail(), new FcmTokenRequest(token)).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "FCM Token updated on server successfully");
-                } else {
-                    Log.e(TAG, "Failed to update FCM Token: " + response.code());
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        if (sessionManager.isLoggedIn() && sessionManager.getUser() != null) {
+            AbsensiTMRepository repository = new AbsensiTMRepository(getApplication());
+            
+            Map<String, String> body = new HashMap<>();
+            body.put("fcmToken", token);
+            
+            repository.updateEmployeeData(body).observeForever(success -> {
+                if (success != null && success) {
+                    Log.d(TAG, "FCM Token updated successfully in Supabase");
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Error updating FCM Token", t);
-            }
-        });
+            });
+        }
     }
 
     private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_IMMUTABLE);
 
-        String channelId = "absensio_fcm_channel";
+        String channelId = "fcm_default_channel";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(title)
+                        .setSmallIcon(R.drawable.ic_notifications)
+                        .setContentTitle(title != null ? title : "Notifikasi Baru")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
@@ -100,14 +79,13 @@ public class FCMService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
-                    "Absensio Notifications",
+                    "Absensi Notifications",
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(0, notificationBuilder.build());
     }
 }

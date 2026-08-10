@@ -84,6 +84,7 @@
                         <TextView android:id="@+id/tvScheduleTime" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="08:00 - 17:00" android:textColor="@color/ent_primary" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="16dp"/>
 
                         <TextView android:id="@+id/tvScheduleName" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Reguler Pagi" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:layout_marginTop="4dp"/>
+                        <TextView android:id="@+id/tvScheduleTolerance" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Toleransi: 15 menit" android:textColor="@color/ent_error" android:textSize="12sp" android:layout_marginTop="4dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

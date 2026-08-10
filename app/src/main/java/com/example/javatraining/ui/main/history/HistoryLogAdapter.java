@@ -108,19 +108,22 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             if ("PENDING".equalsIgnoreCase(confStatus)) {
                 holder.tvStatusBadge.setText("Pending");
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
-                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray); // Need to make sure this
-                                                                                            // drawable exists or
-                                                                                            // fallback
-            } else if (p.getCheckInEvent().isLate()) {
-                // Late
-                holder.tvStatusBadge.setText("Late");
-                holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706"));
-                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
+            } else if ("REJECTED".equalsIgnoreCase(confStatus)) {
+                holder.tvStatusBadge.setText("Rejected");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#DC2626")); // red
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_red);
             } else {
-                // On Time
-                holder.tvStatusBadge.setText("On Time");
-                holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC"));
-                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
+                // CONFIRMED or unknown, use lateness
+                if (p.getCheckInEvent().isLate()) {
+                    holder.tvStatusBadge.setText("Late");
+                    holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
+                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+                } else {
+                    holder.tvStatusBadge.setText("On Time");
+                    holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC")); // blue/primary
+                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
+                }
             }
         } else {
             holder.tvStatusBadge.setText("Pending");
