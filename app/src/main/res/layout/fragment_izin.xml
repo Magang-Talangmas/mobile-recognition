@@ -5,41 +5,47 @@
     android:layout_height="match_parent"
     android:background="@color/html_background">
 
-    <!-- Top App Bar -->
+    <!-- Top AppBar matching Dashboard/History -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-            
+            android:layout_height="72dp"
+            android:paddingHorizontal="16dp">
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
-                
-                <ImageButton
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/logo_face_recognition" 
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@android:drawable/ic_menu_revert"
-                    app:tint="@color/html_on_background" />
-                    
+                    android:clickable="true"
+                    android:focusable="true"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:text="Pengajuan Izin"
-                    android:textColor="@color/html_on_background"
-                    android:textSize="20sp"
+                    android:textColor="@color/html_primary"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -123,6 +129,7 @@
                     android:paddingHorizontal="16dp"
                     android:drawablePadding="12dp"
                     android:drawableStart="@android:drawable/ic_menu_today"
+                    app:drawableTint="@color/html_on_surface"
                     android:hint="Pilih Tanggal"
                     android:textColor="@color/html_on_surface"
                     android:textSize="16sp"/>
