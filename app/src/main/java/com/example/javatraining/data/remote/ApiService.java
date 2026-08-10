@@ -37,7 +37,7 @@ public interface ApiService {
             @Query("limit") Integer limit
     );
 
-    @GET("rest/v1/schedule?select=*")
+    @GET("rest/v1/work_schedules?select=*")
     Call<List<ScheduleData>> getScheduleToday();
 
     @PATCH("rest/v1/employees")
