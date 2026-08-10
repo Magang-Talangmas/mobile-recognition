@@ -86,6 +86,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Simulasi Terlambat (Testing)"
+                    app:showText="false"
+                    android:textOn=""
+                    android:textOff=""
                     android:textSize="16sp"/>
 
                 <FrameLayout android:id="@+id/flPhotoUpload" android:layout_width="match_parent" android:layout_height="220dp" android:background="@drawable/bg_photo_upload" android:clickable="true" android:focusable="true">
