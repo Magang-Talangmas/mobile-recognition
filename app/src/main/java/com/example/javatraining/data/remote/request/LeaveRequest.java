@@ -3,6 +3,9 @@ package com.example.javatraining.data.remote.request;
 import com.google.gson.annotations.SerializedName;
 
 public class LeaveRequest {
+    @SerializedName("id")
+    private String id;
+
     @SerializedName("employeeId")
     private String employeeId;
 
@@ -22,6 +25,7 @@ public class LeaveRequest {
     private String status;
 
     public LeaveRequest(String employeeId, String date, String type, String reason, String photoUrl, String status) {
+        this.id = java.util.UUID.randomUUID().toString();
         this.employeeId = employeeId;
         this.date = date;
         this.type = type;
