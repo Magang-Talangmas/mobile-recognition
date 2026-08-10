@@ -19,12 +19,12 @@ public class ScheduleData {
     private Integer toleranceMinutes;
 
     @SerializedName("workDays")
-    private String workDays;
+    private java.util.List<String> workDays;
 
     public String getId() { return id; }
     public String getName() { return name; }
     public String getCheckInTime() { return checkInTime; }
     public String getCheckOutTime() { return checkOutTime; }
     public Integer getToleranceMinutes() { return toleranceMinutes; }
-    public String getWorkDays() { return workDays; }
+    public java.util.List<String> getWorkDays() { return workDays; }
 }
