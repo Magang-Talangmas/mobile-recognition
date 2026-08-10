@@ -44,7 +44,7 @@
                     <!-- Hero Live Clock Section -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="16dp" android:gravity="start">
 
-                        <TextClock android:id="@+id/tcLiveClock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:format12Hour="hh:mm:ss a" android:format24Hour="HH:mm:ss" android:textColor="@color/ent_primary" android:textSize="40sp" android:textStyle="bold" android:letterSpacing="-0.02" />
+                        <TextClock android:id="@+id/tcLiveClock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:format12Hour="HH:mm:ss" android:format24Hour="HH:mm:ss" android:textColor="@color/ent_primary" android:textSize="40sp" android:textStyle="bold" android:letterSpacing="-0.02" />
 
                         <TextClock android:id="@+id/tcLiveDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:format12Hour="EEEE, MMMM d, yyyy" android:format24Hour="EEEE, MMMM d, yyyy" android:textColor="@color/ent_text_secondary" android:textSize="16sp" android:layout_marginTop="4dp" />
                     </LinearLayout>
