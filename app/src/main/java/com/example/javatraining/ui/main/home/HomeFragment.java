@@ -109,16 +109,31 @@ public class HomeFragment extends Fragment {
         User currentUser = sessionManager.getUser();
         String karyawanId = currentUser != null ? currentUser.getId() : "";
 
-        // Greeting
+        // Default Greeting (from Session)
         TextView tvGreeting = view.findViewById(R.id.tvGreeting);
         String name = currentUser != null ? currentUser.getName() : "Guest";
         if (name != null && name.contains(" ")) {
             name = name.substring(0, name.indexOf(" "));
         }
-        tvGreeting.setText("Good morning, " + name + ".");
+        if (name != null) tvGreeting.setText("Good morning, " + name + ".");
+
+        repository = new AbsensiTMRepository(requireActivity().getApplication());
+
+        // Observe Profile API to update greeting with accurate name
+        repository.getProfileApi().observe(getViewLifecycleOwner(), new Observer<EmployeeData>() {
+            @Override
+            public void onChanged(EmployeeData employeeData) {
+                if (employeeData != null && employeeData.getName() != null) {
+                    String updatedName = employeeData.getName();
+                    if (updatedName.contains(" ")) {
+                        updatedName = updatedName.substring(0, updatedName.indexOf(" "));
+                    }
+                    tvGreeting.setText("Good morning, " + updatedName + ".");
+                }
+            }
+        });
 
         // Fetch user logs from API
-        repository = new AbsensiTMRepository(requireActivity().getApplication());
         repository.getAttendancesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
             @Override
             public void onChanged(List<AttendanceData> attendanceDataList) {
