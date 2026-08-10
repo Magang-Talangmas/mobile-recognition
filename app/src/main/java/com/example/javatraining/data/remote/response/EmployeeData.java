@@ -7,6 +7,9 @@ public class EmployeeData {
     @SerializedName("id")
     private String id;
 
+    @SerializedName(value = "employeeId", alternate = {"employee_id"})
+    private String employeeId;
+
     @SerializedName("name")
     private String name;
 
@@ -32,6 +35,7 @@ public class EmployeeData {
     private List<String> photos;
 
     public String getId() { return id; }
+    public String getEmployeeId() { return employeeId; }
     public String getName() { return name; }
     public String getEmail() { return email; }
     public String getPosition() { return position; }

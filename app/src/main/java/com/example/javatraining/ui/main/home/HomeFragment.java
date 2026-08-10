@@ -288,7 +288,7 @@ public class HomeFragment extends Fragment {
             }
         } else {
             isCheckedIn = false;
-            tvStatusTitle.setText("Checked Out");
+            tvStatusTitle.setText("Waiting for Check-in");
             tvStatusTime.setText("No activity today");
             vStatusDot.setVisibility(View.GONE);
         }

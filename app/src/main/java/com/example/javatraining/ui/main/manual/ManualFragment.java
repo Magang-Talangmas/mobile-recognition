@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class ManualFragment extends Fragment {
 
-    private TextView etDate, etTime, tvActionTitle, tvSuccessTitle, tvSuccessSubtitle;
+    private TextView etDate, etTime, tvActionTitle, tvSuccessTitle, tvSuccessSubtitle, tvVerificationTitle, tvSelfieLabel;
     private FrameLayout flPhotoUpload;
     private LinearLayout loadingState, llUploadPlaceholder, formContainer, successState;
     private ImageView ivPhotoPreview;
@@ -116,6 +116,8 @@ public class ManualFragment extends Fragment {
         tvActionTitle = view.findViewById(R.id.tvActionTitle);
         tvSuccessTitle = view.findViewById(R.id.tvSuccessTitle);
         tvSuccessSubtitle = view.findViewById(R.id.tvSuccessSubtitle);
+        tvVerificationTitle = view.findViewById(R.id.tvVerificationTitle);
+        tvSelfieLabel = view.findViewById(R.id.tvSelfieLabel);
         flPhotoUpload = view.findViewById(R.id.flPhotoUpload);
         loadingState = view.findViewById(R.id.loadingState);
         llUploadPlaceholder = view.findViewById(R.id.llUploadPlaceholder);
@@ -186,7 +188,7 @@ public class ManualFragment extends Fragment {
         });
 
         btnSubmit.setOnClickListener(v -> {
-            if (!hasPhoto) {
+            if (isCheckIn && !hasPhoto) {
                 Toast.makeText(getContext(), "Please take a selfie for verification", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -207,20 +209,33 @@ public class ManualFragment extends Fragment {
             String statusStr = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
 
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                String filename = "manual_" + empId + "_" + System.currentTimeMillis() + ".jpg";
+                // Build filename with checkins folder path to match backend structure
+                String filename = "checkins/" + empId + "/manual_" + System.currentTimeMillis() + ".jpg";
                 okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile,
                         okhttp3.MediaType.parse("image/jpeg"));
 
                 ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-                apiService.uploadStorageObject("attendance-images", filename, requestFile)
+                apiService.uploadStorageObject("recognition", filename, requestFile)
                         .enqueue(new Callback<okhttp3.ResponseBody>() {
                             @Override
                             public void onResponse(Call<okhttp3.ResponseBody> call,
                                     Response<okhttp3.ResponseBody> response) {
-                                String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
-                                        + "storage/v1/object/public/attendance-images/" + filename;
-                                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                        publicUrl);
+                                if (response.isSuccessful()) {
+                                    String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
+                                            + "storage/v1/object/public/recognition/" + filename;
+                                    sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
+                                            publicUrl);
+                                } else {
+                                    String errorMsg = "Upload Failed: " + response.code();
+                                    try { if (response.errorBody() != null) errorMsg += " " + response.errorBody().string(); } catch(Exception e) {}
+                                    android.util.Log.e("IMAGE_UPLOAD", errorMsg);
+                                    
+                                    // Make sure we show a Toast to the user so they know image failed
+                                    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
+                                    
+                                    sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
+                                            null);
+                                }
                             }
 
                             @Override
@@ -298,7 +313,7 @@ public class ManualFragment extends Fragment {
         ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
         SessionManager sm = new SessionManager(getContext());
         String empId = sm.getUser() != null ? sm.getUser().getId() : "";
-        apiService.getAttendances(empId, 1).enqueue(new Callback<List<AttendanceData>>() {
+        apiService.getAttendances("eq." + empId, 1).enqueue(new Callback<List<AttendanceData>>() {
             @Override
             public void onResponse(Call<List<AttendanceData>> call, Response<List<AttendanceData>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
@@ -358,6 +373,10 @@ public class ManualFragment extends Fragment {
         btnSubmit.setText("Submit Check In");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_primary, getActivity().getTheme())));
+        
+        tvVerificationTitle.setVisibility(View.VISIBLE);
+        tvSelfieLabel.setVisibility(View.VISIBLE);
+        flPhotoUpload.setVisibility(View.VISIBLE);
     }
 
     private void setCheckOutState(AttendanceData latest) {
@@ -382,6 +401,10 @@ public class ManualFragment extends Fragment {
         btnSubmit.setText("Submit Check Out");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_error, getActivity().getTheme())));
+                
+        tvVerificationTitle.setVisibility(View.GONE);
+        tvSelfieLabel.setVisibility(View.GONE);
+        flPhotoUpload.setVisibility(View.GONE);
     }
 
     private void setCompletedState() {

@@ -63,7 +63,8 @@ public class AbsensiTMRepository {
                             if (profileResponse.isSuccessful() && profileResponse.body() != null && !profileResponse.body().isEmpty()) {
                                 com.example.javatraining.data.remote.response.EmployeeData empData = profileResponse.body().get(0);
                                 String role = data.getEmployee() != null ? data.getEmployee().getRole() : "EMPLOYEE";
-                                User realUser = new User(empData.getId(), empData.getName(), empData.getEmail(), role, "", "");
+                                String finalId = empData.getEmployeeId() != null ? empData.getEmployeeId() : empData.getId();
+                                User realUser = new User(finalId, empData.getName(), empData.getEmail(), role, "", "");
                                 sessionManager.saveSession(data.getToken(), realUser);
                                 result.setValue(realUser);
                             } else {

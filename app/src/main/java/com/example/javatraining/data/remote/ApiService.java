@@ -31,9 +31,9 @@ public interface ApiService {
     @GET("rest/v1/employees?select=*")
     Call<List<EmployeeData>> getProfile(@Query("email") String email);
 
-    @GET("rest/v1/attendances?select=*,employees(*)&order=detected_at.desc")
+    @GET("rest/v1/attendances?select=*,employees(*)&order=timestamp.desc")
     Call<List<AttendanceData>> getAttendances(
-            @Query("employee_id") String employeeId,
+            @Query("employeeId") String employeeId,
             @Query("limit") Integer limit
     );
 
