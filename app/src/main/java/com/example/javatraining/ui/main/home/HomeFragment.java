@@ -27,6 +27,7 @@ import com.example.javatraining.ui.main.MainActivity;
 import com.example.javatraining.ui.main.profile.ProfileActivity;
 import com.example.javatraining.ui.main.notifications.NotificationsFragment;
 import com.example.javatraining.data.remote.response.AttendanceData;
+import com.example.javatraining.data.remote.response.EmployeeData;
 import com.example.javatraining.data.remote.response.ScheduleData;
 import com.example.javatraining.data.repository.AbsensiTMRepository;
 import androidx.lifecycle.Observer;
