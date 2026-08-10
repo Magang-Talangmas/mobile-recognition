@@ -21,6 +21,9 @@ public class ManualAttendanceRequest {
     @SerializedName("status")
     public String status;
     
+    @SerializedName("isLate")
+    public boolean isLate;
+    
     @SerializedName("confirmationStatus")
     public String confirmationStatus;
     
@@ -36,13 +39,14 @@ public class ManualAttendanceRequest {
     @SerializedName("updatedAt")
     public String updatedAt;
 
-    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String photoUrl) {
+    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String photoUrl, boolean isLate) {
         this.id = java.util.UUID.randomUUID().toString();
         this.cameraId = "MANUAL";
         this.employeeId = employeeId;
         this.eventType = eventType;
         this.similarity = 1.0;
         this.status = status;
+        this.isLate = isLate;
         this.confirmationStatus = "CONFIRMED";
         this.timestamp = detectedAt;
         this.createdAt = detectedAt;
@@ -50,7 +54,7 @@ public class ManualAttendanceRequest {
         this.photoUrl = photoUrl;
     }
 
-    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt) {
-        this(employeeId, direction, eventType, status, detectedAt, null);
+    public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, boolean isLate) {
+        this(employeeId, direction, eventType, status, detectedAt, null, isLate);
     }
 }

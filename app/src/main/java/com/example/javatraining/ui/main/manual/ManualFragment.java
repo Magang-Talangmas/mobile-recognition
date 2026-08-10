@@ -216,8 +216,10 @@ public class ManualFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
                                             + "storage/v1/object/public/recognition/" + filename;
+                                    com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
+                                    boolean isLate = switchLate != null && switchLate.isChecked();
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            publicUrl);
+                                            publicUrl, isLate);
                                 } else {
                                     String errorMsg = "Upload Failed: " + response.code();
                                     try { if (response.errorBody() != null) errorMsg += " " + response.errorBody().string(); } catch(Exception e) {}
@@ -226,32 +228,40 @@ public class ManualFragment extends Fragment {
                                     // Make sure we show a Toast to the user so they know image failed
                                     Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
                                     
+                                    com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
+                                    boolean isLate = switchLate != null && switchLate.isChecked();
+                                    
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            null);
+                                            null, isLate);
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
+                                com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
+                                boolean isLate = switchLate != null && switchLate.isChecked();
                                 sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                        null);
+                                        null, isLate);
                             }
                         });
             } else {
-                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null);
+                com.google.android.material.materialswitch.MaterialSwitch switchLate = view.findViewById(R.id.switchSimulateLate);
+                boolean isLate = switchLate != null && switchLate.isChecked();
+                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null, isLate);
             }
         });
     }
 
     private void sendManualAttendance(View view, String empId, String directionStr, String eventType, String statusStr,
-            String combinedTime, String imageUrl) {
+            String combinedTime, String imageUrl, boolean isLate) {
         com.example.javatraining.data.remote.request.ManualAttendanceRequest request = new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
                 empId,
                 directionStr,
                 eventType,
                 statusStr,
                 combinedTime,
-                imageUrl);
+                imageUrl,
+                isLate);
 
         ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
         apiService.submitManualAttendance(request).enqueue(new Callback<Void>() {
