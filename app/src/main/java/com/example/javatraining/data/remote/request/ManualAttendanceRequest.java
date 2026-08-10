@@ -30,6 +30,12 @@ public class ManualAttendanceRequest {
     @SerializedName("photoUrl")
     public String photoUrl;
 
+    @SerializedName("createdAt")
+    public String createdAt;
+
+    @SerializedName("updatedAt")
+    public String updatedAt;
+
     public ManualAttendanceRequest(String employeeId, String direction, String eventType, String status, String detectedAt, String photoUrl) {
         this.id = java.util.UUID.randomUUID().toString();
         this.cameraId = "MANUAL";
@@ -39,6 +45,8 @@ public class ManualAttendanceRequest {
         this.status = status;
         this.confirmationStatus = "PENDING";
         this.timestamp = detectedAt;
+        this.createdAt = detectedAt;
+        this.updatedAt = detectedAt;
         this.photoUrl = photoUrl;
     }
 
