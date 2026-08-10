@@ -110,37 +110,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tanggal Izin -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tanggal Izin"
-                android:textColor="@color/html_on_surface_variant"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/html_surface"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-                <TextView
-                    android:id="@+id/etTanggalIzin"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="16dp"
-                    android:drawablePadding="12dp"
-                    android:drawableStart="@android:drawable/ic_menu_today"
-                    app:drawableTint="@color/html_on_surface"
-                    android:hint="Pilih Tanggal"
-                    android:textColor="@color/html_on_surface"
-                    android:textSize="16sp"/>
-            </com.google.android.material.card.MaterialCardView>
 
             <!-- Keterangan -->
             <TextView

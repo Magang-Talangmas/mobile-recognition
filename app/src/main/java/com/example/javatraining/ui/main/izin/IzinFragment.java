@@ -86,7 +86,6 @@ public class IzinFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         
         setupDropdown();
-        setupDatePickers();
         
         binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
@@ -111,13 +110,14 @@ public class IzinFragment extends Fragment {
         
         binding.btnSubmitIzin.setOnClickListener(v -> {
             String type = binding.spinnerJenisIzin.getText().toString();
-            String date = binding.etTanggalIzin.getText().toString();
             String reason = binding.etKeterangan.getText().toString();
 
-            if (type.isEmpty() || date.isEmpty() || reason.isEmpty()) {
+            if (type.isEmpty() || reason.isEmpty()) {
                 Toast.makeText(requireContext(), "Semua kolom harus diisi", Toast.LENGTH_SHORT).show();
                 return;
             }
+            
+            String date = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
 
             if (!hasPhoto) {
                 Toast.makeText(requireContext(), "Silakan ambil foto selfie untuk lampiran", Toast.LENGTH_SHORT).show();
@@ -189,30 +189,6 @@ public class IzinFragment extends Fragment {
         binding.spinnerJenisIzin.setAdapter(adapter);
     }
 
-    private void setupDatePickers() {
-        binding.etTanggalIzin.setOnClickListener(v -> showDatePicker(date -> {
-            binding.etTanggalIzin.setText(date);
-        }));
-    }
-
-    private void showDatePicker(OnDateSelectedListener listener) {
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Pilih Tanggal")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .build();
-
-        datePicker.addOnPositiveButtonClickListener(selection -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            String date = sdf.format(new Date(selection));
-            listener.onSelected(date);
-        });
-
-        datePicker.show(getParentFragmentManager(), "DATE_PICKER");
-    }
-
-    interface OnDateSelectedListener {
-        void onSelected(String date);
-    }
 
     @Override
     public void onDestroyView() {
