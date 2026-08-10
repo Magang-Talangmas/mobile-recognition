@@ -73,76 +73,99 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             }
         }
 
-        // Times
-        Date inTime = p.getCheckInEvent() != null ? p.getCheckInEvent().getDetectedAt() : null;
-        Date outTime = p.getCheckOutEvent() != null ? p.getCheckOutEvent().getDetectedAt() : null;
-
-        if (inTime != null) {
-            holder.tvCheckInTime.setText(timeFormat.format(inTime));
+        if (p.getLeaveData() != null) {
+            com.example.javatraining.data.remote.response.LeaveData leave = p.getLeaveData();
+            holder.llCheckInRow.setVisibility(View.GONE);
+            holder.llCheckOutRow.setVisibility(View.GONE);
+            holder.llLeaveInfo.setVisibility(View.VISIBLE);
+            holder.tvAccuracy.setVisibility(View.GONE);
+            
+            holder.tvLeaveReason.setText(leave.getReason() != null ? "Alasan: " + leave.getReason() : "Tidak ada alasan");
+            
+            String type = leave.getType() != null ? leave.getType() : "Izin";
+            holder.tvStatusBadge.setText(type);
+            
+            // Set badge color for leave
+            holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
+            holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
         } else {
-            holder.tvCheckInTime.setText("--:--");
-        }
+            holder.llCheckInRow.setVisibility(View.VISIBLE);
+            holder.llCheckOutRow.setVisibility(View.VISIBLE);
+            holder.llLeaveInfo.setVisibility(View.GONE);
 
-        if (outTime != null) {
-            holder.tvCheckOutTime.setText(timeFormat.format(outTime));
+            // Times
+            Date inTime = p.getCheckInEvent() != null ? p.getCheckInEvent().getDetectedAt() : null;
+            Date outTime = p.getCheckOutEvent() != null ? p.getCheckOutEvent().getDetectedAt() : null;
 
-            // Calculate Total Hours
             if (inTime != null) {
-                long duration = outTime.getTime() - inTime.getTime();
-                long hours = duration / (1000 * 60 * 60);
-                long minutes = (duration / (1000 * 60)) % 60;
-                holder.tvTotalHours.setText(hours + "h " + minutes + "m");
-                holder.tvTotalHours.setTextColor(Color.parseColor("#0052CC"));
+                holder.tvCheckInTime.setText(timeFormat.format(inTime));
             } else {
-                holder.tvTotalHours.setText("N/A");
+                holder.tvCheckInTime.setText("--:--");
             }
-        } else {
-            holder.tvCheckOutTime.setText("--:--");
-            holder.tvTotalHours.setText("Active");
-            holder.tvTotalHours.setTextColor(Color.parseColor("#10B981"));
-        }
 
-        // Status Badge Logic
-        if (p.getCheckInEvent() != null) {
-            String confStatus = p.getCheckInEvent().getConfirmationStatus();
-            if ("PENDING".equalsIgnoreCase(confStatus)) {
+            if (outTime != null) {
+                holder.tvCheckOutTime.setText(timeFormat.format(outTime));
+
+                // Calculate Total Hours
+                if (inTime != null) {
+                    long duration = outTime.getTime() - inTime.getTime();
+                    long hours = duration / (1000 * 60 * 60);
+                    long minutes = (duration / (1000 * 60)) % 60;
+                    holder.tvTotalHours.setText(hours + "h " + minutes + "m");
+                    holder.tvTotalHours.setTextColor(Color.parseColor("#0052CC"));
+                } else {
+                    holder.tvTotalHours.setText("N/A");
+                }
+            } else {
+                holder.tvCheckOutTime.setText("--:--");
+                holder.tvTotalHours.setText("Active");
+                holder.tvTotalHours.setTextColor(Color.parseColor("#10B981"));
+            }
+
+            // Status Badge Logic
+            if (p.getCheckInEvent() != null) {
+                String confStatus = p.getCheckInEvent().getConfirmationStatus();
+                if ("PENDING".equalsIgnoreCase(confStatus)) {
+                    holder.tvStatusBadge.setText("Pending");
+                    holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
+                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
+                } else if ("REJECTED".equalsIgnoreCase(confStatus)) {
+                    holder.tvStatusBadge.setText("Rejected");
+                    holder.tvStatusBadge.setTextColor(Color.parseColor("#DC2626")); // red
+                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_red);
+                } else {
+                    // CONFIRMED or unknown, use lateness
+                    if (p.getCheckInEvent().isLate()) {
+                        holder.tvStatusBadge.setText("Late");
+                        holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
+                        holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+                    } else {
+                        holder.tvStatusBadge.setText("On Time");
+                        holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC")); // blue/primary
+                        holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
+                    }
+                }
+            } else {
                 holder.tvStatusBadge.setText("Pending");
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
                 holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
-            } else if ("REJECTED".equalsIgnoreCase(confStatus)) {
-                holder.tvStatusBadge.setText("Rejected");
-                holder.tvStatusBadge.setTextColor(Color.parseColor("#DC2626")); // red
-                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_red);
-            } else {
-                // CONFIRMED or unknown, use lateness
-                if (p.getCheckInEvent().isLate()) {
-                    holder.tvStatusBadge.setText("Late");
-                    holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
-                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
-                } else {
-                    holder.tvStatusBadge.setText("On Time");
-                    holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC")); // blue/primary
-                    holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
-                }
             }
-        } else {
-            holder.tvStatusBadge.setText("Pending");
-        }
 
-        // Accuracy
-        if (inTime != null && p.getCheckInEvent() != null) {
-            double acc = p.getCheckInEvent().getSimilarity() * 100;
-            holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.0f%%", acc));
-            holder.tvAccuracy.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvAccuracy.setVisibility(View.GONE);
-        }
+            // Accuracy
+            if (inTime != null && p.getCheckInEvent() != null) {
+                double acc = p.getCheckInEvent().getSimilarity() * 100;
+                holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.0f%%", acc));
+                holder.tvAccuracy.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvAccuracy.setVisibility(View.GONE);
+            }
 
-        // Mock locations
-        if (position % 2 == 0) {
-            holder.tvLocation.setText("HQ Office");
-        } else {
-            holder.tvLocation.setText("WFH");
+            // Mock locations
+            if (position % 2 == 0) {
+                holder.tvLocation.setText("HQ Office");
+            } else {
+                holder.tvLocation.setText("WFH");
+            }
         }
     }
 
@@ -164,8 +187,8 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
         View vLineTop, vLineBottom, vInnerDot;
         FrameLayout flDotContainer;
         TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation,
-                tvAccuracy;
-        LinearLayout llStatusBadge;
+                tvAccuracy, tvLeaveReason;
+        LinearLayout llStatusBadge, llCheckInRow, llCheckOutRow, llLeaveInfo;
         com.google.android.material.card.MaterialCardView cardContainer;
 
         public ViewHolder(@NonNull View itemView) {
@@ -187,6 +210,11 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             tvTotalHours = itemView.findViewById(R.id.tvTotalHours);
             tvLocation = itemView.findViewById(R.id.tvLocation);
             tvAccuracy = itemView.findViewById(R.id.tvAccuracy);
+
+            llCheckInRow = itemView.findViewById(R.id.llCheckInRow);
+            llCheckOutRow = itemView.findViewById(R.id.llCheckOutRow);
+            llLeaveInfo = itemView.findViewById(R.id.llLeaveInfo);
+            tvLeaveReason = itemView.findViewById(R.id.tvLeaveReason);
         }
     }
 }

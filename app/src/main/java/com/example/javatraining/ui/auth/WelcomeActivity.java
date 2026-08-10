@@ -185,7 +185,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        String email = etEmail.getText().toString();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
 
         if (email.isEmpty() || password.isEmpty()) {

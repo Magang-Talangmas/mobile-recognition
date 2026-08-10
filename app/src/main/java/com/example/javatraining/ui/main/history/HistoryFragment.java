@@ -33,6 +33,7 @@ public class HistoryFragment extends Fragment {
 
     private HistoryLogAdapter adapter;
     private List<AttendanceData> allLogs;
+    private List<com.example.javatraining.data.remote.response.LeaveData> allLeaves;
     private List<DailyAttendance> filteredLogs;
     private RecyclerView rvHistory;
     private AbsensiTMRepository repository;
@@ -61,6 +62,7 @@ public class HistoryFragment extends Fragment {
         }
 
         allLogs = new ArrayList<>();
+        allLeaves = new ArrayList<>();
         filteredLogs = new ArrayList<>();
 
         adapter = new HistoryLogAdapter(filteredLogs);
@@ -124,21 +126,42 @@ public class HistoryFragment extends Fragment {
     }
 
     private void fetchAttendanceHistory() {
+        final boolean[] attendancesLoaded = {false};
+        final boolean[] leavesLoaded = {false};
+
         repository.getAttendancesApi(1, 100).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
             @Override
             public void onChanged(List<AttendanceData> attendanceDataList) {
                 if (attendanceDataList != null) {
                     allLogs = attendanceDataList;
-                    applyFilter();
                 }
-                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null
-                        ? getView().findViewById(R.id.swipeRefreshLayout)
-                        : null;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                attendancesLoaded[0] = true;
+                checkBothLoaded(attendancesLoaded, leavesLoaded);
             }
         });
+
+        repository.getLeavesApi(1, 100).observe(getViewLifecycleOwner(), new Observer<List<com.example.javatraining.data.remote.response.LeaveData>>() {
+            @Override
+            public void onChanged(List<com.example.javatraining.data.remote.response.LeaveData> leaveDataList) {
+                if (leaveDataList != null) {
+                    allLeaves = leaveDataList;
+                }
+                leavesLoaded[0] = true;
+                checkBothLoaded(attendancesLoaded, leavesLoaded);
+            }
+        });
+    }
+
+    private void checkBothLoaded(boolean[] attendancesLoaded, boolean[] leavesLoaded) {
+        if (attendancesLoaded[0] && leavesLoaded[0]) {
+            applyFilter();
+            androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null
+                    ? getView().findViewById(R.id.swipeRefreshLayout)
+                    : null;
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }
     }
 
     private void applyFilter() {
@@ -193,6 +216,36 @@ public class HistoryFragment extends Fragment {
             }
         }
 
+        if (allLeaves != null) {
+            for (com.example.javatraining.data.remote.response.LeaveData l : allLeaves) {
+                if (l.getCreatedAt() != null || l.getDate() != null) {
+                    try {
+                        String timeStr = l.getCreatedAt() != null ? l.getCreatedAt() : l.getDate();
+                        Date detectedAt = parseIsoDate(timeStr);
+                        if (detectedAt == null && l.getDate() != null) {
+                            detectedAt = parseIsoDate(l.getDate() + "T00:00:00Z");
+                        }
+                        if (detectedAt != null) {
+                            Calendar pCal = Calendar.getInstance();
+                            pCal.setTime(detectedAt);
+                            if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
+                                    pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) {
+                                String dateKey = sdf.format(detectedAt);
+                                DailyAttendance daily = dailyMap.get(dateKey);
+                                if (daily == null) {
+                                    daily = new DailyAttendance(detectedAt);
+                                    dailyMap.put(dateKey, daily);
+                                }
+                                daily.setLeaveData(l);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
         filteredLogs.addAll(dailyMap.values());
 
         // If month filter returned no logs but allLogs has data, show all available
@@ -224,6 +277,31 @@ public class HistoryFragment extends Fragment {
                             daily.setCheckInEvent(event);
                         } else {
                             daily.setCheckOutEvent(event);
+                        }
+                    }
+                }
+            }
+
+            if (allLeaves != null) {
+                for (com.example.javatraining.data.remote.response.LeaveData l : allLeaves) {
+                    if (l.getCreatedAt() != null || l.getDate() != null) {
+                        try {
+                            String timeStr = l.getCreatedAt() != null ? l.getCreatedAt() : l.getDate();
+                            Date detectedAt = parseIsoDate(timeStr);
+                            if (detectedAt == null && l.getDate() != null) {
+                                detectedAt = parseIsoDate(l.getDate() + "T00:00:00Z");
+                            }
+                            if (detectedAt != null) {
+                                String dateKey = sdf.format(detectedAt);
+                                DailyAttendance daily = fallbackMap.get(dateKey);
+                                if (daily == null) {
+                                    daily = new DailyAttendance(detectedAt);
+                                    fallbackMap.put(dateKey, daily);
+                                }
+                                daily.setLeaveData(l);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }

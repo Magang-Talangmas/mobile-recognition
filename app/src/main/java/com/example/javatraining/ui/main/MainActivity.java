@@ -256,4 +256,11 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomAppBar.setVisibility(View.VISIBLE);
         binding.fabManual.setVisibility(View.VISIBLE);
     }
+
+    public void navigateToHome() {
+        loadFragment(new HomeFragment());
+        selectNavTab(0);
+        binding.bottomAppBar.setVisibility(View.VISIBLE);
+        binding.fabManual.setVisibility(View.VISIBLE);
+    }
 }

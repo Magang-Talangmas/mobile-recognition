@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment {
 
         // Header
 
-
         // View All Recent Log
         View tvViewAll = view.findViewById(R.id.tvViewAll);
         if (tvViewAll != null) {
@@ -113,7 +112,8 @@ public class HomeFragment extends Fragment {
         if (name != null && name.contains(" ")) {
             name = name.substring(0, name.indexOf(" "));
         }
-        if (name != null) tvGreeting.setText("Good morning, " + name + ".");
+        if (name != null)
+            tvGreeting.setText("Good morning, " + name + ".");
 
         repository = new AbsensiTMRepository(requireActivity().getApplication());
 
@@ -138,7 +138,7 @@ public class HomeFragment extends Fragment {
                 if (attendanceDataList != null) {
                     java.util.Map<String, com.example.javatraining.data.model.DailyAttendance> dailyMap = new java.util.HashMap<>();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-                    
+
                     for (AttendanceData p : attendanceDataList) {
                         if (p.getTimestamp() != null) {
                             try {
@@ -150,16 +150,17 @@ public class HomeFragment extends Fragment {
                                         daily = new com.example.javatraining.data.model.DailyAttendance(detectedAt);
                                         dailyMap.put(dateKey, daily);
                                     }
-                                    
+
                                     AttendanceEvent event = new AttendanceEvent(
                                             0, p.getCameraId(), 0, p.getEmployeeId(), null,
                                             null,
-                                            "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN : LogType.CHECK_OUT,
+                                            "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN
+                                                    : LogType.CHECK_OUT,
                                             p.getSimilarity() != null ? p.getSimilarity() : 0.0,
                                             null, null, detectedAt, detectedAt, null);
                                     event.setLate(p.getIsLate());
                                     event.setConfirmationStatus(p.getConfirmationStatus());
-                                    
+
                                     if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
                                         daily.setCheckInEvent(event);
                                     } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
@@ -172,7 +173,8 @@ public class HomeFragment extends Fragment {
                         }
                     }
 
-                    List<com.example.javatraining.data.model.DailyAttendance> groupedLogs = new ArrayList<>(dailyMap.values());
+                    List<com.example.javatraining.data.model.DailyAttendance> groupedLogs = new ArrayList<>(
+                            dailyMap.values());
                     java.util.Collections.sort(groupedLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
 
                     // We need a flat list of events for the Live Status (Checked In/Out)
@@ -181,10 +183,13 @@ public class HomeFragment extends Fragment {
                         Date detectedAt = parseIsoDate(data.getTimestamp());
                         if (detectedAt != null) {
                             String evtType = data.getEventType();
-                            LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType)) ? LogType.CHECK_IN : LogType.CHECK_OUT;
+                            LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType))
+                                    ? LogType.CHECK_IN
+                                    : LogType.CHECK_OUT;
                             flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
-                                type,
-                                data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt, detectedAt, null));
+                                    type,
+                                    data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt,
+                                    detectedAt, null));
                         }
                     }
                     java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
@@ -214,7 +219,8 @@ public class HomeFragment extends Fragment {
                         tvScheduleName.setText(scheduleData.getName());
                     }
                     if (tvScheduleTolerance != null && scheduleData.getToleranceMinutes() != null) {
-                        tvScheduleTolerance.setText("Toleransi Terlambat: " + scheduleData.getToleranceMinutes() + " menit");
+                        tvScheduleTolerance
+                                .setText("Toleransi Terlambat: " + scheduleData.getToleranceMinutes() + " menit");
                         tvScheduleTolerance.setVisibility(View.VISIBLE);
                     } else if (tvScheduleTolerance != null) {
                         tvScheduleTolerance.setVisibility(View.GONE);
@@ -262,7 +268,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void updateDashboard(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs, List<AttendanceEvent> flatLogs) {
+    private void updateDashboard(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs,
+            List<AttendanceEvent> flatLogs) {
         // Live Status Logic
         TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
@@ -293,14 +300,15 @@ public class HomeFragment extends Fragment {
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));
-        
+
         // Take up to 3 grouped logs
         List<com.example.javatraining.data.model.DailyAttendance> recentLogs = new ArrayList<>();
         for (int i = 0; i < Math.min(groupedLogs.size(), 3); i++) {
             recentLogs.add(groupedLogs.get(i));
         }
 
-        com.example.javatraining.ui.main.history.HistoryLogAdapter dashboardLogAdapter = new com.example.javatraining.ui.main.history.HistoryLogAdapter(recentLogs);
+        com.example.javatraining.ui.main.history.HistoryLogAdapter dashboardLogAdapter = new com.example.javatraining.ui.main.history.HistoryLogAdapter(
+                recentLogs);
         rvRecentActivity.setAdapter(dashboardLogAdapter);
 
         // Apply LayoutAnimationController for staggered list item entry

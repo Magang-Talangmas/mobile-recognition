@@ -37,6 +37,12 @@ public interface ApiService {
             @Query("limit") Integer limit
     );
 
+    @GET("rest/v1/attendance_permissions?select=*&order=createdAt.desc")
+    Call<List<com.example.javatraining.data.remote.response.LeaveData>> getLeaveRequests(
+            @Query("employeeId") String employeeId,
+            @Query("limit") Integer limit
+    );
+
     @GET("rest/v1/work_schedules?select=*")
     Call<List<ScheduleData>> getScheduleToday();
 

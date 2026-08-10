@@ -37,31 +37,91 @@ public class IzinFragment extends Fragment {
 
     private FragmentIzinBinding binding;
     private java.io.File currentPhotoFile;
+    private android.net.Uri photoUri;
     private boolean hasPhoto = false;
 
     private final ActivityResultLauncher<Intent> takePictureLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-                    Bundle extras = result.getData().getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-
+                if (result.getResultCode() == getActivity().RESULT_OK) {
                     try {
-                        java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
-                        cachePath.mkdirs();
-                        currentPhotoFile = new java.io.File(cachePath, "izin_selfie_" + System.currentTimeMillis() + ".jpg");
-                        java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        stream.close();
-                    } catch (java.io.IOException e) {
+                        android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
+                        
+                        int reqWidth = 1080;
+                        int reqHeight = 1920;
+                        int inSampleSize = 1;
+                        if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
+                            final int halfHeight = options.outHeight / 2;
+                            final int halfWidth = options.outWidth / 2;
+                            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                                inSampleSize *= 2;
+                            }
+                        }
+                        options.inJustDecodeBounds = false;
+                        options.inSampleSize = inSampleSize;
+                        
+                        Bitmap imageBitmap = android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
+
+                        // Fix rotation using ExifInterface
+                        if (imageBitmap != null) {
+                            try {
+                                android.media.ExifInterface exif = new android.media.ExifInterface(currentPhotoFile.getAbsolutePath());
+                                int orientation = exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, android.media.ExifInterface.ORIENTATION_UNDEFINED);
+                                int rotationDegrees = 0;
+                                switch (orientation) {
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_90:
+                                        rotationDegrees = 90;
+                                        break;
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_180:
+                                        rotationDegrees = 180;
+                                        break;
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_270:
+                                        rotationDegrees = 270;
+                                        break;
+                                }
+                                if (rotationDegrees != 0) {
+                                    android.graphics.Matrix matrix = new android.graphics.Matrix();
+                                    matrix.postRotate(rotationDegrees);
+                                    Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+                                    if (rotatedBitmap != imageBitmap) {
+                                        imageBitmap.recycle();
+                                        imageBitmap = rotatedBitmap;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (imageBitmap == null && result.getData() != null) {
+                            Bundle extras = result.getData().getExtras();
+                            if (extras != null) {
+                                imageBitmap = (Bitmap) extras.get("data");
+                            }
+                        }
+
+                        if (imageBitmap != null) {
+                            java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                imageBitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, stream);
+                            } else {
+                                @SuppressWarnings("deprecation")
+                                Bitmap.CompressFormat webpFormat = Bitmap.CompressFormat.WEBP;
+                                imageBitmap.compress(webpFormat, 100, stream);
+                            }
+                            stream.close();
+
+                            binding.ivPreviewLampiran.setImageBitmap(imageBitmap);
+                            binding.ivPreviewLampiran.setVisibility(View.VISIBLE);
+                            binding.btnRemovePhoto.setVisibility(View.VISIBLE);
+                            binding.llUploadPlaceholder.setVisibility(View.GONE);
+                            binding.btnUpload.setBackgroundResource(0);
+                            hasPhoto = true;
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    binding.ivPreviewLampiran.setImageBitmap(imageBitmap);
-                    binding.ivPreviewLampiran.setVisibility(View.VISIBLE);
-                    binding.btnRemovePhoto.setVisibility(View.VISIBLE);
-                    binding.llUploadPlaceholder.setVisibility(View.GONE);
-                    binding.btnUpload.setBackgroundResource(0);
-                    hasPhoto = true;
                 }
             });
 
@@ -87,7 +147,13 @@ public class IzinFragment extends Fragment {
         
         setupDropdown();
         
-        binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+        binding.btnBack.setOnClickListener(v -> {
+            if (requireActivity() instanceof com.example.javatraining.ui.main.MainActivity) {
+                ((com.example.javatraining.ui.main.MainActivity) requireActivity()).navigateToHome();
+            } else {
+                requireActivity().onBackPressed();
+            }
+        });
 
         binding.btnUpload.setOnClickListener(v -> {
             if (!hasPhoto) {
@@ -133,8 +199,8 @@ public class IzinFragment extends Fragment {
             String employeeId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
 
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                String filename = "izin/" + employeeId + "/selfie_" + System.currentTimeMillis() + ".jpg";
-                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile, okhttp3.MediaType.parse("image/jpeg"));
+                String filename = "izin/" + employeeId + "/selfie_" + System.currentTimeMillis() + ".webp";
+                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile, okhttp3.MediaType.parse("image/webp"));
                 ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
                 apiService.uploadStorageObject("recognition", filename, requestFile).enqueue(new Callback<okhttp3.ResponseBody>() {
                     @Override
@@ -169,7 +235,11 @@ public class IzinFragment extends Fragment {
             progress.dismiss();
             if (success != null && success) {
                 Toast.makeText(requireContext(), "Pengajuan Izin berhasil dikirim", Toast.LENGTH_SHORT).show();
-                requireActivity().onBackPressed();
+                if (requireActivity() instanceof com.example.javatraining.ui.main.MainActivity) {
+                    ((com.example.javatraining.ui.main.MainActivity) requireActivity()).navigateToHome();
+                } else {
+                    requireActivity().onBackPressed();
+                }
             } else {
                 Toast.makeText(requireContext(), "Gagal mengirim pengajuan izin", Toast.LENGTH_SHORT).show();
             }
@@ -179,7 +249,16 @@ public class IzinFragment extends Fragment {
     private void launchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            takePictureLauncher.launch(takePictureIntent);
+            try {
+                java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
+                cachePath.mkdirs();
+                currentPhotoFile = new java.io.File(cachePath, "izin_selfie_" + System.currentTimeMillis() + ".webp");
+                photoUri = androidx.core.content.FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", currentPhotoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                takePictureLauncher.launch(takePictureIntent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

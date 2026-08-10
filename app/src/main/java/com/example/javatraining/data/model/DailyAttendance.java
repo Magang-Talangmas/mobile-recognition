@@ -6,6 +6,7 @@ public class DailyAttendance {
     private Date date;
     private AttendanceEvent checkInEvent;
     private AttendanceEvent checkOutEvent;
+    private com.example.javatraining.data.remote.response.LeaveData leaveData;
 
     public DailyAttendance(Date date) {
         this.date = date;
@@ -33,5 +34,13 @@ public class DailyAttendance {
 
     public void setCheckOutEvent(AttendanceEvent checkOutEvent) {
         this.checkOutEvent = checkOutEvent;
+    }
+
+    public com.example.javatraining.data.remote.response.LeaveData getLeaveData() {
+        return leaveData;
+    }
+
+    public void setLeaveData(com.example.javatraining.data.remote.response.LeaveData leaveData) {
+        this.leaveData = leaveData;
     }
 }

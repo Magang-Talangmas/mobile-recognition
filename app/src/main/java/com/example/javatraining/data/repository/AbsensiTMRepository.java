@@ -210,6 +210,32 @@ public class AbsensiTMRepository {
         return result;
     }
 
+    public LiveData<List<com.example.javatraining.data.remote.response.LeaveData>> getLeavesApi(int page, int perPage) {
+        MutableLiveData<List<com.example.javatraining.data.remote.response.LeaveData>> result = new MutableLiveData<>();
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        
+        String filter = (employeeId != null && !employeeId.trim().isEmpty()) ? "eq." + employeeId : null;
+        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getLeaveRequests(filter, perPage).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.LeaveData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.LeaveData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.LeaveData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
+                } else {
+                    result.setValue(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.LeaveData>> call, Throwable t) {
+                result.setValue(new ArrayList<>());
+            }
+        });
+        return result;
+    }
+
     public LiveData<com.example.javatraining.data.remote.response.ScheduleData> getScheduleTodayApi() {
         MutableLiveData<com.example.javatraining.data.remote.response.ScheduleData> result = new MutableLiveData<>();
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);

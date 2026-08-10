@@ -47,7 +47,8 @@ import java.util.Locale;
 
 public class ManualFragment extends Fragment {
 
-    private TextView etDate, etTime, tvActionTitle, tvSuccessTitle, tvSuccessSubtitle, tvVerificationTitle, tvSelfieLabel;
+    private TextView etDate, etTime, tvSuccessTitle, tvSuccessSubtitle, tvVerificationTitle,
+            tvSelfieLabel;
     private FrameLayout flPhotoUpload;
     private LinearLayout loadingState, llUploadPlaceholder, formContainer, successState;
     private ImageView ivPhotoPreview;
@@ -61,30 +62,96 @@ public class ManualFragment extends Fragment {
     private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable timerRunnable;
     private java.io.File currentPhotoFile;
+    private android.net.Uri photoUri;
 
     private final ActivityResultLauncher<Intent> takePictureLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-                    Bundle extras = result.getData().getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-
+                if (result.getResultCode() == getActivity().RESULT_OK) {
                     try {
-                        java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
-                        cachePath.mkdirs();
-                        currentPhotoFile = new java.io.File(cachePath, "selfie_" + System.currentTimeMillis() + ".jpg");
-                        java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
-                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        stream.close();
-                    } catch (java.io.IOException e) {
+                        android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
+                        
+                        int reqWidth = 1080;
+                        int reqHeight = 1920;
+                        int inSampleSize = 1;
+                        if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
+                            final int halfHeight = options.outHeight / 2;
+                            final int halfWidth = options.outWidth / 2;
+                            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                                inSampleSize *= 2;
+                            }
+                        }
+                        options.inJustDecodeBounds = false;
+                        options.inSampleSize = inSampleSize;
+                        
+                        Bitmap imageBitmap = android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
+
+                        // Fix rotation using ExifInterface
+                        if (imageBitmap != null) {
+                            try {
+                                android.media.ExifInterface exif = new android.media.ExifInterface(currentPhotoFile.getAbsolutePath());
+                                int orientation = exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, android.media.ExifInterface.ORIENTATION_UNDEFINED);
+                                int rotationDegrees = 0;
+                                switch (orientation) {
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_90:
+                                        rotationDegrees = 90;
+                                        break;
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_180:
+                                        rotationDegrees = 180;
+                                        break;
+                                    case android.media.ExifInterface.ORIENTATION_ROTATE_270:
+                                        rotationDegrees = 270;
+                                        break;
+                                }
+                                if (rotationDegrees != 0) {
+                                    android.graphics.Matrix matrix = new android.graphics.Matrix();
+                                    matrix.postRotate(rotationDegrees);
+                                    Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+                                    if (rotatedBitmap != imageBitmap) {
+                                        imageBitmap.recycle();
+                                        imageBitmap = rotatedBitmap;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // If imageBitmap is somehow null, just fallback to thumbnail if present
+                        if (imageBitmap == null && result.getData() != null) {
+                            Bundle extras = result.getData().getExtras();
+                            if (extras != null) {
+                                imageBitmap = (Bitmap) extras.get("data");
+                            }
+                        }
+
+                        if (imageBitmap != null) {
+                            java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
+                            
+                            // Use WEBP format for conversion. 
+                            // In Android, .compress() is the method used to encode/convert the image.
+                            // Setting quality to 100 with WEBP will just convert it to WebP without aggressive compression.
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                imageBitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, stream);
+                            } else {
+                                @SuppressWarnings("deprecation")
+                                Bitmap.CompressFormat webpFormat = Bitmap.CompressFormat.WEBP;
+                                imageBitmap.compress(webpFormat, 100, stream);
+                            }
+                            
+                            stream.close();
+                            
+                            ivPhotoPreview.setImageBitmap(imageBitmap);
+                            ivPhotoPreview.setVisibility(View.VISIBLE);
+                            btnRemovePhoto.setVisibility(View.VISIBLE);
+                            llUploadPlaceholder.setVisibility(View.GONE);
+                            flPhotoUpload.setBackgroundResource(0);
+                            hasPhoto = true;
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    ivPhotoPreview.setImageBitmap(imageBitmap);
-                    ivPhotoPreview.setVisibility(View.VISIBLE);
-                    btnRemovePhoto.setVisibility(View.VISIBLE);
-                    llUploadPlaceholder.setVisibility(View.GONE);
-                    flPhotoUpload.setBackgroundResource(0);
-                    hasPhoto = true;
                 }
             });
 
@@ -113,7 +180,6 @@ public class ManualFragment extends Fragment {
     private void initViews(View view) {
         etDate = view.findViewById(R.id.etDate);
         etTime = view.findViewById(R.id.etTime);
-        tvActionTitle = view.findViewById(R.id.tvActionTitle);
         tvSuccessTitle = view.findViewById(R.id.tvSuccessTitle);
         tvSuccessSubtitle = view.findViewById(R.id.tvSuccessSubtitle);
         tvVerificationTitle = view.findViewById(R.id.tvVerificationTitle);
@@ -158,8 +224,6 @@ public class ManualFragment extends Fragment {
 
     private void setupListeners(View view) {
 
-
-
         // HANYA DIBUKA KETIKA AREA FOTO DI KLIK (TIDAK OTOMATIS)
         flPhotoUpload.setOnClickListener(v -> {
             if (!hasPhoto) {
@@ -203,9 +267,9 @@ public class ManualFragment extends Fragment {
 
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
                 // Build filename with checkins folder path to match backend structure
-                String filename = "checkins/" + empId + "/manual_" + System.currentTimeMillis() + ".jpg";
+                String filename = "checkins/" + empId + "/manual_" + System.currentTimeMillis() + ".webp";
                 okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile,
-                        okhttp3.MediaType.parse("image/jpeg"));
+                        okhttp3.MediaType.parse("image/webp"));
 
                 ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
                 apiService.uploadStorageObject("recognition", filename, requestFile)
@@ -221,14 +285,18 @@ public class ManualFragment extends Fragment {
                                             publicUrl, isLate);
                                 } else {
                                     String errorMsg = "Upload Failed: " + response.code();
-                                    try { if (response.errorBody() != null) errorMsg += " " + response.errorBody().string(); } catch(Exception e) {}
+                                    try {
+                                        if (response.errorBody() != null)
+                                            errorMsg += " " + response.errorBody().string();
+                                    } catch (Exception e) {
+                                    }
                                     android.util.Log.e("IMAGE_UPLOAD", errorMsg);
-                                    
+
                                     // Make sure we show a Toast to the user so they know image failed
                                     Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
-                                    
+
                                     boolean isLate = false;
-                                    
+
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
                                             null, isLate);
                                 }
@@ -332,7 +400,8 @@ public class ManualFragment extends Fragment {
                                 String eventType = latest.getEventType();
                                 if ("CHECK_IN".equalsIgnoreCase(eventType) || "IN".equalsIgnoreCase(eventType)) {
                                     setCheckOutState(latest);
-                                } else if ("CHECK_OUT".equalsIgnoreCase(eventType) || "OUT".equalsIgnoreCase(eventType)) {
+                                } else if ("CHECK_OUT".equalsIgnoreCase(eventType)
+                                        || "OUT".equalsIgnoreCase(eventType)) {
                                     setCompletedState();
                                 } else {
                                     setCheckInState();
@@ -368,11 +437,10 @@ public class ManualFragment extends Fragment {
         formContainer.setVisibility(View.VISIBLE);
         successState.setVisibility(View.GONE);
 
-        tvActionTitle.setText("Good Morning! Ready to start?");
         btnSubmit.setText("Submit Check In");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_primary, getActivity().getTheme())));
-        
+
         tvVerificationTitle.setVisibility(View.VISIBLE);
         tvSelfieLabel.setVisibility(View.VISIBLE);
         flPhotoUpload.setVisibility(View.VISIBLE);
@@ -396,11 +464,10 @@ public class ManualFragment extends Fragment {
             }
         }
 
-        tvActionTitle.setText("Checked in at " + timeStr + ". Ready to wrap up?");
         btnSubmit.setText("Submit Check Out");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_error, getActivity().getTheme())));
-                
+
         tvVerificationTitle.setVisibility(View.GONE);
         tvSelfieLabel.setVisibility(View.GONE);
         flPhotoUpload.setVisibility(View.GONE);
@@ -423,7 +490,16 @@ public class ManualFragment extends Fragment {
     private void launchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            takePictureLauncher.launch(takePictureIntent);
+            try {
+                java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
+                cachePath.mkdirs();
+                currentPhotoFile = new java.io.File(cachePath, "selfie_" + System.currentTimeMillis() + ".webp");
+                photoUri = androidx.core.content.FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", currentPhotoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                takePictureLauncher.launch(takePictureIntent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
