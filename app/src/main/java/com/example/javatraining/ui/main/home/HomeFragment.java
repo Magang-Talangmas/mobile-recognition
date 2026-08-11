@@ -279,21 +279,35 @@ public class HomeFragment extends Fragment {
 
         if (!flatLogs.isEmpty()) {
             AttendanceEvent latestLog = flatLogs.get(0);
-            if (latestLog.getEventType() == LogType.CHECK_OUT) {
-                isCheckedIn = false;
-                tvStatusTitle.setText("Checked Out");
-                tvStatusTime.setText("Since " + sdf.format(latestLog.getDetectedAt()));
-                vStatusDot.setVisibility(View.GONE);
+            
+            java.util.Calendar calEvent = java.util.Calendar.getInstance();
+            calEvent.setTime(latestLog.getDetectedAt());
+            java.util.Calendar calToday = java.util.Calendar.getInstance();
+            boolean isToday = calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                              calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR);
+
+            if (isToday) {
+                if (latestLog.getEventType() == LogType.CHECK_OUT) {
+                    isCheckedIn = false;
+                    tvStatusTitle.setText("Sudah Check-Out");
+                    tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
+                    vStatusDot.setVisibility(View.GONE);
+                } else {
+                    isCheckedIn = true;
+                    tvStatusTitle.setText("Sudah Check-In");
+                    tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
+                    vStatusDot.setVisibility(View.VISIBLE);
+                }
             } else {
-                isCheckedIn = true;
-                tvStatusTitle.setText("Checked In");
-                tvStatusTime.setText("Since " + sdf.format(latestLog.getDetectedAt()));
-                vStatusDot.setVisibility(View.VISIBLE);
+                isCheckedIn = false;
+                tvStatusTitle.setText("Belum Absen");
+                tvStatusTime.setText("Belum ada aktivitas hari ini");
+                vStatusDot.setVisibility(View.GONE);
             }
         } else {
             isCheckedIn = false;
-            tvStatusTitle.setText("Waiting for Check-in");
-            tvStatusTime.setText("No activity today");
+            tvStatusTitle.setText("Belum Absen");
+            tvStatusTime.setText("Belum ada aktivitas hari ini");
             vStatusDot.setVisibility(View.GONE);
         }
 
