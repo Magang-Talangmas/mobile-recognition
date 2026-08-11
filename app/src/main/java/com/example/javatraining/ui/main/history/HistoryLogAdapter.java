@@ -80,14 +80,24 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             holder.llLeaveInfo.setVisibility(View.VISIBLE);
             holder.tvAccuracy.setVisibility(View.GONE);
             
-            holder.tvLeaveReason.setText(leave.getReason() != null ? "Alasan: " + leave.getReason() : "Tidak ada alasan");
-            
             String type = leave.getType() != null ? leave.getType() : "Izin";
-            holder.tvStatusBadge.setText(type);
+            String reason = leave.getReason() != null ? leave.getReason() : "Tidak ada alasan";
+            holder.tvLeaveReason.setText("[" + type + "] Alasan: " + reason);
             
-            // Set badge color for leave
-            holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
-            holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+            String statusStr = leave.getStatus() != null ? leave.getStatus() : "PENDING";
+            if ("APPROVED".equalsIgnoreCase(statusStr)) {
+                holder.tvStatusBadge.setText("Diterima");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#059669")); // green
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_green);
+            } else if ("REJECTED".equalsIgnoreCase(statusStr)) {
+                holder.tvStatusBadge.setText("Ditolak");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#DC2626")); // red
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_red);
+            } else {
+                holder.tvStatusBadge.setText("Menunggu");
+                holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
+                holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);
+            }
         } else {
             holder.llCheckInRow.setVisibility(View.VISIBLE);
             holder.llCheckOutRow.setVisibility(View.VISIBLE);

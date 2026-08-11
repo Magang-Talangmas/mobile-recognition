@@ -280,51 +280,89 @@ public class IzinFragment extends Fragment {
         binding.formContainer.setVisibility(View.GONE);
         binding.successState.setVisibility(View.GONE);
 
+        final boolean[] attendancesLoaded = {false};
+        final boolean[] leavesLoaded = {false};
+        final com.example.javatraining.data.remote.response.AttendanceData[] latestAttendance = {null};
+        final com.example.javatraining.data.remote.response.LeaveData[] latestLeave = {null};
+
         ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
         com.example.javatraining.data.local.SessionManager sm = new com.example.javatraining.data.local.SessionManager(requireContext());
         String empId = sm.getUser() != null ? sm.getUser().getId() : "";
+
         apiService.getAttendances("eq." + empId, 1).enqueue(new Callback<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>>() {
             @Override
             public void onResponse(Call<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> call, Response<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    com.example.javatraining.data.remote.response.AttendanceData latest = response.body().get(0);
+                    latestAttendance[0] = response.body().get(0);
+                }
+                attendancesLoaded[0] = true;
+                checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
+            }
+            @Override
+            public void onFailure(Call<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+                attendancesLoaded[0] = true;
+                checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
+            }
+        });
 
-                    if (latest.getTimestamp() != null) {
-                        java.util.Date d = parseIsoDate(latest.getTimestamp());
-                        if (d != null) {
-                            java.util.Calendar calEvent = java.util.Calendar.getInstance();
-                            calEvent.setTime(d);
-                            java.util.Calendar calToday = java.util.Calendar.getInstance();
+        apiService.getLeaveRequests("eq." + empId, 1).enqueue(new Callback<java.util.List<com.example.javatraining.data.remote.response.LeaveData>>() {
+            @Override
+            public void onResponse(Call<java.util.List<com.example.javatraining.data.remote.response.LeaveData>> call, Response<java.util.List<com.example.javatraining.data.remote.response.LeaveData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    latestLeave[0] = response.body().get(0);
+                }
+                leavesLoaded[0] = true;
+                checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
+            }
+            @Override
+            public void onFailure(Call<java.util.List<com.example.javatraining.data.remote.response.LeaveData>> call, Throwable t) {
+                leavesLoaded[0] = true;
+                checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
+            }
+        });
+    }
 
-                            boolean isToday = calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
-                                    calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR);
+    private void checkStatus(boolean[] attendancesLoaded, boolean[] leavesLoaded, com.example.javatraining.data.remote.response.AttendanceData latestAtt, com.example.javatraining.data.remote.response.LeaveData latestLeave) {
+        if (attendancesLoaded[0] && leavesLoaded[0]) {
+            boolean hasLeaveToday = false;
+            boolean hasAttToday = false;
+            
+            java.util.Calendar calToday = java.util.Calendar.getInstance();
 
-                            if (isToday) {
-                                String eventType = latest.getEventType();
-                                if ("CHECK_OUT".equalsIgnoreCase(eventType) || "OUT".equalsIgnoreCase(eventType)) {
-                                    setCompletedState();
-                                } else {
-                                    setFormState();
-                                }
-                            } else {
-                                setFormState();
-                            }
-                        } else {
-                            setFormState();
-                        }
-                    } else {
-                        setFormState();
+            if (latestLeave != null) {
+                String timeStr = latestLeave.getCreatedAt() != null ? latestLeave.getCreatedAt() : latestLeave.getDate();
+                java.util.Date d = parseIsoDate(timeStr);
+                if (d == null && latestLeave.getDate() != null) d = parseIsoDate(latestLeave.getDate() + "T00:00:00Z");
+                if (d != null) {
+                    java.util.Calendar calEvent = java.util.Calendar.getInstance();
+                    calEvent.setTime(d);
+                    if (calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                        calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR)) {
+                        hasLeaveToday = true;
                     }
-                } else {
-                    setFormState();
                 }
             }
 
-            @Override
-            public void onFailure(Call<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+            if (latestAtt != null && latestAtt.getTimestamp() != null) {
+                java.util.Date d = parseIsoDate(latestAtt.getTimestamp());
+                if (d != null) {
+                    java.util.Calendar calEvent = java.util.Calendar.getInstance();
+                    calEvent.setTime(d);
+                    if (calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                        calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR)) {
+                        hasAttToday = true;
+                    }
+                }
+            }
+
+            if (hasLeaveToday) {
+                setCompletedState("Anda sudah mengajukan izin hari ini.");
+            } else if (hasAttToday) {
+                setCompletedState("Anda sudah memiliki absensi hari ini. Tidak dapat mengajukan izin.");
+            } else {
                 setFormState();
             }
-        });
+        }
     }
 
     private void setFormState() {
@@ -333,13 +371,13 @@ public class IzinFragment extends Fragment {
         binding.formContainer.setVisibility(View.VISIBLE);
     }
 
-    private void setCompletedState() {
+    private void setCompletedState(String message) {
         binding.loadingState.setVisibility(View.GONE);
         binding.formContainer.setVisibility(View.GONE);
         binding.successState.setVisibility(View.VISIBLE);
 
         binding.tvSuccessTitle.setText("Selesai untuk hari ini!");
-        binding.tvSuccessSubtitle.setText("Anda telah berhasil menyelesaikan absensi hari ini.");
+        binding.tvSuccessSubtitle.setText(message);
 
         if (binding.ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
             ((android.graphics.drawable.Animatable) binding.ivSuccessAnim.getDrawable()).start();

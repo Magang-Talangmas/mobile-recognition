@@ -42,6 +42,8 @@ public class HomeFragment extends Fragment {
 
     private boolean isCheckedIn = false; // Based on latest log
     private AbsensiTMRepository repository;
+    private List<AttendanceData> allLogs = new ArrayList<>();
+    private List<com.example.javatraining.data.remote.response.LeaveData> allLeaves = new ArrayList<>();
 
     @Nullable
     @Override
@@ -131,77 +133,30 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final boolean[] attendancesLoaded = {false};
+        final boolean[] leavesLoaded = {false};
+
         // Fetch user logs from API
         repository.getAttendancesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
             @Override
             public void onChanged(List<AttendanceData> attendanceDataList) {
                 if (attendanceDataList != null) {
-                    java.util.Map<String, com.example.javatraining.data.model.DailyAttendance> dailyMap = new java.util.HashMap<>();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-
-                    for (AttendanceData p : attendanceDataList) {
-                        if (p.getTimestamp() != null) {
-                            try {
-                                Date detectedAt = parseIsoDate(p.getTimestamp());
-                                if (detectedAt != null) {
-                                    String dateKey = sdf.format(detectedAt);
-                                    com.example.javatraining.data.model.DailyAttendance daily = dailyMap.get(dateKey);
-                                    if (daily == null) {
-                                        daily = new com.example.javatraining.data.model.DailyAttendance(detectedAt);
-                                        dailyMap.put(dateKey, daily);
-                                    }
-
-                                    AttendanceEvent event = new AttendanceEvent(
-                                            0, p.getCameraId(), 0, p.getEmployeeId(), null,
-                                            null,
-                                            "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN
-                                                    : LogType.CHECK_OUT,
-                                            p.getSimilarity() != null ? p.getSimilarity() : 0.0,
-                                            null, null, detectedAt, detectedAt, null);
-                                    event.setLate(p.getIsLate());
-                                    event.setConfirmationStatus(p.getConfirmationStatus());
-
-                                    if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
-                                        daily.setCheckInEvent(event);
-                                    } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
-                                        daily.setCheckOutEvent(event);
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    List<com.example.javatraining.data.model.DailyAttendance> groupedLogs = new ArrayList<>(
-                            dailyMap.values());
-                    java.util.Collections.sort(groupedLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
-
-                    // We need a flat list of events for the Live Status (Checked In/Out)
-                    List<AttendanceEvent> flatLogs = new ArrayList<>();
-                    for (AttendanceData data : attendanceDataList) {
-                        Date detectedAt = parseIsoDate(data.getTimestamp());
-                        if (detectedAt != null) {
-                            String evtType = data.getEventType();
-                            LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType))
-                                    ? LogType.CHECK_IN
-                                    : LogType.CHECK_OUT;
-                            flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
-                                    type,
-                                    data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt,
-                                    detectedAt, null));
-                        }
-                    }
-                    java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
-
-                    updateDashboard(view, groupedLogs, flatLogs);
+                    allLogs = attendanceDataList;
                 }
+                attendancesLoaded[0] = true;
+                checkBothLoaded(view, attendancesLoaded, leavesLoaded);
+            }
+        });
 
-                androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
-                        .findViewById(R.id.swipeRefreshLayout);
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
+        // Fetch user leaves from API
+        repository.getLeavesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<com.example.javatraining.data.remote.response.LeaveData>>() {
+            @Override
+            public void onChanged(List<com.example.javatraining.data.remote.response.LeaveData> leaveDataList) {
+                if (leaveDataList != null) {
+                    allLeaves = leaveDataList;
                 }
+                leavesLoaded[0] = true;
+                checkBothLoaded(view, attendancesLoaded, leavesLoaded);
             }
         });
 
@@ -268,6 +223,101 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void checkBothLoaded(View view, boolean[] attendancesLoaded, boolean[] leavesLoaded) {
+        if (attendancesLoaded[0] && leavesLoaded[0]) {
+            java.util.Map<String, com.example.javatraining.data.model.DailyAttendance> dailyMap = new java.util.HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+
+            for (AttendanceData p : allLogs) {
+                if (p.getTimestamp() != null) {
+                    try {
+                        Date detectedAt = parseIsoDate(p.getTimestamp());
+                        if (detectedAt != null) {
+                            String dateKey = sdf.format(detectedAt);
+                            com.example.javatraining.data.model.DailyAttendance daily = dailyMap.get(dateKey);
+                            if (daily == null) {
+                                daily = new com.example.javatraining.data.model.DailyAttendance(detectedAt);
+                                dailyMap.put(dateKey, daily);
+                            }
+
+                            AttendanceEvent event = new AttendanceEvent(
+                                    0, p.getCameraId(), 0, p.getEmployeeId(), null,
+                                    null,
+                                    "CHECK_IN".equalsIgnoreCase(p.getEventType()) ? LogType.CHECK_IN
+                                            : LogType.CHECK_OUT,
+                                    p.getSimilarity() != null ? p.getSimilarity() : 0.0,
+                                    null, null, detectedAt, detectedAt, null);
+                            event.setLate(p.getIsLate());
+                            event.setConfirmationStatus(p.getConfirmationStatus());
+
+                            if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                                daily.setCheckInEvent(event);
+                            } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                                daily.setCheckOutEvent(event);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (allLeaves != null) {
+                for (com.example.javatraining.data.remote.response.LeaveData l : allLeaves) {
+                    if (l.getCreatedAt() != null || l.getDate() != null) {
+                        try {
+                            String timeStr = l.getCreatedAt() != null ? l.getCreatedAt() : l.getDate();
+                            Date detectedAt = parseIsoDate(timeStr);
+                            if (detectedAt == null && l.getDate() != null) {
+                                detectedAt = parseIsoDate(l.getDate() + "T00:00:00Z");
+                            }
+                            if (detectedAt != null) {
+                                String dateKey = sdf.format(detectedAt);
+                                com.example.javatraining.data.model.DailyAttendance daily = dailyMap.get(dateKey);
+                                if (daily == null) {
+                                    daily = new com.example.javatraining.data.model.DailyAttendance(detectedAt);
+                                    dailyMap.put(dateKey, daily);
+                                }
+                                daily.setLeaveData(l);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            List<com.example.javatraining.data.model.DailyAttendance> groupedLogs = new ArrayList<>(
+                    dailyMap.values());
+            java.util.Collections.sort(groupedLogs, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+
+            // We need a flat list of events for the Live Status (Checked In/Out)
+            List<AttendanceEvent> flatLogs = new ArrayList<>();
+            for (AttendanceData data : allLogs) {
+                Date detectedAt = parseIsoDate(data.getTimestamp());
+                if (detectedAt != null) {
+                    String evtType = data.getEventType();
+                    LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType))
+                            ? LogType.CHECK_IN
+                            : LogType.CHECK_OUT;
+                    flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
+                            type,
+                            data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt,
+                            detectedAt, null));
+                }
+            }
+            java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
+
+            updateDashboard(view, groupedLogs, flatLogs);
+
+            androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
+                    .findViewById(R.id.swipeRefreshLayout);
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }
+    }
+
     private void updateDashboard(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs,
             List<AttendanceEvent> flatLogs) {
         // Live Status Logic
@@ -276,13 +326,44 @@ public class HomeFragment extends Fragment {
         View vStatusDot = view.findViewById(R.id.vStatusDot);
 
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
+        java.util.Calendar calToday = java.util.Calendar.getInstance();
+        boolean hasLeaveToday = false;
+        String leaveStatus = "";
+        String leaveType = "";
+        
+        if (allLeaves != null) {
+            for (com.example.javatraining.data.remote.response.LeaveData leave : allLeaves) {
+                String timeStr = leave.getCreatedAt() != null ? leave.getCreatedAt() : leave.getDate();
+                java.util.Date d = parseIsoDate(timeStr);
+                if (d == null && leave.getDate() != null) d = parseIsoDate(leave.getDate() + "T00:00:00Z");
+                if (d != null) {
+                    java.util.Calendar calEvent = java.util.Calendar.getInstance();
+                    calEvent.setTime(d);
+                    if (calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                        calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR)) {
+                        hasLeaveToday = true;
+                        leaveStatus = leave.getStatus() != null ? leave.getStatus() : "PENDING";
+                        leaveType = leave.getType() != null ? leave.getType() : "Izin";
+                        break;
+                    }
+                }
+            }
+        }
 
-        if (!flatLogs.isEmpty()) {
+        if (hasLeaveToday) {
+            isCheckedIn = false;
+            String statusId = "Menunggu";
+            if ("APPROVED".equalsIgnoreCase(leaveStatus)) statusId = "Diterima";
+            else if ("REJECTED".equalsIgnoreCase(leaveStatus)) statusId = "Ditolak";
+            
+            tvStatusTitle.setText(leaveType + " (" + statusId + ")");
+            tvStatusTime.setText("Hari ini");
+            vStatusDot.setVisibility(View.GONE);
+        } else if (!flatLogs.isEmpty()) {
             AttendanceEvent latestLog = flatLogs.get(0);
             
             java.util.Calendar calEvent = java.util.Calendar.getInstance();
             calEvent.setTime(latestLog.getDetectedAt());
-            java.util.Calendar calToday = java.util.Calendar.getInstance();
             boolean isToday = calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
                               calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR);
 
