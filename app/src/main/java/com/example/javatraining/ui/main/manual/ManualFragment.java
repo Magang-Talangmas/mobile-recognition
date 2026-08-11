@@ -215,6 +215,12 @@ public class ManualFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fetchAttendanceStatus();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (timerHandler != null && timerRunnable != null) {
