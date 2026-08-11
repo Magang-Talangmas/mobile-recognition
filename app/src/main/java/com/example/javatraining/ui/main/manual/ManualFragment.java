@@ -58,6 +58,7 @@ public class ManualFragment extends Fragment {
     private Calendar calendar;
     private boolean hasPhoto = false;
     private boolean isCheckIn = true;
+    private com.example.javatraining.data.remote.response.ScheduleData todaySchedule = null;
 
     private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable timerRunnable;
@@ -271,6 +272,33 @@ public class ManualFragment extends Fragment {
             String directionStr = isCheckIn ? "IN" : "OUT";
             String statusStr = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
 
+            boolean isLateCalculated = false;
+            if (isCheckIn && todaySchedule != null) {
+                try {
+                    String checkInTimeStr = todaySchedule.getCheckInTime(); // e.g. "08:30" or "08:30:00"
+                    Integer tolerance = todaySchedule.getToleranceMinutes();
+                    if (checkInTimeStr != null && tolerance != null) {
+                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", Locale.getDefault());
+                        java.util.Date scheduleTime = sdf.parse(checkInTimeStr);
+                        
+                        java.util.Calendar calNow = java.util.Calendar.getInstance();
+                        String nowStr = sdf.format(calNow.getTime());
+                        java.util.Date currentTime = sdf.parse(nowStr);
+                        
+                        java.util.Calendar calThreshold = java.util.Calendar.getInstance();
+                        calThreshold.setTime(scheduleTime);
+                        calThreshold.add(java.util.Calendar.MINUTE, tolerance);
+                        
+                        if (currentTime != null && currentTime.after(calThreshold.getTime())) {
+                            isLateCalculated = true;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            final boolean finalIsLate = isLateCalculated;
+
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
                 // Build filename with checkins folder path to match backend structure
                 String filename = "checkins/" + empId + "/manual_" + System.currentTimeMillis() + ".webp";
@@ -286,9 +314,8 @@ public class ManualFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
                                             + "storage/v1/object/public/recognition/" + filename;
-                                    boolean isLate = false;
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            publicUrl, isLate);
+                                            publicUrl, finalIsLate);
                                 } else {
                                     String errorMsg = "Upload Failed: " + response.code();
                                     try {
@@ -301,23 +328,19 @@ public class ManualFragment extends Fragment {
                                     // Make sure we show a Toast to the user so they know image failed
                                     Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
 
-                                    boolean isLate = false;
-
                                     sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            null, isLate);
+                                            null, finalIsLate);
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
-                                boolean isLate = false;
                                 sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                        null, isLate);
+                                        null, finalIsLate);
                             }
                         });
             } else {
-                boolean isLate = false;
-                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null, isLate);
+                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null, finalIsLate);
             }
         });
     }
@@ -378,7 +401,25 @@ public class ManualFragment extends Fragment {
         });
     }
 
+    private void fetchSchedule() {
+        ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+        apiService.getScheduleToday().enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.ScheduleData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.ScheduleData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    todaySchedule = response.body().get(0);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
+                // Ignore failure, todaySchedule will remain null
+            }
+        });
+    }
+
     private void fetchAttendanceStatus() {
+        fetchSchedule();
         loadingState.setVisibility(View.VISIBLE);
         formContainer.setVisibility(View.GONE);
         successState.setVisibility(View.GONE);
