@@ -21,7 +21,7 @@ public class ManualAttendanceRequest {
     @SerializedName("status")
     public String status;
     
-    @SerializedName("is_late")
+    @SerializedName("isLate")
     public boolean isLate;
     
     @SerializedName("confirmationStatus")
