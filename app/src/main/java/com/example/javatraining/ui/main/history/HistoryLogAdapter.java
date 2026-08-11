@@ -160,12 +160,6 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
                 holder.tvAccuracy.setVisibility(View.GONE);
             }
 
-            // Mock locations
-            if (position % 2 == 0) {
-                holder.tvLocation.setText("HQ Office");
-            } else {
-                holder.tvLocation.setText("WFH");
-            }
         }
     }
 
@@ -186,7 +180,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View vLineTop, vLineBottom, vInnerDot;
         FrameLayout flDotContainer;
-        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours, tvLocation,
+        TextView tvRelativeDate, tvDate, tvStatusBadge, tvCheckInTime, tvCheckOutTime, tvTotalHours,
                 tvAccuracy, tvLeaveReason;
         LinearLayout llStatusBadge, llCheckInRow, llCheckOutRow, llLeaveInfo;
         com.google.android.material.card.MaterialCardView cardContainer;
@@ -208,7 +202,6 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             tvCheckInTime = itemView.findViewById(R.id.tvCheckInTime);
             tvCheckOutTime = itemView.findViewById(R.id.tvCheckOutTime);
             tvTotalHours = itemView.findViewById(R.id.tvTotalHours);
-            tvLocation = itemView.findViewById(R.id.tvLocation);
             tvAccuracy = itemView.findViewById(R.id.tvAccuracy);
 
             llCheckInRow = itemView.findViewById(R.id.llCheckInRow);

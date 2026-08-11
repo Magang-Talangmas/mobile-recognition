@@ -42,10 +42,6 @@
                 <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_exit" android:rotation="180" app:tint="#737685" />
 
                 <TextView android:id="@+id/tvCheckInTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="08:55 AM" android:textColor="#434654" android:textSize="14sp" />
-
-                <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
-
-                <TextView android:id="@+id/tvLocation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HQ Office" android:textColor="#737685" android:textSize="12sp" />
             </LinearLayout>
 
             <!-- Check Out Row -->
