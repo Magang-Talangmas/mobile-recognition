@@ -270,6 +270,114 @@ public class IzinFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fetchAttendanceStatus();
+    }
+
+    private void fetchAttendanceStatus() {
+        binding.loadingState.setVisibility(View.VISIBLE);
+        binding.formContainer.setVisibility(View.GONE);
+        binding.successState.setVisibility(View.GONE);
+
+        ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
+        com.example.javatraining.data.local.SessionManager sm = new com.example.javatraining.data.local.SessionManager(requireContext());
+        String empId = sm.getUser() != null ? sm.getUser().getId() : "";
+        apiService.getAttendances("eq." + empId, 1).enqueue(new Callback<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>>() {
+            @Override
+            public void onResponse(Call<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> call, Response<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    com.example.javatraining.data.remote.response.AttendanceData latest = response.body().get(0);
+
+                    if (latest.getTimestamp() != null) {
+                        java.util.Date d = parseIsoDate(latest.getTimestamp());
+                        if (d != null) {
+                            java.util.Calendar calEvent = java.util.Calendar.getInstance();
+                            calEvent.setTime(d);
+                            java.util.Calendar calToday = java.util.Calendar.getInstance();
+
+                            boolean isToday = calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                                    calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR);
+
+                            if (isToday) {
+                                String eventType = latest.getEventType();
+                                if ("CHECK_OUT".equalsIgnoreCase(eventType) || "OUT".equalsIgnoreCase(eventType)) {
+                                    setCompletedState();
+                                } else {
+                                    setFormState();
+                                }
+                            } else {
+                                setFormState();
+                            }
+                        } else {
+                            setFormState();
+                        }
+                    } else {
+                        setFormState();
+                    }
+                } else {
+                    setFormState();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<java.util.List<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+                setFormState();
+            }
+        });
+    }
+
+    private void setFormState() {
+        binding.loadingState.setVisibility(View.GONE);
+        binding.successState.setVisibility(View.GONE);
+        binding.formContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void setCompletedState() {
+        binding.loadingState.setVisibility(View.GONE);
+        binding.formContainer.setVisibility(View.GONE);
+        binding.successState.setVisibility(View.VISIBLE);
+
+        binding.tvSuccessTitle.setText("Selesai untuk hari ini!");
+        binding.tvSuccessSubtitle.setText("Anda telah berhasil menyelesaikan absensi hari ini.");
+
+        if (binding.ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
+            ((android.graphics.drawable.Animatable) binding.ivSuccessAnim.getDrawable()).start();
+        }
+    }
+
+    private java.util.Date parseIsoDate(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty()) return null;
+        String normalized = dateStr.trim().replace(" ", "T");
+
+        String[] formats = {
+                "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SXXX",
+                "yyyy-MM-dd'T'HH:mm:ssXXX",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.SSS",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
+        };
+
+        for (String f : formats) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(f, java.util.Locale.getDefault());
+                if (f.contains("XXX") || f.contains("Z")) {
+                    sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+                }
+                return sdf.parse(normalized);
+            } catch (Exception ignored) { }
+        }
+        return null;
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

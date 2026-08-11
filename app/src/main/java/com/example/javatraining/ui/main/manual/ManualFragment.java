@@ -342,11 +342,11 @@ public class ManualFragment extends Fragment {
                     successState.setVisibility(View.VISIBLE);
 
                     if (isCheckIn) {
-                        tvSuccessTitle.setText("Check In Submitted");
-                        tvSuccessSubtitle.setText("Your check-in has been sent to your supervisor for review.");
+                        tvSuccessTitle.setText("Check-In Terkirim");
+                        tvSuccessSubtitle.setText("Check-in Anda telah dikirim ke atasan untuk ditinjau.");
                     } else {
-                        tvSuccessTitle.setText("Check Out Submitted");
-                        tvSuccessSubtitle.setText("Your check-out has been sent to your supervisor for review.");
+                        tvSuccessTitle.setText("Check-Out Terkirim");
+                        tvSuccessSubtitle.setText("Check-out Anda telah dikirim ke atasan untuk ditinjau.");
                     }
 
                     ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
@@ -484,8 +484,8 @@ public class ManualFragment extends Fragment {
         formContainer.setVisibility(View.GONE);
         successState.setVisibility(View.VISIBLE);
 
-        tvSuccessTitle.setText("All done for today!");
-        tvSuccessSubtitle.setText("You've successfully completed your attendance for today.");
+        tvSuccessTitle.setText("Selesai untuk hari ini!");
+        tvSuccessSubtitle.setText("Anda telah berhasil menyelesaikan absensi hari ini.");
 
         ImageView ivSuccessAnim = getView().findViewById(R.id.ivSuccessAnim);
         if (ivSuccessAnim != null && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
