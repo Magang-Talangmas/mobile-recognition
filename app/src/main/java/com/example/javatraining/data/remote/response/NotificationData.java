@@ -24,6 +24,9 @@ public class NotificationData {
     @SerializedName(value = "imageUrl", alternate = {"image_url", "thumbnail"})
     private String imageUrl;
 
+    @SerializedName(value = "recognitionId", alternate = {"recognition_id", "recognitionEventId"})
+    private String recognitionId;
+
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getBody() { return body; }
@@ -31,4 +34,6 @@ public class NotificationData {
     public String getCreatedAt() { return createdAt; }
     public String getType() { return type; }
     public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getRecognitionId() { return recognitionId; }
 }

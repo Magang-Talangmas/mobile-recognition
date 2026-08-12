@@ -22,11 +22,29 @@ import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
+    public interface OnNotificationActionListener {
+        void onConfirm(NotificationItem item, int position);
+        void onReject(NotificationItem item, int position);
+    }
+
     private List<NotificationItem> items = new ArrayList<>();
+    private OnNotificationActionListener listener;
+
+    public void setListener(OnNotificationActionListener listener) {
+        this.listener = listener;
+    }
 
     public void updateData(List<NotificationItem> newItems) {
         this.items = newItems;
         notifyDataSetChanged();
+    }
+
+    public void removeItem(int position) {
+        if (position >= 0 && position < items.size()) {
+            items.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, items.size());
+        }
     }
 
     @NonNull
@@ -73,13 +91,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.ivSnapshot.setVisibility(View.GONE);
         }
 
-        if (item.requiresConfirmation()) {
+        if (item.requiresConfirmation() && item.getRecognitionId() != null) {
             holder.llActionButtons.setVisibility(View.VISIBLE);
             holder.btnConfirm.setOnClickListener(v -> {
-                Toast.makeText(holder.itemView.getContext(), "Mengeksekusi Konfirmasi Absensi...", Toast.LENGTH_SHORT).show();
+                if (listener != null) {
+                    listener.onConfirm(item, holder.getAdapterPosition());
+                }
             });
             holder.btnReject.setOnClickListener(v -> {
-                Toast.makeText(holder.itemView.getContext(), "Menolak Konfirmasi...", Toast.LENGTH_SHORT).show();
+                if (listener != null) {
+                    listener.onReject(item, holder.getAdapterPosition());
+                }
             });
         } else {
             holder.llActionButtons.setVisibility(View.GONE);

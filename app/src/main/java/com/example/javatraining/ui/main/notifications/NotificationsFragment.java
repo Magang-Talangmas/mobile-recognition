@@ -39,6 +39,27 @@ public class NotificationsFragment extends Fragment {
 
         com.example.javatraining.data.repository.AbsensiTMRepository repository = new com.example.javatraining.data.repository.AbsensiTMRepository(
                 requireActivity().getApplication());
+
+        adapter.setListener(new NotificationAdapter.OnNotificationActionListener() {
+            @Override
+            public void onConfirm(NotificationItem item, int position) {
+                if (item.getRecognitionId() != null) {
+                    repository.confirmRecognition(item.getRecognitionId());
+                    adapter.removeItem(position);
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onReject(NotificationItem item, int position) {
+                if (item.getRecognitionId() != null) {
+                    repository.rejectRecognition(item.getRecognitionId());
+                    adapter.removeItem(position);
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         repository.getNotificationsApi().observe(getViewLifecycleOwner(), notifications -> {
             List<NotificationItem> items = new ArrayList<>();
             if (notifications != null && !notifications.isEmpty()) {
@@ -52,25 +73,27 @@ public class NotificationsFragment extends Fragment {
                             || "ALERT".equalsIgnoreCase(n.getType());
                     boolean requiresConfirmation = "REQUIRE_CONFIRMATION".equalsIgnoreCase(n.getType());
                     items.add(new NotificationItem(
+                            n.getId(),
                             n.getTitle() != null ? n.getTitle() : "Notifikasi Absensi",
                             n.getBody() != null ? n.getBody() : "",
                             n.getCreatedAt() != null ? n.getCreatedAt() : "Terbaru",
                             isWarning,
                             n.getImageUrl(),
-                            requiresConfirmation));
+                            requiresConfirmation,
+                            n.getRecognitionId()));
                 }
             } else {
                 // Default notifications if none returned from server
-                items.add(new NotificationItem("Konfirmasi Absensi",
-                        "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false, null, false));
-                items.add(new NotificationItem("Wajah Tidak Dikenali",
+                items.add(new NotificationItem("1", "Konfirmasi Absensi",
+                        "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false, null, false, null));
+                items.add(new NotificationItem("2", "Wajah Tidak Dikenali",
                         "Kamera Pintu Utama mendeteksi wajah yang tidak terdaftar. Harap lakukan absensi manual.",
-                        "10 mins ago", true, null, false));
-                items.add(new NotificationItem("Sinkronisasi Sukses",
-                        "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false, null, false));
-                items.add(new NotificationItem("Akurasi Wajah Rendah",
+                        "10 mins ago", true, null, false, null));
+                items.add(new NotificationItem("3", "Sinkronisasi Sukses",
+                        "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false, null, false, null));
+                items.add(new NotificationItem("4", "Akurasi Wajah Rendah",
                         "Kamera mendeteksi Anda dengan akurasi 82%. Status Anda tetap dikonfirmasi.", "Yesterday",
-                        true, null, false));
+                        true, null, false, null));
             }
             adapter.updateData(items);
         });

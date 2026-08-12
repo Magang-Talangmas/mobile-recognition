@@ -70,4 +70,10 @@ public interface ApiService {
 
     @PATCH("rest/v1/notifications")
     Call<Void> readNotification(@Query("id") String id, @Body RequestBody body);
+
+    @PATCH("rest/v1/recognition_events")
+    Call<Void> updateRecognitionStatus(@Query("id") String idEq, @Body RequestBody body);
+
+    @GET("rest/v1/recognition_events?select=id,thumbnail")
+    Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getRecognitionEvents(@Query("id") String idIn);
 }

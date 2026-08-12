@@ -297,7 +297,42 @@ public class AbsensiTMRepository {
             @Override
             public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.NotificationData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.NotificationData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    List<com.example.javatraining.data.remote.response.NotificationData> notifs = response.body();
+                    
+                    java.util.List<String> recognitionIds = new java.util.ArrayList<>();
+                    for (com.example.javatraining.data.remote.response.NotificationData notif : notifs) {
+                        if (notif.getRecognitionId() != null && !notif.getRecognitionId().trim().isEmpty()) {
+                            recognitionIds.add(notif.getRecognitionId());
+                        }
+                    }
+
+                    if (recognitionIds.isEmpty()) {
+                        result.setValue(notifs);
+                    } else {
+                        String idIn = "in.(" + android.text.TextUtils.join(",", recognitionIds) + ")";
+                        apiService.getRecognitionEvents(idIn).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.RecognitionEventData>>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.RecognitionEventData>> thumbnailResponse) {
+                                if (thumbnailResponse.isSuccessful() && thumbnailResponse.body() != null) {
+                                    java.util.Map<String, String> thumbnails = new java.util.HashMap<>();
+                                    for (com.example.javatraining.data.remote.response.RecognitionEventData event : thumbnailResponse.body()) {
+                                        thumbnails.put(event.getId(), event.getThumbnail());
+                                    }
+                                    for (com.example.javatraining.data.remote.response.NotificationData notif : notifs) {
+                                        if (notif.getRecognitionId() != null && thumbnails.containsKey(notif.getRecognitionId())) {
+                                            notif.setImageUrl(thumbnails.get(notif.getRecognitionId()));
+                                        }
+                                    }
+                                }
+                                result.setValue(notifs);
+                            }
+
+                            @Override
+                            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, Throwable t) {
+                                result.setValue(notifs);
+                            }
+                        });
+                    }
                 } else {
                     result.setValue(new java.util.ArrayList<>());
                 }
@@ -322,6 +357,30 @@ public class AbsensiTMRepository {
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
             }
+        });
+    }
+
+    public void confirmRecognition(String recognitionId) {
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        String json = "{\"status\": \"Verified\"}";
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
+        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+        });
+    }
+
+    public void rejectRecognition(String recognitionId) {
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        String json = "{\"status\": \"Rejected\"}";
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
+        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
         });
     }
 }
