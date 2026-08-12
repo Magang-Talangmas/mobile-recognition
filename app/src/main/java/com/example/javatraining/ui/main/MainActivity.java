@@ -90,18 +90,14 @@ public class MainActivity extends AppCompatActivity {
                         .setAllCorners(CornerFamily.ROUNDED, 100f)
                         .build());
         
-        // Add outline stroke so it stands out from the background
-        float strokeWidth = getResources().getDisplayMetrics().density * 1.5f;
+        // Add subtle outline stroke
+        float strokeWidth = getResources().getDisplayMetrics().density * 1.0f;
         bottomBarBackground.setStroke(strokeWidth, androidx.core.content.ContextCompat.getColor(this, R.color.ent_outline));
                         
-        // Fix for concave shadow bug: force a custom convex outline so native shadow renders correctly
-        binding.bottomAppBar.setOutlineProvider(new android.view.ViewOutlineProvider() {
-            @Override
-            public void getOutline(android.view.View view, android.graphics.Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 100f);
-            }
-        });
-        binding.bottomAppBar.setClipToOutline(true);
+        // Enable accurate software shadow for concave shape (FAB cradle)
+        // clipChildren="false" on parent prevents the shadow from being clipped on the edges
+        bottomBarBackground.setShadowCompatibilityMode(MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS);
+        binding.bottomAppBar.setOutlineProvider(null); // Disable native shadow to prevent double-shadows
 
         setupNavigation();
 
