@@ -45,7 +45,7 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        binding.btnPersonalInfo.setOnClickListener(v -> {
+        binding.btnProfileCard.setOnClickListener(v -> {
             startActivity(new android.content.Intent(requireContext(), ProfileActivity.class));
         });
 

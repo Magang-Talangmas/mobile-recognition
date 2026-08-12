@@ -38,6 +38,7 @@
 
         <!-- User Profile Card -->
         <LinearLayout
+            android:id="@+id/btnProfileCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -45,7 +46,10 @@
             android:elevation="2dp"
             android:gravity="center_vertical"
             android:padding="20dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivAvatar"
@@ -102,50 +106,6 @@
             android:paddingBottom="8dp"
             android:layout_marginBottom="24dp">
 
-            <!-- User Profile -->
-            <LinearLayout
-                android:id="@+id/btnPersonalInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="14dp"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/bg_icon_circle"
-                    android:backgroundTint="#E8EAFF">
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_nav_profile"
-                        app:tint="#4A5CFF" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:text="Personal Information"
-                    android:textColor="#111645"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="#A0A5B9" />
-            </LinearLayout>
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F1F5" android:layout_marginHorizontal="16dp" />
 
             <!-- Change Password -->
             <LinearLayout
@@ -164,13 +124,13 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/bg_icon_circle"
-                    android:backgroundTint="#FFF0E6">
+                    android:backgroundTint="#EBECF0">
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_lock_outline"
-                        app:tint="#FF8C39" />
+                        app:tint="#111645" />
                 </FrameLayout>
 
                 <TextView
@@ -226,13 +186,13 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/bg_icon_circle"
-                    android:backgroundTint="#E6F9EE">
+                    android:backgroundTint="#EBECF0">
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_notifications"
-                        app:tint="#20C968" />
+                        app:tint="#111645" />
                 </FrameLayout>
 
                 <TextView
@@ -272,13 +232,13 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/bg_icon_circle"
-                    android:backgroundTint="#F4E9FF">
+                    android:backgroundTint="#EBECF0">
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_email_outline"
-                        app:tint="#9D4EDD" />
+                        app:tint="#111645" />
                 </FrameLayout>
 
                 <TextView
