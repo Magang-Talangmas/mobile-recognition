@@ -85,12 +85,16 @@ public class AbsensiTMRepository {
                         
                         // Parse the error message if possible
                         String displayMsg = "Login Failed: " + response.code();
-                        if (errBody.contains("message")) {
-                            try {
-                                org.json.JSONObject jObjError = new org.json.JSONObject(errBody);
+                        try {
+                            org.json.JSONObject jObjError = new org.json.JSONObject(errBody);
+                            if (jObjError.has("error_description")) {
+                                displayMsg = jObjError.getString("error_description");
+                            } else if (jObjError.has("message")) {
                                 displayMsg = jObjError.getString("message");
-                            } catch (Exception e) {}
-                        }
+                            } else if (jObjError.has("error")) {
+                                displayMsg = jObjError.getString("error");
+                            }
+                        } catch (Exception e) {}
                         
                         final String finalMsg = displayMsg;
                         mainThreadHandler.post(() -> {

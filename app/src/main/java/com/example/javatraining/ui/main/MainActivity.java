@@ -89,6 +89,15 @@ public class MainActivity extends AppCompatActivity {
                         .toBuilder()
                         .setAllCorners(CornerFamily.ROUNDED, 100f)
                         .build());
+                        
+        // Fix for concave shadow bug: force a custom convex outline so native shadow renders correctly
+        binding.bottomAppBar.setOutlineProvider(new android.view.ViewOutlineProvider() {
+            @Override
+            public void getOutline(android.view.View view, android.graphics.Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 100f);
+            }
+        });
+        binding.bottomAppBar.setClipToOutline(true);
 
         setupNavigation();
 
