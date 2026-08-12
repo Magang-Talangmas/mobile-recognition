@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btnSavePassword);
         btnSave.setOnClickListener(v -> {
             bottomSheetDialog.dismiss();
-            android.widget.Toast.showText(requireContext(), "Password saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+            android.widget.Toast.makeText(requireContext(), "Password saved successfully", android.widget.Toast.LENGTH_SHORT).show();
         });
 
         bottomSheetDialog.show();
