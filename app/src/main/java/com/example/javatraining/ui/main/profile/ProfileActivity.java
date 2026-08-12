@@ -1,11 +1,10 @@
 package com.example.javatraining.ui.main.profile;
 
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.javatraining.R;
-import com.google.android.material.button.MaterialButton;
 import com.example.javatraining.data.local.SessionManager;
 import com.example.javatraining.data.model.User;
 import com.bumptech.glide.Glide;
@@ -35,32 +34,34 @@ public class ProfileActivity extends AppCompatActivity {
                         .into(ivAvatar);
             }
 
-            EditText etFirstName = findViewById(R.id.etFirstName);
-            EditText etLastName = findViewById(R.id.etLastName);
-            EditText etEmail = findViewById(R.id.etEmail);
-            EditText etMobile = findViewById(R.id.etMobile);
+            TextView tvFullName = findViewById(R.id.tvFullName);
+            TextView tvEmployeeId = findViewById(R.id.tvEmployeeId);
+            TextView tvDepartment = findViewById(R.id.tvDepartment);
+            TextView tvPosition = findViewById(R.id.tvPosition);
+            TextView tvEmail = findViewById(R.id.tvEmail);
 
-            if (user.getName() != null) {
-                String[] nameParts = user.getName().split(" ", 2);
-                if (etFirstName != null) etFirstName.setText(nameParts[0]);
-                if (nameParts.length > 1 && etLastName != null) {
-                    etLastName.setText(nameParts[1]);
+            if (tvFullName != null) {
+                tvFullName.setText(user.getName() != null && !user.getName().isEmpty() ? user.getName() : "-");
+            }
+            if (tvEmployeeId != null) {
+                tvEmployeeId.setText(user.getEmployeeId() != null && !user.getEmployeeId().isEmpty() ? user.getEmployeeId() : "-");
+            }
+            if (tvDepartment != null) {
+                tvDepartment.setText(user.getDepartment() != null && !user.getDepartment().isEmpty() ? user.getDepartment() : "-");
+            }
+            if (tvPosition != null) {
+                String positionText = "";
+                if (user.getPosition() != null && !user.getPosition().isEmpty()) {
+                    positionText = user.getPosition();
                 }
+                if (user.getRole() != null && !user.getRole().isEmpty()) {
+                    positionText += (positionText.isEmpty() ? "" : " / ") + user.getRole();
+                }
+                tvPosition.setText(positionText.isEmpty() ? "-" : positionText);
             }
-
-            if (etEmail != null) {
-                etEmail.setText(user.getEmail());
+            if (tvEmail != null) {
+                tvEmail.setText(user.getEmail() != null && !user.getEmail().isEmpty() ? user.getEmail() : "-");
             }
-            
-            // Note: Mobile is not currently in the User model, leaving blank or placeholder
-        }
-        
-        MaterialButton btnSave = findViewById(R.id.btnSave);
-        if (btnSave != null) {
-            btnSave.setOnClickListener(v -> {
-                android.widget.Toast.makeText(this, "Profile updated", android.widget.Toast.LENGTH_SHORT).show();
-                finish();
-            });
         }
     }
 }
