@@ -43,6 +43,11 @@ public class NotificationsFragment extends Fragment {
             List<NotificationItem> items = new ArrayList<>();
             if (notifications != null && !notifications.isEmpty()) {
                 for (com.example.javatraining.data.remote.response.NotificationData n : notifications) {
+                    
+                    if (!n.isRead()) {
+                        repository.markNotificationAsRead(n.getId());
+                    }
+
                     boolean isWarning = "WARNING".equalsIgnoreCase(n.getType())
                             || "ALERT".equalsIgnoreCase(n.getType());
                     items.add(new NotificationItem(

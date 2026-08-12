@@ -283,8 +283,13 @@ public class AbsensiTMRepository {
 
     public LiveData<List<com.example.javatraining.data.remote.response.NotificationData>> getNotificationsApi() {
         MutableLiveData<List<com.example.javatraining.data.remote.response.NotificationData>> result = new MutableLiveData<>();
+        
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        String filter = (employeeId != null && !employeeId.trim().isEmpty()) ? "eq." + employeeId : null;
+
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.getNotifications().enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.NotificationData>>() {
+        apiService.getNotifications(filter).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.NotificationData>>() {
             @Override
             public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.NotificationData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.NotificationData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -300,5 +305,19 @@ public class AbsensiTMRepository {
             }
         });
         return result;
+    }
+
+    public void markNotificationAsRead(String notifId) {
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        String json = "{\"isRead\": true}";
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
+        apiService.readNotification("eq." + notifId, body).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+            }
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+            }
+        });
     }
 }

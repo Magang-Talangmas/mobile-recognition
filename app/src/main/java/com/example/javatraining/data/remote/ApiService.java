@@ -65,8 +65,8 @@ public interface ApiService {
             @Body okhttp3.RequestBody imageBody
     );
 
-    @GET("rest/v1/notifications?select=*")
-    Call<List<NotificationData>> getNotifications();
+    @GET("rest/v1/notifications?select=*&order=createdAt.desc")
+    Call<List<NotificationData>> getNotifications(@Query("employeeId") String employeeIdEq);
 
     @PATCH("rest/v1/notifications")
     Call<Void> readNotification(@Query("id") String id, @Body RequestBody body);
