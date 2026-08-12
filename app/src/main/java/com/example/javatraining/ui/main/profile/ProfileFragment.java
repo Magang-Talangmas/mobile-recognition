@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.javatraining.databinding.FragmentProfileBinding;
+import com.example.javatraining.R;
 
 public class ProfileFragment extends Fragment {
 
