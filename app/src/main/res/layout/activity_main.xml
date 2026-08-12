@@ -21,6 +21,7 @@
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="24dp"
         app:fabCradleVerticalOffset="0dp"
+        android:outlineProvider="background"
         android:background="@drawable/bg_bottom_nav"
         app:elevation="12dp">
 
