@@ -29,13 +29,32 @@ public class User {
     private String password;
 
     // Full constructor (for AbsensiTMRepository mock login)
-    public User(String id, String name, String email, String role, String shift, String avatar) {
+    public User(String id, String name, String email, String role, String employeeId, String department, String position) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.role = role;
-        this.shift = shift;
-        this.avatar = avatar;
+        this.employeeId = employeeId;
+        this.department = department;
+        this.position = position;
+    }
+    
+    public String generateProfilePhotoUrl(String accountName) {
+        if (accountName == null || accountName.trim().isEmpty()) {
+            return "https://ui-avatars.com/api/?name=U&background=random&color=fff&size=256";
+        }
+        String[] words = accountName.trim().split("\\s+");
+
+        String nameForAvatar;
+        if (words.length >= 2) {
+            nameForAvatar = words[0] + "+" + words[1];
+        } else {
+            nameForAvatar = words[0];
+        }
+
+        return "https://ui-avatars.com/api/?name=" 
+                + nameForAvatar 
+                + "&background=random&color=fff&size=256";
     }
 
     // Simple constructor (for MockDatabase internal use)
@@ -59,5 +78,7 @@ public class User {
     public String getDepartment() { return department; }
     public String getPosition() { return position; }
     public String getShift() { return shift != null ? shift : ""; }
-    public String getAvatar() { return avatar != null ? avatar : ""; }
+    public String getAvatar() { 
+        return generateProfilePhotoUrl(this.name != null && !this.name.isEmpty() ? this.name : this.email);
+    }
 }

@@ -26,12 +26,21 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             binding.tvName
                     .setText(user.getName() != null && !user.getName().isEmpty() ? user.getName() : user.getEmail());
-            binding.tvPosition.setText(user.getRole() != null ? user.getRole() : "Employee");
+            String position = user.getPosition() != null && !user.getPosition().isEmpty() ? user.getPosition() : "Employee";
+            String department = user.getDepartment() != null && !user.getDepartment().isEmpty() ? user.getDepartment() : "";
+            binding.tvPosition.setText(department.isEmpty() ? position : position + " - " + department);
+            
             String displayId = user.getId() != null ? user.getId() : "N/A";
             if (displayId.length() > 8) {
                 displayId = displayId.substring(0, 8).toUpperCase();
             }
             binding.tvEmployeeId.setText(displayId);
+            
+            com.bumptech.glide.Glide.with(this)
+                    .load(user.getAvatar())
+                    .placeholder(R.drawable.ic_avatar)
+                    .error(R.drawable.ic_avatar)
+                    .into(binding.ivAvatar);
         }
 
         binding.btnLogout.setOnClickListener(v -> {
