@@ -329,7 +329,7 @@ public class IzinFragment extends Fragment {
             
             java.util.Calendar calToday = java.util.Calendar.getInstance();
 
-            if (latestLeave != null) {
+            if (latestLeave != null && !"REJECTED".equalsIgnoreCase(latestLeave.getStatus())) {
                 String timeStr = latestLeave.getCreatedAt() != null ? latestLeave.getCreatedAt() : latestLeave.getDate();
                 java.util.Date d = parseIsoDate(timeStr);
                 if (d == null && latestLeave.getDate() != null) d = parseIsoDate(latestLeave.getDate() + "T00:00:00Z");
