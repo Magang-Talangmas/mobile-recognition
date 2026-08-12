@@ -80,24 +80,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Request notification permission if needed
         requestNotificationPermission();
-
-        // Force fully rounded corners on BottomAppBar
-        MaterialShapeDrawable bottomBarBackground = (MaterialShapeDrawable) binding.bottomAppBar.getBackground();
-        bottomBarBackground.setShapeAppearanceModel(
-                bottomBarBackground.getShapeAppearanceModel()
-                        .toBuilder()
-                        .setAllCorners(CornerFamily.ROUNDED, 100f)
-                        .build());
-        
-        // Add subtle outline stroke
-        float strokeWidth = getResources().getDisplayMetrics().density * 1.0f;
-        bottomBarBackground.setStroke(strokeWidth, androidx.core.content.ContextCompat.getColor(this, R.color.ent_outline));
-                        
-        // Enable accurate software shadow for concave shape (FAB cradle)
-        // clipChildren="false" on parent prevents the shadow from being clipped on the edges
-        bottomBarBackground.setShadowCompatibilityMode(MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS);
-        binding.bottomAppBar.setOutlineProvider(null); // Disable native shadow to prevent double-shadows
 
         setupNavigation();
 

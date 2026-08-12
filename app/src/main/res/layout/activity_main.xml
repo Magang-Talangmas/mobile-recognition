@@ -17,14 +17,10 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="24dp"
-        android:layout_marginHorizontal="16dp"
         app:backgroundTint="@color/ent_surface"
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="24dp"
         app:fabCradleVerticalOffset="0dp"
-        android:outlineProvider="background"
-        android:background="@drawable/bg_bottom_nav"
         app:elevation="12dp">
 
         <LinearLayout
