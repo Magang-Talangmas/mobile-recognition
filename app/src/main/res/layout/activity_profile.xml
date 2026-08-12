@@ -1,313 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ent_background"
-    android:fitsSystemWindows="true">
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="24dp">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Header -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ent_background"
-        app:elevation="0dp">
+        android:layout_marginBottom="32dp">
 
-        <!-- Top Header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:paddingHorizontal="20dp"
-            android:background="@drawable/bg_bottom_line">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#162473"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"/>
 
-            <!-- Back Button -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="User Profile"
+            android:textColor="#1A1C29"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Avatar Section -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="48dp">
+
+        <!-- Outer Ring -->
+        <View
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_circle_outline"
+            android:backgroundTint="#F0F1F5" />
+
+        <!-- Profile Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
+
+        <!-- Camera Icon Badge -->
+        <FrameLayout
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_circle_primary"
+            android:backgroundTint="#FFFFFF"
+            android:elevation="4dp">
+
             <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_arrow_back"
-                android:padding="2dp"
-                app:tint="@color/ent_primary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_camera_alt"
+                app:tint="#162473" />
+        </FrameLayout>
+    </RelativeLayout>
 
-            <!-- Title -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_profile"
-                android:textColor="@color/ent_primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="16dp"
-        android:paddingBottom="100dp"
-        android:paddingHorizontal="20dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Profile Header Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <!-- First Name -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/ent_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeColor="@color/ent_outline"
-                app:strokeWidth="0dp">
+                android:text="First Name"
+                android:textColor="#A0A5BA"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="24dp">
-
-                    <!-- Top Blue Background -->
-                    <View
-                        android:id="@+id/topBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:background="@android:color/transparent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/ivProfilePic"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:layout_marginTop="32dp"
-                        android:background="@drawable/bg_circle_white"
-                        android:padding="4dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/img_profile_pic"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvProfileName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Marcus Chen"
-                        android:textColor="@color/ent_primary"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ivProfilePic" />
-
-                    <TextView
-                        android:id="@+id/tvProfileEmail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Senior Developer"
-                        android:textColor="@color/ent_text_secondary"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvProfileName" />
-
-                    <!-- Badge -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/bg_input_capsule"
-                        android:backgroundTint="@color/ent_surface_variant"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvProfileEmail">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_nav_profile"
-                            app:tint="@color/ent_secondary_dark" />
-
-                        <TextView
-                            android:id="@+id/tvProfileEmpId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="ID: EMP-4421"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="12sp"
-                            android:letterSpacing="0.05" />
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Personal Info Section -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/ent_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeColor="@color/ent_outline"
-                app:strokeWidth="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Title -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="8dp"
-                        android:background="@drawable/bg_bottom_line">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_nav_profile"
-                            app:tint="@color/ent_primary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/profile_personal_info"
-                            android:textColor="@color/ent_primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Email -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="12dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/profile_email"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="m.chen@company.com"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/ent_outline" />
-
-                    <!-- Phone -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="12dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/profile_phone"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+1 (555) 019-8234"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/ent_outline" />
-
-                    <!-- Department -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="12dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/profile_department"
-                            android:textColor="@color/ent_text_secondary"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/tvDepartment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Engineering"
-                            android:textColor="@color/ent_text_primary"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <!-- Edit Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/profile_edit_details"
-                        android:textAllCaps="false"
-                        android:textColor="@color/ent_primary"
-                        app:strokeColor="@color/ent_primary"
-                        app:strokeWidth="0dp"
-                        app:cornerRadius="8dp"
-                        app:icon="@android:drawable/ic_menu_edit"
-                        app:iconTint="@color/ent_primary"
-                        app:iconGravity="textStart"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-
-
-
-
-            <!-- Sign Out Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
+            <EditText
+                android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginBottom="24dp"
-                android:text="@string/profile_logout"
-                android:textAllCaps="false"
-                android:textColor="#ba1a1a"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_rounded_white_card"
+                android:backgroundTint="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A1C29"
+                android:textSize="16sp"
+                android:elevation="2dp"/>
+
+            <!-- Last Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Name"
+                android:textColor="#A0A5BA"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etLastName"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_rounded_white_card"
+                android:backgroundTint="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A1C29"
+                android:textSize="16sp"
+                android:elevation="2dp"/>
+
+            <!-- E-Mail -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-Mail"
+                android:textColor="#A0A5BA"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_rounded_white_card"
+                android:backgroundTint="#FFFFFF"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A1C29"
+                android:textSize="16sp"
+                android:elevation="2dp"/>
+
+            <!-- Mobile -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile"
+                android:textColor="#A0A5BA"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etMobile"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/bg_rounded_white_card"
+                android:backgroundTint="#FFFFFF"
+                android:inputType="phone"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A1C29"
+                android:textSize="16sp"
+                android:elevation="2dp"/>
+
+            <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="SAVE"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:cornerRadius="12dp"
-                app:strokeColor="#ba1a1a"
-                app:strokeWidth="0dp"
-                app:icon="@drawable/ic_exit"
-                app:iconTint="#ba1a1a"
-                app:iconGravity="textStart"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                app:backgroundTint="#162473"
+                app:cornerRadius="32dp" />
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </ScrollView>
+</LinearLayout>

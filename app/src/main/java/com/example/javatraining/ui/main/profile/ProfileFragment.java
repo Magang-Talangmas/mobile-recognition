@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.javatraining.databinding.FragmentProfileBinding;
 import com.example.javatraining.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class ProfileFragment extends Fragment {
 
@@ -27,15 +28,6 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             binding.tvName
                     .setText(user.getName() != null && !user.getName().isEmpty() ? user.getName() : user.getEmail());
-            String position = user.getPosition() != null && !user.getPosition().isEmpty() ? user.getPosition() : "Employee";
-            String department = user.getDepartment() != null && !user.getDepartment().isEmpty() ? user.getDepartment() : "";
-            binding.tvPosition.setText(department.isEmpty() ? position : position + " - " + department);
-            
-            String displayId = user.getId() != null ? user.getId() : "N/A";
-            if (displayId.length() > 8) {
-                displayId = displayId.substring(0, 8).toUpperCase();
-            }
-            binding.tvEmployeeId.setText(displayId);
             
             com.bumptech.glide.Glide.with(this)
                     .load(user.getAvatar())
@@ -53,7 +45,29 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        binding.btnPersonalInfo.setOnClickListener(v -> {
+            startActivity(new android.content.Intent(requireContext(), ProfileActivity.class));
+        });
+
+        binding.btnChangePassword.setOnClickListener(v -> {
+            showChangePasswordBottomSheet();
+        });
+
         return binding.getRoot();
+    }
+
+    private void showChangePasswordBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_change_password, null);
+        bottomSheetDialog.setContentView(view);
+        
+        View btnSave = view.findViewById(R.id.btnSavePassword);
+        btnSave.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+            android.widget.Toast.showText(requireContext(), "Password saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+        });
+
+        bottomSheetDialog.show();
     }
 
     @Override
