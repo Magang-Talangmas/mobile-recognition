@@ -44,6 +44,7 @@
 
         <!-- Outer Ring -->
         <View
+            android:id="@+id/vOuterRing"
             android:layout_width="112dp"
             android:layout_height="112dp"
             android:layout_centerInParent="true"
@@ -64,10 +65,10 @@
         <FrameLayout
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_alignEnd="@id/vOuterRing"
+            android:layout_alignBottom="@id/vOuterRing"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/bg_circle_primary"
             android:backgroundTint="#FFFFFF"
             android:elevation="4dp">
