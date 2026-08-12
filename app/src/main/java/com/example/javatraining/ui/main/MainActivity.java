@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
                         .toBuilder()
                         .setAllCorners(CornerFamily.ROUNDED, 100f)
                         .build());
+        
+        // Add outline stroke so it stands out from the background
+        float strokeWidth = getResources().getDisplayMetrics().density * 1.5f;
+        bottomBarBackground.setStroke(strokeWidth, androidx.core.content.ContextCompat.getColor(this, R.color.ent_outline));
                         
         // Fix for concave shadow bug: force a custom convex outline so native shadow renders correctly
         binding.bottomAppBar.setOutlineProvider(new android.view.ViewOutlineProvider() {
