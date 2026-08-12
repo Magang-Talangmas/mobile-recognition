@@ -142,8 +142,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.navProfile.setOnClickListener(v -> {
-            startActivity(new android.content.Intent(MainActivity.this, com.example.javatraining.ui.main.profile.ProfileActivity.class));
-            // No tab change since Profile is an Activity
+            loadFragment(new ProfileFragment());
+            selectNavTab(3);
+            binding.bottomAppBar.setVisibility(View.VISIBLE);
+            binding.fabManual.setVisibility(View.VISIBLE);
         });
 
         // FAB (Manual Entry / Clock In) click listener
