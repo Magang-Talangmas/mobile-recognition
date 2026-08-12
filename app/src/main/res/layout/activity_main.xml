@@ -21,6 +21,7 @@
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="24dp"
         app:fabCradleVerticalOffset="0dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.BottomAppBar"
         app:elevation="12dp">
 
         <LinearLayout
