@@ -4,12 +4,17 @@ import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
+import com.example.javatraining.BuildConfig;
 import com.example.javatraining.R;
 import com.example.javatraining.data.model.NotificationItem;
 import java.util.ArrayList;
@@ -53,6 +58,32 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     .valueOf(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary_container)));
             holder.tvNotifTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
         }
+
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            holder.ivSnapshot.setVisibility(View.VISIBLE);
+            String url = item.getImageUrl();
+            if (url.startsWith("/")) {
+                url = BuildConfig.SUPABASE_URL + url;
+            }
+            Glide.with(holder.itemView.getContext())
+                    .load(url)
+                    .centerCrop()
+                    .into(holder.ivSnapshot);
+        } else {
+            holder.ivSnapshot.setVisibility(View.GONE);
+        }
+
+        if (item.requiresConfirmation()) {
+            holder.llActionButtons.setVisibility(View.VISIBLE);
+            holder.btnConfirm.setOnClickListener(v -> {
+                Toast.makeText(holder.itemView.getContext(), "Mengeksekusi Konfirmasi Absensi...", Toast.LENGTH_SHORT).show();
+            });
+            holder.btnReject.setOnClickListener(v -> {
+                Toast.makeText(holder.itemView.getContext(), "Menolak Konfirmasi...", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            holder.llActionButtons.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -62,8 +93,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNotifTitle, tvNotifMessage, tvNotifTime;
-        ImageView ivNotifIcon;
+        ImageView ivNotifIcon, ivSnapshot;
         FrameLayout flIconBg;
+        LinearLayout llActionButtons;
+        Button btnConfirm, btnReject;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +105,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             tvNotifTime = itemView.findViewById(R.id.tvNotifTime);
             ivNotifIcon = itemView.findViewById(R.id.ivNotifIcon);
             flIconBg = itemView.findViewById(R.id.flIconBg);
+            ivSnapshot = itemView.findViewById(R.id.ivSnapshot);
+            llActionButtons = itemView.findViewById(R.id.llActionButtons);
+            btnConfirm = itemView.findViewById(R.id.btnConfirm);
+            btnReject = itemView.findViewById(R.id.btnReject);
         }
     }
 }

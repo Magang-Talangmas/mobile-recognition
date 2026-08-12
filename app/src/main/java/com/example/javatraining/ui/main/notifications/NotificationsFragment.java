@@ -50,24 +50,27 @@ public class NotificationsFragment extends Fragment {
 
                     boolean isWarning = "WARNING".equalsIgnoreCase(n.getType())
                             || "ALERT".equalsIgnoreCase(n.getType());
+                    boolean requiresConfirmation = "REQUIRE_CONFIRMATION".equalsIgnoreCase(n.getType());
                     items.add(new NotificationItem(
                             n.getTitle() != null ? n.getTitle() : "Notifikasi Absensi",
                             n.getBody() != null ? n.getBody() : "",
                             n.getCreatedAt() != null ? n.getCreatedAt() : "Terbaru",
-                            isWarning));
+                            isWarning,
+                            n.getImageUrl(),
+                            requiresConfirmation));
                 }
             } else {
                 // Default notifications if none returned from server
                 items.add(new NotificationItem("Konfirmasi Absensi",
-                        "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false));
+                        "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false, null, false));
                 items.add(new NotificationItem("Wajah Tidak Dikenali",
                         "Kamera Pintu Utama mendeteksi wajah yang tidak terdaftar. Harap lakukan absensi manual.",
-                        "10 mins ago", true));
+                        "10 mins ago", true, null, false));
                 items.add(new NotificationItem("Sinkronisasi Sukses",
-                        "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false));
+                        "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false, null, false));
                 items.add(new NotificationItem("Akurasi Wajah Rendah",
                         "Kamera mendeteksi Anda dengan akurasi 82%. Status Anda tetap dikonfirmasi.", "Yesterday",
-                        true));
+                        true, null, false));
             }
             adapter.updateData(items);
         });

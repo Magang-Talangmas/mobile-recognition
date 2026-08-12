@@ -21,10 +21,14 @@ public class NotificationData {
     @SerializedName("type")
     private String type;
 
+    @SerializedName(value = "imageUrl", alternate = {"image_url", "thumbnail"})
+    private String imageUrl;
+
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getBody() { return body; }
     public boolean isRead() { return isRead != null && isRead; }
     public String getCreatedAt() { return createdAt; }
     public String getType() { return type; }
+    public String getImageUrl() { return imageUrl; }
 }
