@@ -100,19 +100,19 @@
                 android:text="First Name"
                 android:textColor="#A0A5BA"
                 android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp" />
 
             <EditText
                 android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_rounded_white_card"
-                android:backgroundTint="#FFFFFF"
-                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_rounded_outline_gray"
+                android:paddingHorizontal="20dp"
                 android:textColor="#1A1C29"
-                android:textSize="16sp"
-                android:elevation="2dp"/>
+                android:textSize="14sp" />
 
             <!-- Last Name -->
             <TextView
@@ -121,19 +121,19 @@
                 android:text="Last Name"
                 android:textColor="#A0A5BA"
                 android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp" />
 
             <EditText
                 android:id="@+id/etLastName"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_rounded_white_card"
-                android:backgroundTint="#FFFFFF"
-                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_rounded_outline_gray"
+                android:paddingHorizontal="20dp"
                 android:textColor="#1A1C29"
-                android:textSize="16sp"
-                android:elevation="2dp"/>
+                android:textSize="14sp" />
 
             <!-- E-Mail -->
             <TextView
@@ -142,20 +142,20 @@
                 android:text="E-Mail"
                 android:textColor="#A0A5BA"
                 android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp" />
 
             <EditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_rounded_white_card"
-                android:backgroundTint="#FFFFFF"
+                android:background="@drawable/bg_rounded_outline_gray"
                 android:inputType="textEmailAddress"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:textColor="#1A1C29"
-                android:textSize="16sp"
-                android:elevation="2dp"/>
+                android:textSize="14sp" />
 
             <!-- Mobile -->
             <TextView
@@ -164,33 +164,33 @@
                 android:text="Mobile"
                 android:textColor="#A0A5BA"
                 android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp" />
 
             <EditText
                 android:id="@+id/etMobile"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginBottom="32dp"
-                android:background="@drawable/bg_rounded_white_card"
-                android:backgroundTint="#FFFFFF"
+                android:background="@drawable/bg_rounded_outline_gray"
                 android:inputType="phone"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="20dp"
                 android:textColor="#1A1C29"
-                android:textSize="16sp"
-                android:elevation="2dp"/>
+                android:textSize="14sp" />
 
             <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="56dp"
                 android:text="SAVE"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                app:backgroundTint="#162473"
-                app:cornerRadius="32dp" />
+                app:backgroundTint="#121650"
+                app:cornerRadius="28dp" />
 
         </LinearLayout>
     </ScrollView>
