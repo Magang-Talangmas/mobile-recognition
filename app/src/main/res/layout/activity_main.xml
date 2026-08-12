@@ -29,7 +29,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
-            android:paddingTop="12dp"
             android:gravity="center_vertical">
 
             <!-- Item 1: Dashboard -->
