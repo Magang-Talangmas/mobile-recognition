@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:text="Welcome"
                         android:textColor="#8B8F9C"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvName"
@@ -82,14 +82,14 @@
                         android:layout_height="wrap_content"
                         android:text="Mr. John Doe"
                         android:textColor="#111645"
-                        android:textSize="14sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/btnLogout"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_exit"
