@@ -49,8 +49,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivAvatar"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_avatar"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:text="Mr. John Doe"
                     android:textColor="#111645"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
                     
                 <TextView
