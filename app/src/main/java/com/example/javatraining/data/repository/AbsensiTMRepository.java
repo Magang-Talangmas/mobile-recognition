@@ -401,7 +401,7 @@ public class AbsensiTMRepository {
                             event.getEmployeeId(), 
                             "IN", 
                             "CHECK_IN", 
-                            "Hadir", 
+                            "CHECKED_IN", 
                             event.getCreatedAt(), 
                             event.getThumbnail(), 
                             false
@@ -411,6 +411,12 @@ public class AbsensiTMRepository {
                     apiService.submitManualAttendance(req).enqueue(new retrofit2.Callback<Void>() {
                         @Override
                         public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> attendanceResponse) {
+                            if (!attendanceResponse.isSuccessful()) {
+                                try {
+                                    String err = attendanceResponse.errorBody() != null ? attendanceResponse.errorBody().string() : "unknown error";
+                                    android.util.Log.e("CONFIRM_ATTENDANCE", "Error inserting attendance: " + err);
+                                } catch (Exception e) {}
+                            }
                             if (onSuccess != null) {
                                 mainThreadHandler.post(onSuccess);
                             }
