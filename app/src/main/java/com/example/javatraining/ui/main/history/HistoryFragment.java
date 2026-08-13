@@ -313,6 +313,9 @@ public class HistoryFragment extends Fragment {
                                     pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) {
                                 String dateKey = sdf.format(detectedAt);
                                 DailyAttendance daily = dailyMap.get(dateKey);
+                                if (daily != null && (daily.getFirstIn() != null || daily.getLastOut() != null || daily.getLeaveData() != null)) {
+                                    continue; // Sudah ada aktivitas absensi/izin hari ini, abaikan pending recognition
+                                }
                                 if (daily == null) {
                                     daily = new DailyAttendance(detectedAt);
                                     dailyMap.put(dateKey, daily);

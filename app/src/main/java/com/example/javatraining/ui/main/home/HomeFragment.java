@@ -337,44 +337,6 @@ public class HomeFragment extends Fragment {
         View llNormalStatus = view.findViewById(R.id.llNormalStatus);
         View llConfirmationStatus = view.findViewById(R.id.llConfirmationStatus);
         
-        if (pendingRecognitions != null && !pendingRecognitions.isEmpty()) {
-            llNormalStatus.setVisibility(View.GONE);
-            llConfirmationStatus.setVisibility(View.VISIBLE);
-            com.example.javatraining.data.remote.response.RecognitionEventData latestPending = pendingRecognitions.get(0);
-            
-            android.widget.ImageView ivConfirmationSnapshot = view.findViewById(R.id.ivConfirmationSnapshot);
-            if (latestPending.getThumbnail() != null && !latestPending.getThumbnail().isEmpty()) {
-                String url = latestPending.getThumbnail();
-                if (url.startsWith("/")) url = com.example.javatraining.BuildConfig.SUPABASE_URL + url;
-                com.bumptech.glide.Glide.with(requireContext()).load(url).centerCrop().into(ivConfirmationSnapshot);
-            }
-            
-            view.findViewById(R.id.btnConfirmAttendance).setOnClickListener(v -> {
-                repository.confirmRecognition(latestPending, () -> {
-                    android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
-                    loadDataAndRefreshUI(view);
-                });
-            });
-            view.findViewById(R.id.btnRejectAttendance).setOnClickListener(v -> {
-                repository.rejectRecognition(latestPending.getId(), () -> {
-                    android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
-                    loadDataAndRefreshUI(view);
-                });
-            });
-            
-            // Setup Recent Activity RecyclerView
-            setupRecentActivity(view, groupedLogs);
-            return;
-        }
-        
-        llNormalStatus.setVisibility(View.VISIBLE);
-        llConfirmationStatus.setVisibility(View.GONE);
-
-        // Live Status Logic
-        TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
-        TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
-        View vStatusDot = view.findViewById(R.id.vStatusDot);
-
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
         java.util.Calendar calToday = java.util.Calendar.getInstance();
         boolean hasLeaveToday = false;
@@ -400,6 +362,51 @@ public class HomeFragment extends Fragment {
             }
         }
 
+        boolean hasAttendanceToday = false;
+        if (!flatLogs.isEmpty()) {
+            AttendanceEvent latestLog = flatLogs.get(0);
+            java.util.Calendar calEvent = java.util.Calendar.getInstance();
+            calEvent.setTime(latestLog.getDetectedAt());
+            if (calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
+                calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR)) {
+                hasAttendanceToday = true;
+            }
+        }
+
+        boolean hasActivityToday = hasLeaveToday || hasAttendanceToday;
+
+        if (!hasActivityToday && pendingRecognitions != null && !pendingRecognitions.isEmpty()) {
+            llNormalStatus.setVisibility(View.GONE);
+            llConfirmationStatus.setVisibility(View.VISIBLE);
+            com.example.javatraining.data.remote.response.RecognitionEventData latestPending = pendingRecognitions.get(0);
+            
+            android.widget.ImageView ivConfirmationSnapshot = view.findViewById(R.id.ivConfirmationSnapshot);
+            if (latestPending.getThumbnail() != null && !latestPending.getThumbnail().isEmpty()) {
+                String url = latestPending.getThumbnail();
+                if (url.startsWith("/")) url = com.example.javatraining.BuildConfig.SUPABASE_URL + url;
+                com.bumptech.glide.Glide.with(requireContext()).load(url).centerCrop().into(ivConfirmationSnapshot);
+            }
+            
+            view.findViewById(R.id.btnConfirmAttendance).setOnClickListener(v -> {
+                repository.confirmRecognition(latestPending, () -> {
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
+                    loadDataAndRefreshUI(view);
+                });
+            });
+            view.findViewById(R.id.btnRejectAttendance).setOnClickListener(v -> {
+                repository.rejectRecognition(latestPending.getId(), () -> {
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
+                    loadDataAndRefreshUI(view);
+                });
+            });
+            
+            setupRecentActivity(view, groupedLogs);
+            return;
+        }
+        
+        llNormalStatus.setVisibility(View.VISIBLE);
+        llConfirmationStatus.setVisibility(View.GONE);
+
         if (hasLeaveToday) {
             isCheckedIn = false;
             String statusId = "Menunggu";
@@ -409,31 +416,18 @@ public class HomeFragment extends Fragment {
             tvStatusTitle.setText(leaveType + " (" + statusId + ")");
             tvStatusTime.setText("Hari ini");
             vStatusDot.setVisibility(View.GONE);
-        } else if (!flatLogs.isEmpty()) {
+        } else if (hasAttendanceToday) {
             AttendanceEvent latestLog = flatLogs.get(0);
-            
-            java.util.Calendar calEvent = java.util.Calendar.getInstance();
-            calEvent.setTime(latestLog.getDetectedAt());
-            boolean isToday = calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
-                              calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR);
-
-            if (isToday) {
-                if (latestLog.getEventType() == LogType.CHECK_OUT) {
-                    isCheckedIn = false;
-                    tvStatusTitle.setText("Sudah Check-Out");
-                    tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
-                    vStatusDot.setVisibility(View.GONE);
-                } else {
-                    isCheckedIn = true;
-                    tvStatusTitle.setText("Sudah Check-In");
-                    tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
-                    vStatusDot.setVisibility(View.VISIBLE);
-                }
-            } else {
+            if (latestLog.getEventType() == LogType.CHECK_OUT) {
                 isCheckedIn = false;
-                tvStatusTitle.setText("Belum Absen");
-                tvStatusTime.setText("Belum ada aktivitas hari ini");
+                tvStatusTitle.setText("Sudah Check-Out");
+                tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
                 vStatusDot.setVisibility(View.GONE);
+            } else {
+                isCheckedIn = true;
+                tvStatusTitle.setText("Sudah Check-In");
+                tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
+                vStatusDot.setVisibility(View.VISIBLE);
             }
         } else {
             isCheckedIn = false;
