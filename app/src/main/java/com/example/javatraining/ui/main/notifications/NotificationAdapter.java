@@ -88,6 +88,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNotifTitle, tvNotifMessage, tvNotifTime;
         FrameLayout flIconBg;
+        ImageView ivNotifIcon;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
