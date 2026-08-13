@@ -226,7 +226,9 @@ public class FaceScanActivity extends AppCompatActivity {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                 runOnUiThread(() -> tvInstruction.setText("Mengirim data ke server..."));
-                repository.submitLivenessAttendance(photoFile, "CHECK_IN").observe(FaceScanActivity.this, response -> {
+                String eventType = getIntent().getStringExtra("eventType");
+                if (eventType == null) eventType = "CHECK_IN";
+                repository.submitLivenessAttendance(photoFile, eventType).observe(FaceScanActivity.this, response -> {
                     if (response != null && response.isSuccess()) {
                         Toast.makeText(FaceScanActivity.this, "Absen Liveness Berhasil!", Toast.LENGTH_SHORT).show();
                         finish();

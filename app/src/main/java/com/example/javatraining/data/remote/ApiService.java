@@ -28,6 +28,9 @@ public interface ApiService {
     @POST("auth/v1/token?grant_type=password")
     Call<LoginData> login(@Body LoginRequest request);
 
+    @POST("mobile/auth/login")
+    Call<BaseResponse<LoginData>> loginBackend(@Body LoginRequest request);
+
     @GET("rest/v1/employees?select=*")
     Call<List<EmployeeData>> getProfile(@Query("email") String email);
 
@@ -54,6 +57,25 @@ public interface ApiService {
 
     @POST("rest/v1/attendances")
     Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
+
+    // --- NODEJS BACKEND ENDPOINTS ---
+
+    @GET("mobile/profile")
+    Call<BaseResponse<EmployeeData>> getProfileBackend();
+
+    @GET("mobile/attendance/history")
+    Call<BaseResponse<List<AttendanceData>>> getAttendancesBackend(
+            @Query("page") Integer page,
+            @Query("limit") Integer limit
+    );
+
+    @GET("mobile/schedule/today")
+    Call<BaseResponse<ScheduleData>> getScheduleTodayBackend();
+
+    @GET("mobile/recognitions/pending")
+    Call<BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>> getPendingRecognitionsBackend(
+            @Query("limit") Integer limit
+    );
 
     @Multipart
     @POST("mobile/attendance")

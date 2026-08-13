@@ -75,24 +75,7 @@
                 <!-- No entry type toggle anymore -->
 
 
-                <!-- Verification (Photo) -->
-                <TextView android:id="@+id/tvVerificationTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verifikasi" android:textColor="@color/html_on_background" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="32dp" android:layout_marginBottom="16dp"/>
 
-                <TextView android:id="@+id/tvSelfieLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Unggah Selfie" android:textColor="@color/html_on_surface_variant" android:textSize="14sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
-
-
-
-                <FrameLayout android:id="@+id/flPhotoUpload" android:layout_width="match_parent" android:layout_height="220dp" android:background="@drawable/bg_photo_upload" android:clickable="true" android:focusable="true">
-
-                    <LinearLayout android:id="@+id/llUploadPlaceholder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_gravity="center" android:gravity="center">
-                        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@android:drawable/ic_menu_camera" app:tint="@color/html_outline"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ketuk untuk selfie\nDiperlukan untuk verifikasi" android:textAlignment="center" android:textSize="16sp" android:textColor="@color/html_on_surface_variant" android:layout_marginTop="12dp"/>
-                    </LinearLayout>
-
-                    <ImageView android:id="@+id/ivPhotoPreview" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:visibility="gone" />
-
-                    <ImageButton android:id="@+id/btnRemovePhoto" android:layout_width="36dp" android:layout_height="36dp" android:layout_gravity="top|end" android:layout_margin="12dp" android:src="@android:drawable/ic_menu_close_clear_cancel" android:background="@drawable/bg_circle_inverse" android:visibility="gone" app:tint="@android:color/white"/>
-                </FrameLayout>
 
                 <Button android:id="@+id/btnSubmit" android:layout_width="match_parent" android:layout_height="56dp" android:text="Kirim Pengajuan" android:backgroundTint="@color/html_primary" android:textColor="@color/html_on_primary" android:textSize="16sp" android:layout_marginTop="32dp" app:cornerRadius="28dp"/>
             </LinearLayout>

@@ -47,12 +47,8 @@ import java.util.Locale;
 
 public class ManualFragment extends Fragment {
 
-    private TextView etDate, etTime, tvSuccessTitle, tvSuccessSubtitle, tvVerificationTitle,
-            tvSelfieLabel;
-    private FrameLayout flPhotoUpload;
-    private LinearLayout loadingState, llUploadPlaceholder, formContainer, successState;
-    private ImageView ivPhotoPreview;
-    private ImageButton btnRemovePhoto;
+    private TextView etDate, etTime, tvSuccessTitle, tvSuccessSubtitle;
+    private LinearLayout loadingState, formContainer, successState;
     private Button btnSubmit;
 
     private Calendar calendar;
@@ -62,104 +58,14 @@ public class ManualFragment extends Fragment {
 
     private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable timerRunnable;
-    private java.io.File currentPhotoFile;
-    private android.net.Uri photoUri;
 
-    private final ActivityResultLauncher<Intent> takePictureLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == getActivity().RESULT_OK) {
-                    try {
-                        android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
-                        
-                        int reqWidth = 1080;
-                        int reqHeight = 1920;
-                        int inSampleSize = 1;
-                        if (options.outHeight > reqHeight || options.outWidth > reqWidth) {
-                            final int halfHeight = options.outHeight / 2;
-                            final int halfWidth = options.outWidth / 2;
-                            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                                inSampleSize *= 2;
-                            }
-                        }
-                        options.inJustDecodeBounds = false;
-                        options.inSampleSize = inSampleSize;
-                        
-                        Bitmap imageBitmap = android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath(), options);
-
-                        // Fix rotation using ExifInterface
-                        if (imageBitmap != null) {
-                            try {
-                                android.media.ExifInterface exif = new android.media.ExifInterface(currentPhotoFile.getAbsolutePath());
-                                int orientation = exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, android.media.ExifInterface.ORIENTATION_UNDEFINED);
-                                int rotationDegrees = 0;
-                                switch (orientation) {
-                                    case android.media.ExifInterface.ORIENTATION_ROTATE_90:
-                                        rotationDegrees = 90;
-                                        break;
-                                    case android.media.ExifInterface.ORIENTATION_ROTATE_180:
-                                        rotationDegrees = 180;
-                                        break;
-                                    case android.media.ExifInterface.ORIENTATION_ROTATE_270:
-                                        rotationDegrees = 270;
-                                        break;
-                                }
-                                if (rotationDegrees != 0) {
-                                    android.graphics.Matrix matrix = new android.graphics.Matrix();
-                                    matrix.postRotate(rotationDegrees);
-                                    Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
-                                    if (rotatedBitmap != imageBitmap) {
-                                        imageBitmap.recycle();
-                                        imageBitmap = rotatedBitmap;
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        // If imageBitmap is somehow null, just fallback to thumbnail if present
-                        if (imageBitmap == null && result.getData() != null) {
-                            Bundle extras = result.getData().getExtras();
-                            if (extras != null) {
-                                imageBitmap = (Bitmap) extras.get("data");
-                            }
-                        }
-
-                        if (imageBitmap != null) {
-                            java.io.FileOutputStream stream = new java.io.FileOutputStream(currentPhotoFile);
-                            
-                            // Use WEBP format for conversion. 
-                            // In Android, .compress() is the method used to encode/convert the image.
-                            // Setting quality to 100 with WEBP will just convert it to WebP without aggressive compression.
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                                imageBitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, stream);
-                            } else {
-                                @SuppressWarnings("deprecation")
-                                Bitmap.CompressFormat webpFormat = Bitmap.CompressFormat.WEBP;
-                                imageBitmap.compress(webpFormat, 100, stream);
-                            }
-                            
-                            stream.close();
-                            
-                            ivPhotoPreview.setImageBitmap(imageBitmap);
-                            ivPhotoPreview.setVisibility(View.VISIBLE);
-                            btnRemovePhoto.setVisibility(View.VISIBLE);
-                            llUploadPlaceholder.setVisibility(View.GONE);
-                            flPhotoUpload.setBackgroundResource(0);
-                            hasPhoto = true;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
     private final ActivityResultLauncher<String> requestCameraLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    launchCamera();
+                    Intent intent = new Intent(getActivity(), com.example.javatraining.ui.main.home.FaceScanActivity.class);
+                    intent.putExtra("eventType", isCheckIn ? "CHECK_IN" : "CHECK_OUT");
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), "Izin kamera diperlukan untuk foto selfie", Toast.LENGTH_SHORT).show();
                 }
@@ -183,13 +89,7 @@ public class ManualFragment extends Fragment {
         etTime = view.findViewById(R.id.etTime);
         tvSuccessTitle = view.findViewById(R.id.tvSuccessTitle);
         tvSuccessSubtitle = view.findViewById(R.id.tvSuccessSubtitle);
-        tvVerificationTitle = view.findViewById(R.id.tvVerificationTitle);
-        tvSelfieLabel = view.findViewById(R.id.tvSelfieLabel);
-        flPhotoUpload = view.findViewById(R.id.flPhotoUpload);
         loadingState = view.findViewById(R.id.loadingState);
-        llUploadPlaceholder = view.findViewById(R.id.llUploadPlaceholder);
-        ivPhotoPreview = view.findViewById(R.id.ivPhotoPreview);
-        btnRemovePhoto = view.findViewById(R.id.btnRemovePhoto);
         btnSubmit = view.findViewById(R.id.btnSubmit);
         formContainer = view.findViewById(R.id.formContainer);
         successState = view.findViewById(R.id.successState);
@@ -230,176 +130,19 @@ public class ManualFragment extends Fragment {
     }
 
     private void setupListeners(View view) {
-
-        // HANYA DIBUKA KETIKA AREA FOTO DI KLIK (TIDAK OTOMATIS)
-        flPhotoUpload.setOnClickListener(v -> {
-            if (!hasPhoto) {
-                if (ContextCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    launchCamera();
-                } else {
-                    requestCameraLauncher.launch(Manifest.permission.CAMERA);
-                }
-            }
-        });
-
-        btnRemovePhoto.setOnClickListener(v -> {
-            hasPhoto = false;
-            ivPhotoPreview.setVisibility(View.GONE);
-            btnRemovePhoto.setVisibility(View.GONE);
-            llUploadPlaceholder.setVisibility(View.VISIBLE);
-            flPhotoUpload.setBackgroundResource(R.drawable.bg_photo_upload);
-        });
-
         btnSubmit.setOnClickListener(v -> {
-            if (isCheckIn && !hasPhoto) {
-                Toast.makeText(getContext(), "Harap ambil foto selfie untuk verifikasi", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            btnSubmit.setText("Processing...");
-            btnSubmit.setEnabled(false);
-
             String eventType = isCheckIn ? "CHECK_IN" : "CHECK_OUT";
-
-            SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-            isoFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-            String combinedTime = isoFormat.format(Calendar.getInstance().getTime());
-
-            SessionManager sessionManager = new SessionManager(getContext());
-            String empId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
-
-            String directionStr = isCheckIn ? "IN" : "OUT";
-            String statusStr = isCheckIn ? "CHECKED_IN" : "CHECKED_OUT";
-
-            boolean isLateCalculated = false;
-            if (isCheckIn && todaySchedule != null) {
-                try {
-                    String checkInTimeStr = todaySchedule.getCheckInTime(); // e.g. "08:30" or "08:30:00"
-                    Integer tolerance = todaySchedule.getToleranceMinutes();
-                    if (checkInTimeStr != null && tolerance != null) {
-                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", Locale.getDefault());
-                        java.util.Date scheduleTime = sdf.parse(checkInTimeStr);
-                        
-                        java.util.Calendar calNow = java.util.Calendar.getInstance();
-                        String nowStr = sdf.format(calNow.getTime());
-                        java.util.Date currentTime = sdf.parse(nowStr);
-                        
-                        java.util.Calendar calThreshold = java.util.Calendar.getInstance();
-                        calThreshold.setTime(scheduleTime);
-                        calThreshold.add(java.util.Calendar.MINUTE, tolerance);
-                        
-                        if (currentTime != null && currentTime.after(calThreshold.getTime())) {
-                            isLateCalculated = true;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            final boolean finalIsLate = isLateCalculated;
-
-            if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                // Build filename with checkins folder path to match backend structure
-                String filename = "checkins/" + empId + "/manual_" + System.currentTimeMillis() + ".webp";
-                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile,
-                        okhttp3.MediaType.parse("image/webp"));
-
-                ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-                apiService.uploadStorageObject("recognition", filename, requestFile)
-                        .enqueue(new Callback<okhttp3.ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<okhttp3.ResponseBody> call,
-                                    Response<okhttp3.ResponseBody> response) {
-                                if (response.isSuccessful()) {
-                                    String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL
-                                            + "storage/v1/object/public/recognition/" + filename;
-                                    sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            publicUrl, finalIsLate);
-                                } else {
-                                    String errorMsg = "Upload Failed: " + response.code();
-                                    try {
-                                        if (response.errorBody() != null)
-                                            errorMsg += " " + response.errorBody().string();
-                                    } catch (Exception e) {
-                                    }
-                                    android.util.Log.e("IMAGE_UPLOAD", errorMsg);
-
-                                    // Make sure we show a Toast to the user so they know image failed
-                                    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
-
-                                    sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                            null, finalIsLate);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
-                                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime,
-                                        null, finalIsLate);
-                            }
-                        });
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(getActivity(), com.example.javatraining.ui.main.home.FaceScanActivity.class);
+                intent.putExtra("eventType", eventType);
+                startActivity(intent);
             } else {
-                sendManualAttendance(view, empId, directionStr, eventType, statusStr, combinedTime, null, finalIsLate);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
             }
         });
     }
 
-    private void sendManualAttendance(View view, String empId, String directionStr, String eventType, String statusStr,
-            String combinedTime, String imageUrl, boolean isLate) {
-        com.example.javatraining.data.remote.request.ManualAttendanceRequest request = new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
-                empId,
-                directionStr,
-                eventType,
-                statusStr,
-                combinedTime,
-                imageUrl,
-                isLate);
 
-        ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
-        apiService.submitManualAttendance(request).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    formContainer.setVisibility(View.GONE);
-                    successState.setVisibility(View.VISIBLE);
-
-                    if (isCheckIn) {
-                        tvSuccessTitle.setText("Check-In Terkirim");
-                        tvSuccessSubtitle.setText("Check-in Anda telah dikirim ke atasan untuk ditinjau.");
-                    } else {
-                        tvSuccessTitle.setText("Check-Out Terkirim");
-                        tvSuccessSubtitle.setText("Check-out Anda telah dikirim ke atasan untuk ditinjau.");
-                    }
-
-                    ImageView ivSuccessAnim = view.findViewById(R.id.ivSuccessAnim);
-                    if (ivSuccessAnim != null
-                            && ivSuccessAnim.getDrawable() instanceof android.graphics.drawable.Animatable) {
-                        ((android.graphics.drawable.Animatable) ivSuccessAnim.getDrawable()).start();
-                    }
-                } else {
-                    String errorMsg = "Gagal: " + response.code();
-                    try {
-                        if (response.errorBody() != null) {
-                            errorMsg += " - " + response.errorBody().string();
-                        }
-                    } catch (Exception e) {
-                    }
-                    android.util.Log.e("MANUAL_ATTENDANCE", errorMsg);
-                    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    btnSubmit.setText("Submit Request");
-                    btnSubmit.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                btnSubmit.setText("Submit Request");
-                btnSubmit.setEnabled(true);
-            }
-        });
-    }
 
     private void fetchSchedule() {
         ApiService apiService = ApiClient.getClient(getContext()).create(ApiService.class);
@@ -433,17 +176,22 @@ public class ManualFragment extends Fragment {
         SessionManager sm = new SessionManager(getContext());
         String empId = sm.getUser() != null ? sm.getUser().getId() : "";
 
-        apiService.getAttendances("eq." + empId, 1).enqueue(new Callback<List<AttendanceData>>() {
+        ApiService backendApiService = ApiClient.getBackendClient(getContext()).create(ApiService.class);
+        
+        backendApiService.getAttendancesBackend(1, 1).enqueue(new Callback<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>>() {
             @Override
-            public void onResponse(Call<List<AttendanceData>> call, Response<List<AttendanceData>> response) {
-                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    latestAttendance[0] = response.body().get(0);
+            public void onResponse(Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, Response<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    List<AttendanceData> data = response.body().getData();
+                    if (data != null && !data.isEmpty()) {
+                        latestAttendance[0] = data.get(0);
+                    }
                 }
                 attendancesLoaded[0] = true;
                 checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
             }
             @Override
-            public void onFailure(Call<List<AttendanceData>> call, Throwable t) {
+            public void onFailure(Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, Throwable t) {
                 attendancesLoaded[0] = true;
                 checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
             }
@@ -525,10 +273,6 @@ public class ManualFragment extends Fragment {
         btnSubmit.setText("Submit Check In");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_primary, getActivity().getTheme())));
-
-        tvVerificationTitle.setVisibility(View.VISIBLE);
-        tvSelfieLabel.setVisibility(View.VISIBLE);
-        flPhotoUpload.setVisibility(View.VISIBLE);
     }
 
     private void setCheckOutState(AttendanceData latest) {
@@ -552,10 +296,6 @@ public class ManualFragment extends Fragment {
         btnSubmit.setText("Submit Check Out");
         btnSubmit.setBackgroundTintList(android.content.res.ColorStateList
                 .valueOf(getResources().getColor(R.color.html_error, getActivity().getTheme())));
-
-        tvVerificationTitle.setVisibility(View.GONE);
-        tvSelfieLabel.setVisibility(View.GONE);
-        flPhotoUpload.setVisibility(View.GONE);
     }
 
     private void setCompletedState(String message) {
@@ -572,21 +312,7 @@ public class ManualFragment extends Fragment {
         }
     }
 
-    private void launchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            try {
-                java.io.File cachePath = new java.io.File(getContext().getCacheDir(), "images");
-                cachePath.mkdirs();
-                currentPhotoFile = new java.io.File(cachePath, "selfie_" + System.currentTimeMillis() + ".webp");
-                photoUri = androidx.core.content.FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", currentPhotoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                takePictureLauncher.launch(takePictureIntent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     private void updateDateLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
