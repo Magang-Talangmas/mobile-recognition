@@ -88,8 +88,11 @@ public class NotificationsFragment extends Fragment {
                     }
 
                     boolean isWarning = "WARNING".equalsIgnoreCase(n.getType())
-                            || "ALERT".equalsIgnoreCase(n.getType());
-                    boolean requiresConfirmation = "REQUIRE_CONFIRMATION".equalsIgnoreCase(n.getType());
+                            || "ALERT".equalsIgnoreCase(n.getType())
+                            || "unknown".equalsIgnoreCase(n.getType())
+                            || "cctv".equalsIgnoreCase(n.getType());
+                    boolean requiresConfirmation = "REQUIRE_CONFIRMATION".equalsIgnoreCase(n.getType()) 
+                            || "recognition".equalsIgnoreCase(n.getType());
                     items.add(new NotificationItem(
                             n.getId(),
                             n.getTitle() != null ? n.getTitle() : "Notifikasi Absensi",
