@@ -60,6 +60,24 @@ public class NotificationsFragment extends Fragment {
             }
         });
 
+        // Setup clear all button
+        ImageView btnClear = view.findViewById(R.id.btnClear);
+        btnClear.setOnClickListener(v -> {
+            new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Bersihkan Notifikasi")
+                .setMessage("Hapus semua notifikasi?")
+                .setPositiveButton("Hapus", (d, w) -> {
+                    repository.deleteAllNotifications(() -> {
+                        adapter.updateData(new ArrayList<>());
+                    });
+                })
+                .setNegativeButton("Batal", null)
+                .show();
+        });
+
+        // Trigger auto cleanup of old notifications (> 7 days)
+        repository.deleteOldNotifications();
+
         repository.getNotificationsApi().observe(getViewLifecycleOwner(), notifications -> {
             List<NotificationItem> items = new ArrayList<>();
             if (notifications != null && !notifications.isEmpty()) {

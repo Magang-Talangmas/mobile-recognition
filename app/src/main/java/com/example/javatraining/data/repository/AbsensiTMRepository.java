@@ -383,4 +383,39 @@ public class AbsensiTMRepository {
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
         });
     }
+
+    public void deleteAllNotifications(Runnable onSuccess) {
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        if (employeeId == null) return;
+        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.deleteAllNotifications("eq." + employeeId).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (onSuccess != null) mainThreadHandler.post(onSuccess);
+            }
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+        });
+    }
+
+    public void deleteOldNotifications() {
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        if (employeeId == null) return;
+        
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.add(java.util.Calendar.DAY_OF_YEAR, -7);
+        String dateThreshold = "lt." + sdf.format(cal.getTime());
+        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.deleteOldNotifications("eq." + employeeId, dateThreshold).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+        });
+    }
 }
