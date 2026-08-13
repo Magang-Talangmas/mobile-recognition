@@ -388,58 +388,31 @@ public class AbsensiTMRepository {
     }
 
     public void confirmRecognition(com.example.javatraining.data.remote.response.RecognitionEventData event, Runnable onSuccess) {
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        String json = "{\"status\": \"Verified\"}";
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
-        apiService.updateRecognitionStatus("eq." + event.getId(), body).enqueue(new retrofit2.Callback<Void>() {
+        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
+        backendService.confirmRecognitionMobile(event.getId()).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
-                    // Create an attendance record
-                    com.example.javatraining.data.remote.request.ManualAttendanceRequest req = 
-                        new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
-                            event.getEmployeeId(), 
-                            "IN", 
-                            "CHECK_IN", 
-                            "CHECKED_IN", 
-                            event.getCreatedAt(), 
-                            event.getThumbnail(), 
-                            false
-                        );
-                    req.cameraId = event.getCameraId();
-                    req.confirmationStatus = "CONFIRMED";
-                    apiService.submitManualAttendance(req).enqueue(new retrofit2.Callback<Void>() {
-                        @Override
-                        public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> attendanceResponse) {
-                            if (!attendanceResponse.isSuccessful()) {
-                                try {
-                                    String err = attendanceResponse.errorBody() != null ? attendanceResponse.errorBody().string() : "unknown error";
-                                    android.util.Log.e("CONFIRM_ATTENDANCE", "Error inserting attendance: " + err);
-                                } catch (Exception e) {}
-                            }
-                            if (onSuccess != null) {
-                                mainThreadHandler.post(onSuccess);
-                            }
-                        }
-                        @Override
-                        public void onFailure(retrofit2.Call<Void> call, Throwable t) {
-                            if (onSuccess != null) {
-                                mainThreadHandler.post(onSuccess);
-                            }
-                        }
-                    });
+                    if (onSuccess != null) {
+                        mainThreadHandler.post(onSuccess);
+                    }
+                } else {
+                    try {
+                        String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
+                        android.util.Log.e("CONFIRM_RECOGNITION", "Error confirming: " + err);
+                    } catch (Exception e) {}
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                android.util.Log.e("CONFIRM_RECOGNITION", "Failure: " + t.getMessage());
+            }
         });
     }
 
     public void rejectRecognition(String recognitionId, Runnable onSuccess) {
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        String json = "{\"status\": \"Rejected\"}";
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
-        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
+        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
+        backendService.rejectRecognitionMobile(recognitionId).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (onSuccess != null) {
@@ -447,7 +420,9 @@ public class AbsensiTMRepository {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                android.util.Log.e("REJECT_RECOGNITION", "Failure: " + t.getMessage());
+            }
         });
     }
 

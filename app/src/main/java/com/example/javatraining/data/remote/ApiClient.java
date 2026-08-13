@@ -31,4 +31,27 @@ public class ApiClient {
         }
         return retrofit;
     }
+
+    private static Retrofit backendRetrofit = null;
+
+    public static Retrofit getBackendClient(Context context) {
+        if (backendRetrofit == null) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            AuthInterceptor authInterceptor = new AuthInterceptor(context);
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(authInterceptor)
+                    .build();
+
+            backendRetrofit = new Retrofit.Builder()
+                    .baseUrl(BuildConfig.API_BASE_URL)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return backendRetrofit;
+    }
 }

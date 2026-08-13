@@ -38,6 +38,19 @@ android {
         def supabaseAnonKey = envProperties.getProperty("SUPABASE_ANON_KEY", "your-anon-key")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${supabaseAnonKey}\"")
 
+        def localProperties = new Properties()
+        def localPropertiesFile = rootProject.file('local.properties')
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.withInputStream { instr ->
+                localProperties.load(instr)
+            }
+        }
+        def apiBaseUrl = localProperties.getProperty("API_BASE_URL", "\"http://10.0.2.2:3000/api/v1/\"").replace("\"", "")
+        if (!apiBaseUrl.endsWith("/")) {
+            apiBaseUrl += "/"
+        }
+        buildConfigField("String", "API_BASE_URL", "\"${apiBaseUrl}\"")
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

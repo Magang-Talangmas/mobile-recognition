@@ -74,8 +74,14 @@ public interface ApiService {
     @PATCH("rest/v1/recognition_events")
     Call<Void> updateRecognitionStatus(@Query("id") String idEq, @Body RequestBody body);
 
-    @GET("rest/v1/recognition_events?select=id,thumbnail")
-    Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getRecognitionEvents(@Query("id") String idIn);
+    @GET("rest/v1/recognition_events?select=*")
+    Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getRecognitionEvents(@Query("employeeId") String employeeId);
+
+    @PATCH("mobile/recognition/{id}/confirm")
+    Call<Void> confirmRecognitionMobile(@Path("id") String id);
+
+    @PATCH("mobile/recognition/{id}/reject")
+    Call<Void> rejectRecognitionMobile(@Path("id") String id);
 
     @GET("rest/v1/recognition_events?select=*&order=createdAt.desc")
     Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getPendingRecognitions(
