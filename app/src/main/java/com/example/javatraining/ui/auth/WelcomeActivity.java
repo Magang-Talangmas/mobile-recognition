@@ -206,6 +206,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
         viewModel.login(email, password).observe(this, user -> {
             if (user != null) {
+                // Save remember me preference
+                CheckBox cbRemember = findViewById(R.id.cbRemember);
+                SessionManager sessionManager = new SessionManager(WelcomeActivity.this);
+                sessionManager.setRememberMe(cbRemember.isChecked());
+
                 // Success Morph
                 pbLoginLoading.animate().alpha(0f).setDuration(200).start();
                 tvLoginText.setText("Success");

@@ -37,12 +37,27 @@ public class ProfileFragment extends Fragment {
         }
 
         binding.btnLogout.setOnClickListener(v -> {
-            sessionManager.clearSession();
-            android.content.Intent intent = new android.content.Intent(requireContext(),
-                    com.example.javatraining.ui.auth.WelcomeActivity.class);
-            intent.setFlags(
-                    android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            if (user != null) {
+                // Clear FCM token on server so notifications stop for this device
+                com.example.javatraining.data.remote.ApiService apiService = 
+                        com.example.javatraining.data.remote.ApiClient.getClient(requireContext())
+                        .create(com.example.javatraining.data.remote.ApiService.class);
+                        
+                apiService.updateFcmToken("eq." + user.getEmail(), new com.example.javatraining.data.remote.request.FcmTokenRequest(""))
+                        .enqueue(new retrofit2.Callback<Void>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                                performLogout(sessionManager);
+                            }
+
+                            @Override
+                            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                                performLogout(sessionManager);
+                            }
+                        });
+            } else {
+                performLogout(sessionManager);
+            }
         });
 
         binding.btnProfileCard.setOnClickListener(v -> {
@@ -54,6 +69,24 @@ public class ProfileFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void performLogout(com.example.javatraining.data.local.SessionManager sessionManager) {
+        // Clear local Firebase instance ID to force new token on next login
+        new Thread(() -> {
+            try {
+                com.google.firebase.messaging.FirebaseMessaging.getInstance().deleteToken();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        sessionManager.clearSession();
+        android.content.Intent intent = new android.content.Intent(requireContext(),
+                com.example.javatraining.ui.auth.WelcomeActivity.class);
+        intent.setFlags(
+                android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void showChangePasswordBottomSheet() {

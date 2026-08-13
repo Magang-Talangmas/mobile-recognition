@@ -75,12 +75,22 @@ public class SplashActivity extends AppCompatActivity {
                 })
                 .start();
 
-        // Transition to Welcome after 2600ms
+        // Transition to next screen after 2600ms
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (scanAnimator != null) {
                 scanAnimator.cancel();
             }
-            startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
+            
+            com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(SplashActivity.this);
+            if (sessionManager.isLoggedIn() && sessionManager.isRememberMe()) {
+                startActivity(new Intent(SplashActivity.this, com.example.javatraining.ui.main.MainActivity.class));
+            } else {
+                if (sessionManager.isLoggedIn()) {
+                    sessionManager.clearSession(); // Clear session if not remember me
+                }
+                startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
+            }
+            
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         }, 2600);

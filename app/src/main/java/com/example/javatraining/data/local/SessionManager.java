@@ -10,6 +10,7 @@ public class SessionManager {
     private static final String PREF_NAME = "AbsensioSession";
     private static final String KEY_TOKEN = "jwt_token";
     private static final String KEY_USER = "user_data";
+    private static final String KEY_REMEMBER_ME = "is_remember_me";
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -25,6 +26,15 @@ public class SessionManager {
         editor.putString(KEY_TOKEN, token);
         editor.putString(KEY_USER, gson.toJson(user));
         editor.apply();
+    }
+
+    public void setRememberMe(boolean isRememberMe) {
+        editor.putBoolean(KEY_REMEMBER_ME, isRememberMe);
+        editor.apply();
+    }
+
+    public boolean isRememberMe() {
+        return prefs.getBoolean(KEY_REMEMBER_ME, false);
     }
 
     public String getToken() {
