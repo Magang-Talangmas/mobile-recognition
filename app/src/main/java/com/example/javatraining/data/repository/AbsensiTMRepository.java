@@ -415,8 +415,15 @@ public class AbsensiTMRepository {
         backendService.rejectRecognitionMobile(recognitionId).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
-                if (onSuccess != null) {
-                    mainThreadHandler.post(onSuccess);
+                if (response.isSuccessful()) {
+                    if (onSuccess != null) {
+                        mainThreadHandler.post(onSuccess);
+                    }
+                } else {
+                    try {
+                        String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
+                        android.util.Log.e("REJECT_RECOGNITION", "Error rejecting: " + err);
+                    } catch (Exception e) {}
                 }
             }
             @Override
