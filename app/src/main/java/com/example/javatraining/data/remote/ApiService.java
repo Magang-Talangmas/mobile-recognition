@@ -33,13 +33,13 @@ public interface ApiService {
 
     @GET("rest/v1/attendances?select=*,employees(*)&order=timestamp.desc")
     Call<List<AttendanceData>> getAttendances(
-            @Query("employee_id") String employeeId,
+            @Query("employeeId") String employeeId,
             @Query("limit") Integer limit
     );
 
     @GET("rest/v1/attendance_permissions?select=*&order=createdAt.desc")
     Call<List<com.example.javatraining.data.remote.response.LeaveData>> getLeaveRequests(
-            @Query("employee_id") String employeeId,
+            @Query("employeeId") String employeeId,
             @Query("limit") Integer limit
     );
 
@@ -66,7 +66,7 @@ public interface ApiService {
     );
 
     @GET("rest/v1/notifications?select=*&order=createdAt.desc")
-    Call<List<NotificationData>> getNotifications(@Query("employee_id") String employeeIdEq);
+    Call<List<NotificationData>> getNotifications(@Query("employeeId") String employeeIdEq);
 
     @PATCH("rest/v1/notifications")
     Call<Void> readNotification(@Query("id") String id, @Body RequestBody body);
@@ -78,8 +78,8 @@ public interface ApiService {
     Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getRecognitionEvents(@Query("id") String idIn);
 
     @retrofit2.http.DELETE("rest/v1/notifications")
-    Call<Void> deleteAllNotifications(@Query("employee_id") String employeeIdEq);
+    Call<Void> deleteAllNotifications(@Query("employeeId") String employeeIdEq);
 
     @retrofit2.http.DELETE("rest/v1/notifications")
-    Call<Void> deleteOldNotifications(@Query("employee_id") String employeeIdEq, @Query("created_at") String createdAtLt);
+    Call<Void> deleteOldNotifications(@Query("employeeId") String employeeIdEq, @Query("createdAt") String createdAtLt);
 }

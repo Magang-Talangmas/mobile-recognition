@@ -100,18 +100,6 @@ public class NotificationsFragment extends Fragment {
                             requiresConfirmation,
                             n.getRecognitionId()));
                 }
-            } else {
-                // Default notifications if none returned from server
-                items.add(new NotificationItem("1", "Konfirmasi Absensi",
-                        "Pengajuan absen manual Anda telah berhasil diproses oleh sistem.", "Baru saja", false, null, false, null));
-                items.add(new NotificationItem("2", "Wajah Tidak Dikenali",
-                        "Kamera Pintu Utama mendeteksi wajah yang tidak terdaftar. Harap lakukan absensi manual.",
-                        "10 mins ago", true, null, false, null));
-                items.add(new NotificationItem("3", "Sinkronisasi Sukses",
-                        "Data absensi Anda hari ini telah tersinkronisasi dengan server HRD.", "1 hour ago", false, null, false, null));
-                items.add(new NotificationItem("4", "Akurasi Wajah Rendah",
-                        "Kamera mendeteksi Anda dengan akurasi 82%. Status Anda tetap dikonfirmasi.", "Yesterday",
-                        true, null, false, null));
             }
             adapter.updateData(items);
         });
