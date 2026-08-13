@@ -24,3 +24,7 @@ log.txt
 DESIGN.md
 preview*.png
 .agents/
+TestLate.class
+TestLate.java
+openapi.json
+out.txt
