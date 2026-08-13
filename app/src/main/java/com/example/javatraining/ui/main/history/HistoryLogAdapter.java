@@ -142,15 +142,16 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             }
 
             // Status Badge Logic
-            if (p.getCheckInEvent() != null) {
-                String confStatus = p.getCheckInEvent().getConfirmationStatus();
+            com.example.javatraining.data.model.AttendanceEvent eventForStatus = p.getCheckInEvent() != null ? p.getCheckInEvent() : p.getCheckOutEvent();
+            if (eventForStatus != null) {
+                String confStatus = eventForStatus.getConfirmationStatus();
                 if ("PENDING".equalsIgnoreCase(confStatus)) {
                     holder.tvStatusBadge.setText("Menunggu Konfirmasi");
                     holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
                     holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
                     holder.cardContainer.setOnClickListener(v -> {
                         if (listener != null) {
-                            listener.onPendingClick(p.getCheckInEvent());
+                            listener.onPendingClick(eventForStatus);
                         }
                     });
                 } else if ("REJECTED".equalsIgnoreCase(confStatus)) {
@@ -159,7 +160,7 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
                     holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_red);
                 } else {
                     // CONFIRMED or unknown, use lateness
-                    if (p.getCheckInEvent().isLate()) {
+                    if (eventForStatus.isLate()) {
                         holder.tvStatusBadge.setText("Terlambat");
                         holder.tvStatusBadge.setTextColor(Color.parseColor("#D97706")); // orange
                         holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_orange);

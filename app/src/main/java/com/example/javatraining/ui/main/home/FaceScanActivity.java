@@ -90,7 +90,7 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void setupAnimations() {
-        scanningAnimator = ValueAnimator.ofFloat(0f, 320f * getResources().getDisplayMetrics().density - 8f);
+        scanningAnimator = ValueAnimator.ofFloat(0f, 300f * getResources().getDisplayMetrics().density - 8f);
         scanningAnimator.setDuration(1500);
         scanningAnimator.setRepeatCount(ValueAnimator.INFINITE);
         scanningAnimator.setRepeatMode(ValueAnimator.REVERSE);

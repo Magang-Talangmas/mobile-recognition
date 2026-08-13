@@ -132,14 +132,27 @@ public class ManualFragment extends Fragment {
     private void setupListeners(View view) {
         btnSubmit.setOnClickListener(v -> {
             String eventType = isCheckIn ? "CHECK_IN" : "CHECK_OUT";
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(getActivity(), com.example.javatraining.ui.main.home.FaceScanActivity.class);
-                intent.putExtra("eventType", eventType);
-                startActivity(intent);
+            if (!isCheckIn) {
+                new android.app.AlertDialog.Builder(getContext())
+                        .setTitle("Konfirmasi Check-Out")
+                        .setMessage("Apakah Anda yakin ingin melakukan Check-Out sekarang?")
+                        .setPositiveButton("Ya, Check-Out", (dialog, which) -> launchFaceScan(eventType))
+                        .setNegativeButton("Batal", null)
+                        .show();
             } else {
-                requestCameraLauncher.launch(Manifest.permission.CAMERA);
+                launchFaceScan(eventType);
             }
         });
+    }
+
+    private void launchFaceScan(String eventType) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(getActivity(), com.example.javatraining.ui.main.home.FaceScanActivity.class);
+            intent.putExtra("eventType", eventType);
+            startActivity(intent);
+        } else {
+            requestCameraLauncher.launch(Manifest.permission.CAMERA);
+        }
     }
 
 

@@ -17,11 +17,10 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Dark Overlay with Cutout -->
-    <View
+    <com.example.javatraining.ui.main.home.FaceOverlayView
         android:id="@+id/overlayFrame"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/face_scan_overlay"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,8 +55,8 @@
     <!-- Face Frame Container -->
     <RelativeLayout
         android:id="@+id/rlFaceFrame"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -307,6 +307,9 @@ public class HomeFragment extends Fragment {
             // We need a flat list of events for the Live Status (Checked In/Out)
             List<AttendanceEvent> flatLogs = new ArrayList<>();
             for (AttendanceData data : allLogs) {
+                if ("REJECTED".equalsIgnoreCase(data.getConfirmationStatus())) {
+                    continue; // Skip rejected events for live status
+                }
                 Date detectedAt = parseIsoDate(data.getTimestamp());
                 if (detectedAt != null) {
                     String evtType = data.getEventType();
