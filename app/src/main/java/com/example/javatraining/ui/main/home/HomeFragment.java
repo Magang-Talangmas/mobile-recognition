@@ -337,6 +337,13 @@ public class HomeFragment extends Fragment {
         View llNormalStatus = view.findViewById(R.id.llNormalStatus);
         View llConfirmationStatus = view.findViewById(R.id.llConfirmationStatus);
         
+        llNormalStatus.setVisibility(View.VISIBLE);
+        llConfirmationStatus.setVisibility(View.GONE);
+
+        android.widget.TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
+        android.widget.TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
+        View vStatusDot = view.findViewById(R.id.vStatusDot);
+        
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
         java.util.Calendar calToday = java.util.Calendar.getInstance();
         boolean hasLeaveToday = false;
