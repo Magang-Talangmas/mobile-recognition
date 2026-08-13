@@ -33,13 +33,13 @@ public interface ApiService {
 
     @GET("rest/v1/attendances?select=*,employees(*)&order=timestamp.desc")
     Call<List<AttendanceData>> getAttendances(
-            @Query("employeeId") String employeeId,
+            @Query("employee_id") String employeeId,
             @Query("limit") Integer limit
     );
 
     @GET("rest/v1/attendance_permissions?select=*&order=createdAt.desc")
     Call<List<com.example.javatraining.data.remote.response.LeaveData>> getLeaveRequests(
-            @Query("employeeId") String employeeId,
+            @Query("employee_id") String employeeId,
             @Query("limit") Integer limit
     );
 
@@ -66,7 +66,7 @@ public interface ApiService {
     );
 
     @GET("rest/v1/notifications?select=*&order=createdAt.desc")
-    Call<List<NotificationData>> getNotifications(@Query("employeeId") String employeeIdEq);
+    Call<List<NotificationData>> getNotifications(@Query("employee_id") String employeeIdEq);
 
     @PATCH("rest/v1/notifications")
     Call<Void> readNotification(@Query("id") String id, @Body RequestBody body);
