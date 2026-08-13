@@ -55,6 +55,13 @@ public interface ApiService {
     @POST("rest/v1/attendances")
     Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
 
+    @Multipart
+    @POST("mobile/attendance")
+    Call<BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitLivenessAttendance(
+            @Part("eventType") okhttp3.RequestBody eventType,
+            @Part okhttp3.MultipartBody.Part photo
+    );
+
     @POST("rest/v1/attendance_permissions")
     Call<Void> submitLeaveRequest(@Body com.example.javatraining.data.remote.request.LeaveRequest request);
 

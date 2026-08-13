@@ -3,6 +3,7 @@ package com.example.javatraining.data.repository;
 import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -400,12 +401,14 @@ public class AbsensiTMRepository {
                     try {
                         String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
                         android.util.Log.e("CONFIRM_RECOGNITION", "Error confirming: " + err);
+                        mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal konfirmasi: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
                     } catch (Exception e) {}
                 }
             }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
                 android.util.Log.e("CONFIRM_RECOGNITION", "Failure: " + t.getMessage());
+                mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Koneksi gagal: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -423,12 +426,14 @@ public class AbsensiTMRepository {
                     try {
                         String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
                         android.util.Log.e("REJECT_RECOGNITION", "Error rejecting: " + err);
+                        mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal menolak: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
                     } catch (Exception e) {}
                 }
             }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
                 android.util.Log.e("REJECT_RECOGNITION", "Failure: " + t.getMessage());
+                mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Koneksi gagal: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -466,5 +471,36 @@ public class AbsensiTMRepository {
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
         });
+    }
+
+    public LiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitLivenessAttendance(java.io.File photoFile, String eventType) {
+        MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result = new MutableLiveData<>();
+        
+        okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
+        okhttp3.MultipartBody.Part body = okhttp3.MultipartBody.Part.createFormData("photo", photoFile.getName(), requestFile);
+        
+        okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), eventType);
+
+        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
+        apiService.submitLivenessAttendance(eventTypeBody, body).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    result.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+                result.postValue(null);
+                mainThreadHandler.post(() -> {
+                    Toast.makeText(application, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+        
+        return result;
     }
 }

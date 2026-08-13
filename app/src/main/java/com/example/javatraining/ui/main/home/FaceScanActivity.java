@@ -3,16 +3,26 @@ package com.example.javatraining.ui.main.home;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import com.example.javatraining.R;
-import com.example.javatraining.data.model.Karyawan;
-import com.example.javatraining.data.repository.MockDatabase;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -26,6 +36,13 @@ import android.os.Looper;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.graphics.Color;
+import android.media.Image;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FaceScanActivity extends AppCompatActivity {
 
@@ -35,6 +52,13 @@ public class FaceScanActivity extends AppCompatActivity {
     private TextView tvInstruction;
     private ValueAnimator scanningAnimator;
     private ObjectAnimator breathingAnimator;
+    
+    private ImageCapture imageCapture;
+    private ExecutorService cameraExecutor;
+    private FaceDetector faceDetector;
+    private boolean livenessVerified = false;
+    private boolean isProcessing = false;
+    private AbsensiTMRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +69,27 @@ public class FaceScanActivity extends AppCompatActivity {
         vScanningLine = findViewById(R.id.vScanningLine);
         ivFaceBracket = findViewById(R.id.ivFaceBracket);
         tvInstruction = findViewById(R.id.tvInstruction);
+        
+        repository = new AbsensiTMRepository(getApplication());
+        cameraExecutor = Executors.newSingleThreadExecutor();
+
+        FaceDetectorOptions options = new FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                .build();
+        faceDetector = FaceDetection.getClient(options);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnSimulateFail).setVisibility(View.GONE);
+        findViewById(R.id.btnSimulateSuccess).setVisibility(View.GONE);
+
+        tvInstruction.setText("Tantangan: Silakan Tersenyum Lebar!");
 
         startCamera();
         setupAnimations();
-
-        findViewById(R.id.btnSimulateFail).setOnClickListener(v -> {
-            triggerFailureState();
-        });
-
-        findViewById(R.id.btnSimulateSuccess).setOnClickListener(v -> {
-            triggerSuccessState();
-        });
     }
 
     private void setupAnimations() {
-        // Scanning Line Loop
         scanningAnimator = ValueAnimator.ofFloat(0f, 320f * getResources().getDisplayMetrics().density - 8f);
         scanningAnimator.setDuration(1500);
         scanningAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -73,7 +101,6 @@ public class FaceScanActivity extends AppCompatActivity {
         });
         scanningAnimator.start();
 
-        // Frame Breathing Effect
         breathingAnimator = ObjectAnimator.ofPropertyValuesHolder(
                 ivFaceBracket,
                 PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.05f, 1.0f),
@@ -85,14 +112,12 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void triggerSuccessState() {
-        if (scanningAnimator != null)
-            scanningAnimator.cancel();
-        if (breathingAnimator != null)
-            breathingAnimator.cancel();
+        if (scanningAnimator != null) scanningAnimator.cancel();
+        if (breathingAnimator != null) breathingAnimator.cancel();
 
         vScanningLine.setVisibility(View.GONE);
-        ivFaceBracket.setColorFilter(Color.parseColor("#198754")); // Enterprise Green
-        tvInstruction.setText("Wajah Terverifikasi!");
+        ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
+        tvInstruction.setText("Liveness Berhasil! Memotret...");
         tvInstruction.setTextColor(Color.parseColor("#198754"));
 
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
@@ -101,40 +126,29 @@ public class FaceScanActivity extends AppCompatActivity {
                 .scaleX(1.1f).scaleY(1.1f)
                 .setDuration(200)
                 .setInterpolator(new OvershootInterpolator())
-                .withEndAction(() -> {
-                    Karyawan currentUser = MockDatabase.getInstance().getCurrentKaryawan();
-                    if (currentUser != null) {
-                        if (MockDatabase.getInstance().isCheckedIn(currentUser.getId())) {
-                            MockDatabase.getInstance().checkOut(currentUser.getId());
-                            Toast.makeText(this, "Check Out Sukses", Toast.LENGTH_SHORT).show();
-                        } else {
-                            MockDatabase.getInstance().checkIn(currentUser.getId());
-                            Toast.makeText(this, "Check In Sukses", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    new Handler(Looper.getMainLooper()).postDelayed(this::finish, 500);
-                }).start();
+                .withEndAction(this::takePhoto).start();
     }
 
-    private void triggerFailureState() {
-        ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); // Enterprise Red
-        tvInstruction.setText("Wajah Tidak Dikenali!");
-        tvInstruction.setTextColor(Color.parseColor("#BA1A1A"));
+    private void triggerFailureState(String errorMsg) {
+        runOnUiThread(() -> {
+            ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); 
+            tvInstruction.setText(errorMsg);
+            tvInstruction.setTextColor(Color.parseColor("#BA1A1A"));
 
-        ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
-        // Shake Animation
-        ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15, 6,
-                -6, 0);
-        shake.setDuration(400);
-        shake.start();
+            ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
+            shake.setDuration(400);
+            shake.start();
 
-        // Reset after 2 seconds
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            ivFaceBracket.clearColorFilter();
-            tvInstruction.setText("Posisikan wajah di dalam bingkai");
-            tvInstruction.setTextColor(Color.WHITE);
-        }, 2000);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                ivFaceBracket.clearColorFilter();
+                tvInstruction.setText("Tantangan: Silakan Tersenyum Lebar!");
+                tvInstruction.setTextColor(Color.WHITE);
+                livenessVerified = false;
+                isProcessing = false;
+            }, 2000);
+        });
     }
 
     private void startCamera() {
@@ -147,25 +161,93 @@ public class FaceScanActivity extends AppCompatActivity {
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-                // Try front camera first, fallback to back camera if emulator doesn't have
-                // front camera
-                CameraSelector cameraSelector;
-                if (cameraProvider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)) {
-                    cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
-                } else if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                imageCapture = new ImageCapture.Builder()
+                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .build();
+
+                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build();
+
+                imageAnalysis.setAnalyzer(cameraExecutor, new ImageAnalysis.Analyzer() {
+                    @OptIn(markerClass = ExperimentalGetImage.class)
+                    @Override
+                    public void analyze(@NonNull ImageProxy imageProxy) {
+                        if (livenessVerified || isProcessing) {
+                            imageProxy.close();
+                            return;
+                        }
+                        
+                        Image mediaImage = imageProxy.getImage();
+                        if (mediaImage != null) {
+                            InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                            faceDetector.process(image)
+                                    .addOnSuccessListener(faces -> {
+                                        for (Face face : faces) {
+                                            if (face.getSmilingProbability() != null && face.getSmilingProbability() > 0.7f) {
+                                                livenessVerified = true;
+                                                runOnUiThread(() -> triggerSuccessState());
+                                                break;
+                                            }
+                                        }
+                                    })
+                                    .addOnCompleteListener(task -> imageProxy.close());
+                        } else {
+                            imageProxy.close();
+                        }
+                    }
+                });
+
+                CameraSelector cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
+                if (!cameraProvider.hasCamera(cameraSelector)) {
                     cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-                } else {
-                    Toast.makeText(this, "Tidak ada kamera yang tersedia di perangkat ini.", Toast.LENGTH_LONG).show();
-                    return;
                 }
 
                 cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, imageAnalysis);
 
             } catch (Exception exc) {
                 android.util.Log.e("FaceScanActivity", "Gagal membuka kamera", exc);
                 Toast.makeText(this, "Gagal membuka kamera: " + exc.getMessage(), Toast.LENGTH_LONG).show();
             }
         }, ContextCompat.getMainExecutor(this));
+    }
+
+    private void takePhoto() {
+        if (imageCapture == null) return;
+        isProcessing = true;
+
+        File photoFile = new File(getExternalFilesDir(null), 
+                new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
+
+        ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+
+        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
+            @Override
+            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                runOnUiThread(() -> tvInstruction.setText("Mengirim data ke server..."));
+                repository.submitLivenessAttendance(photoFile, "CHECK_IN").observe(FaceScanActivity.this, response -> {
+                    if (response != null && response.isSuccess()) {
+                        Toast.makeText(FaceScanActivity.this, "Absen Liveness Berhasil!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        triggerFailureState("Gagal mengirim absensi");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(@NonNull ImageCaptureException exception) {
+                android.util.Log.e("FaceScanActivity", "Photo capture failed: " + exception.getMessage(), exception);
+                triggerFailureState("Gagal mengambil foto");
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraExecutor.shutdown();
+        if (faceDetector != null) faceDetector.close();
     }
 }

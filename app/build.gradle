@@ -105,6 +105,9 @@ dependencies {
     implementation libs.camerax.lifecycle
     implementation libs.camerax.view
     
+    // ML Kit Face Detection
+    implementation 'com.google.mlkit:face-detection:16.1.6'
+    
     // WorkManager
     implementation libs.work.runtime
     
