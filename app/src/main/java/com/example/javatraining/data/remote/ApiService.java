@@ -77,6 +77,12 @@ public interface ApiService {
     @GET("rest/v1/recognition_events?select=id,thumbnail")
     Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getRecognitionEvents(@Query("id") String idIn);
 
+    @GET("rest/v1/recognition_events?select=*&order=createdAt.desc")
+    Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getPendingRecognitions(
+            @Query("employeeId") String employeeIdEq,
+            @Query("status") String statusEq
+    );
+
     @retrofit2.http.DELETE("rest/v1/notifications")
     Call<Void> deleteAllNotifications(@Query("employeeId") String employeeIdEq);
 

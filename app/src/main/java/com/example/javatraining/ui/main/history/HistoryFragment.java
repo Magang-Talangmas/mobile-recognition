@@ -34,6 +34,7 @@ public class HistoryFragment extends Fragment {
     private HistoryLogAdapter adapter;
     private List<AttendanceData> allLogs;
     private List<com.example.javatraining.data.remote.response.LeaveData> allLeaves;
+    private List<com.example.javatraining.data.remote.response.RecognitionEventData> allPendingRecognitions;
     private List<DailyAttendance> filteredLogs;
     private RecyclerView rvHistory;
     private AbsensiTMRepository repository;
@@ -63,9 +64,13 @@ public class HistoryFragment extends Fragment {
 
         allLogs = new ArrayList<>();
         allLeaves = new ArrayList<>();
+        allPendingRecognitions = new ArrayList<>();
         filteredLogs = new ArrayList<>();
 
         adapter = new HistoryLogAdapter(filteredLogs);
+        adapter.setListener(event -> {
+            showConfirmationDialog(event);
+        });
         rvHistory.setAdapter(adapter);
 
         repository = new AbsensiTMRepository(requireActivity().getApplication());
@@ -101,6 +106,44 @@ public class HistoryFragment extends Fragment {
         datePicker.show(getParentFragmentManager(), "DATE_PICKER");
     }
 
+    private void showConfirmationDialog(AttendanceEvent event) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_attendance, null);
+        builder.setView(dialogView);
+
+        android.widget.ImageView ivSnapshot = dialogView.findViewById(R.id.ivSnapshot);
+        if (event.getThumbnailUrl() != null && !event.getThumbnailUrl().isEmpty()) {
+            String url = event.getThumbnailUrl();
+            if (url.startsWith("/")) url = com.example.javatraining.BuildConfig.SUPABASE_URL + url;
+            com.bumptech.glide.Glide.with(this).load(url).centerCrop().into(ivSnapshot);
+        }
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+
+        dialogView.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
+            com.example.javatraining.data.remote.response.RecognitionEventData mockEvent = new com.example.javatraining.data.remote.response.RecognitionEventData();
+            mockEvent.setId(event.getRecognitionId());
+            mockEvent.setEmployeeId(event.getEmployeeId());
+            mockEvent.setCameraId(event.getCameraId());
+            
+            repository.confirmRecognition(mockEvent, () -> {
+                dialog.dismiss();
+                android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
+                fetchAttendanceHistory(); // Refresh history
+            });
+        });
+
+        dialogView.findViewById(R.id.btnReject).setOnClickListener(v -> {
+            repository.rejectRecognition(event.getRecognitionId(), () -> {
+                dialog.dismiss();
+                android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
+                fetchAttendanceHistory(); // Refresh history
+            });
+        });
+
+        dialog.show();
+    }
+
     private void updateDateLabels() {
         if (tvSelectedDate != null) {
             tvSelectedDate.setText(dateFormat.format(selectedDate));
@@ -128,6 +171,7 @@ public class HistoryFragment extends Fragment {
     private void fetchAttendanceHistory() {
         final boolean[] attendancesLoaded = {false};
         final boolean[] leavesLoaded = {false};
+        final boolean[] recognitionsLoaded = {false};
 
         repository.getAttendancesApi(1, 100).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
             @Override
@@ -136,7 +180,7 @@ public class HistoryFragment extends Fragment {
                     allLogs = attendanceDataList;
                 }
                 attendancesLoaded[0] = true;
-                checkBothLoaded(attendancesLoaded, leavesLoaded);
+                checkBothLoaded(attendancesLoaded, leavesLoaded, recognitionsLoaded);
             }
         });
 
@@ -147,13 +191,24 @@ public class HistoryFragment extends Fragment {
                     allLeaves = leaveDataList;
                 }
                 leavesLoaded[0] = true;
-                checkBothLoaded(attendancesLoaded, leavesLoaded);
+                checkBothLoaded(attendancesLoaded, leavesLoaded, recognitionsLoaded);
+            }
+        });
+
+        repository.getPendingRecognitions().observe(getViewLifecycleOwner(), new Observer<List<com.example.javatraining.data.remote.response.RecognitionEventData>>() {
+            @Override
+            public void onChanged(List<com.example.javatraining.data.remote.response.RecognitionEventData> recognitionEventData) {
+                if (recognitionEventData != null) {
+                    allPendingRecognitions = recognitionEventData;
+                }
+                recognitionsLoaded[0] = true;
+                checkBothLoaded(attendancesLoaded, leavesLoaded, recognitionsLoaded);
             }
         });
     }
 
-    private void checkBothLoaded(boolean[] attendancesLoaded, boolean[] leavesLoaded) {
-        if (attendancesLoaded[0] && leavesLoaded[0]) {
+    private void checkBothLoaded(boolean[] attendancesLoaded, boolean[] leavesLoaded, boolean[] recognitionsLoaded) {
+        if (attendancesLoaded[0] && leavesLoaded[0] && recognitionsLoaded[0]) {
             applyFilter();
             androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = getView() != null
                     ? getView().findViewById(R.id.swipeRefreshLayout)
@@ -246,6 +301,39 @@ public class HistoryFragment extends Fragment {
             }
         }
 
+        if (allPendingRecognitions != null) {
+            for (com.example.javatraining.data.remote.response.RecognitionEventData pr : allPendingRecognitions) {
+                if (pr.getCreatedAt() != null) {
+                    try {
+                        Date detectedAt = parseIsoDate(pr.getCreatedAt());
+                        if (detectedAt != null) {
+                            Calendar pCal = Calendar.getInstance();
+                            pCal.setTime(detectedAt);
+                            if (pCal.get(Calendar.YEAR) == selectedCal.get(Calendar.YEAR) &&
+                                    pCal.get(Calendar.MONTH) == selectedCal.get(Calendar.MONTH)) {
+                                String dateKey = sdf.format(detectedAt);
+                                DailyAttendance daily = dailyMap.get(dateKey);
+                                if (daily == null) {
+                                    daily = new DailyAttendance(detectedAt);
+                                    dailyMap.put(dateKey, daily);
+                                }
+                                
+                                AttendanceEvent event = new AttendanceEvent(
+                                        0, pr.getCameraId(), 0, pr.getEmployeeId(), null,
+                                        null, LogType.CHECK_IN, 0.0, null, null, detectedAt, detectedAt, null);
+                                event.setConfirmationStatus("PENDING");
+                                event.setRecognitionId(pr.getId());
+                                event.setThumbnailUrl(pr.getThumbnail());
+                                daily.setCheckInEvent(event);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
         filteredLogs.addAll(dailyMap.values());
 
         // If month filter returned no logs but allLogs has data, show all available
@@ -306,6 +394,35 @@ public class HistoryFragment extends Fragment {
                     }
                 }
             }
+
+            if (allPendingRecognitions != null) {
+                for (com.example.javatraining.data.remote.response.RecognitionEventData pr : allPendingRecognitions) {
+                    if (pr.getCreatedAt() != null) {
+                        try {
+                            Date detectedAt = parseIsoDate(pr.getCreatedAt());
+                            if (detectedAt != null) {
+                                String dateKey = sdf.format(detectedAt);
+                                DailyAttendance daily = fallbackMap.get(dateKey);
+                                if (daily == null) {
+                                    daily = new DailyAttendance(detectedAt);
+                                    fallbackMap.put(dateKey, daily);
+                                }
+                                
+                                AttendanceEvent event = new AttendanceEvent(
+                                        0, pr.getCameraId(), 0, pr.getEmployeeId(), null,
+                                        null, LogType.CHECK_IN, 0.0, null, null, detectedAt, detectedAt, null);
+                                event.setConfirmationStatus("PENDING");
+                                event.setRecognitionId(pr.getId());
+                                event.setThumbnailUrl(pr.getThumbnail());
+                                daily.setCheckInEvent(event);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
             filteredLogs.addAll(fallbackMap.values());
         }
 

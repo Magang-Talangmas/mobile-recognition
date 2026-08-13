@@ -27,12 +27,21 @@ import java.util.Locale;
 
 public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onPendingClick(com.example.javatraining.data.model.AttendanceEvent checkInEvent);
+    }
+
     private List<DailyAttendance> logs;
+    private OnItemClickListener listener;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd", Locale.getDefault());
 
     public HistoryLogAdapter(List<DailyAttendance> logs) {
         this.logs = logs;
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -136,9 +145,14 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             if (p.getCheckInEvent() != null) {
                 String confStatus = p.getCheckInEvent().getConfirmationStatus();
                 if ("PENDING".equalsIgnoreCase(confStatus)) {
-                    holder.tvStatusBadge.setText("Menunggu");
+                    holder.tvStatusBadge.setText("Menunggu Konfirmasi");
                     holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
                     holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
+                    holder.cardContainer.setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onPendingClick(p.getCheckInEvent());
+                        }
+                    });
                 } else if ("REJECTED".equalsIgnoreCase(confStatus)) {
                     holder.tvStatusBadge.setText("Ditolak");
                     holder.tvStatusBadge.setTextColor(Color.parseColor("#DC2626")); // red
@@ -154,11 +168,13 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
                         holder.tvStatusBadge.setTextColor(Color.parseColor("#0052CC")); // blue/primary
                         holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_primary);
                     }
+                    holder.cardContainer.setOnClickListener(null);
                 }
             } else {
-                holder.tvStatusBadge.setText("Menunggu");
+                holder.tvStatusBadge.setText("Belum Absen");
                 holder.tvStatusBadge.setTextColor(Color.parseColor("#4B5563")); // gray
                 holder.llStatusBadge.setBackgroundResource(R.drawable.bg_badge_light_gray);
+                holder.cardContainer.setOnClickListener(null);
             }
 
             // Accuracy

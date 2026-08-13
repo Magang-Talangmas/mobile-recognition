@@ -51,11 +51,11 @@
                 </LinearLayout>
 
                 <!-- Primary Action: Check In/Out Card -->
-                <com.google.android.material.card.MaterialCardView android:id="@+id/cvStatusCard" android:layout_width="match_parent" android:layout_height="200dp" android:layout_marginBottom="24dp" app:cardBackgroundColor="@color/ent_surface" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:strokeWidth="0dp">
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cvStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" app:cardBackgroundColor="@color/ent_surface" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:strokeWidth="0dp">
 
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
 
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_centerInParent="true">
+                        <LinearLayout android:id="@+id/llNormalStatus" android:layout_width="match_parent" android:layout_height="200dp" android:orientation="vertical" android:gravity="center" android:layout_centerInParent="true">
 
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_current_status" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:textStyle="bold" android:letterSpacing="0.05" android:textAllCaps="true"/>
 
@@ -64,6 +64,16 @@
                             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
                                 <View android:id="@+id/vStatusDot" android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_circle_primary" android:backgroundTint="@color/ent_secondary" android:layout_marginEnd="6dp"/>
                                 <TextView android:id="@+id/tvStatusTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dashboard_waiting_action" android:textColor="@color/ent_text_secondary" android:textSize="14sp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                        
+                        <LinearLayout android:id="@+id/llConfirmationStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                            <ImageView android:id="@+id/ivConfirmationSnapshot" android:layout_width="match_parent" android:layout_height="200dp" android:scaleType="centerCrop" tools:src="@android:color/darker_gray" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Menunggu Konfirmasi" android:textAlignment="center" android:textColor="@color/ent_text_primary" android:textStyle="bold" android:textSize="18sp" android:layout_marginTop="16dp" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wajah Anda terdeteksi oleh CCTV" android:textAlignment="center" android:textColor="@color/ent_text_secondary" android:textSize="14sp" android:layout_marginTop="4dp" />
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp">
+                                <com.google.android.material.button.MaterialButton android:id="@+id/btnConfirmAttendance" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Konfirmasi" android:layout_marginEnd="8dp" app:cornerRadius="12dp" app:backgroundTint="@color/html_primary" android:textColor="@color/html_on_primary"/>
+                                <com.google.android.material.button.MaterialButton android:id="@+id/btnRejectAttendance" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Bukan Saya" android:layout_marginStart="8dp" app:cornerRadius="12dp" app:strokeColor="@color/html_error" android:textColor="@color/html_error"/>
                             </LinearLayout>
                         </LinearLayout>
                     </RelativeLayout>

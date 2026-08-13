@@ -360,25 +360,86 @@ public class AbsensiTMRepository {
         });
     }
 
-    public void confirmRecognition(String recognitionId) {
+    public LiveData<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getPendingRecognitions() {
+        MutableLiveData<List<com.example.javatraining.data.remote.response.RecognitionEventData>> result = new MutableLiveData<>();
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        if (employeeId == null) {
+            result.setValue(new ArrayList<>());
+            return result;
+        }
+
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getPendingRecognitions("eq." + employeeId, "eq.Unknown").enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.RecognitionEventData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.RecognitionEventData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
+                } else {
+                    result.setValue(new ArrayList<>());
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, Throwable t) {
+                result.setValue(new ArrayList<>());
+            }
+        });
+        return result;
+    }
+
+    public void confirmRecognition(com.example.javatraining.data.remote.response.RecognitionEventData event, Runnable onSuccess) {
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         String json = "{\"status\": \"Verified\"}";
         okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
-        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
+        apiService.updateRecognitionStatus("eq." + event.getId(), body).enqueue(new retrofit2.Callback<Void>() {
             @Override
-            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Create an attendance record
+                    com.example.javatraining.data.remote.request.ManualAttendanceRequest req = 
+                        new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
+                            event.getEmployeeId(), 
+                            "IN", 
+                            "CHECK_IN", 
+                            "Hadir", 
+                            event.getCreatedAt(), 
+                            event.getThumbnail(), 
+                            false
+                        );
+                    req.cameraId = event.getCameraId();
+                    req.confirmationStatus = "CONFIRMED";
+                    apiService.submitManualAttendance(req).enqueue(new retrofit2.Callback<Void>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> attendanceResponse) {
+                            if (onSuccess != null) {
+                                mainThreadHandler.post(onSuccess);
+                            }
+                        }
+                        @Override
+                        public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                            if (onSuccess != null) {
+                                mainThreadHandler.post(onSuccess);
+                            }
+                        }
+                    });
+                }
+            }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
         });
     }
 
-    public void rejectRecognition(String recognitionId) {
+    public void rejectRecognition(String recognitionId, Runnable onSuccess) {
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         String json = "{\"status\": \"Rejected\"}";
         okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
         apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
             @Override
-            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (onSuccess != null) {
+                    mainThreadHandler.post(onSuccess);
+                }
+            }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
         });

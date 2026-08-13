@@ -40,25 +40,6 @@ public class NotificationsFragment extends Fragment {
         com.example.javatraining.data.repository.AbsensiTMRepository repository = new com.example.javatraining.data.repository.AbsensiTMRepository(
                 requireActivity().getApplication());
 
-        adapter.setListener(new NotificationAdapter.OnNotificationActionListener() {
-            @Override
-            public void onConfirm(NotificationItem item, int position) {
-                if (item.getRecognitionId() != null) {
-                    repository.confirmRecognition(item.getRecognitionId());
-                    adapter.removeItem(position);
-                    android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onReject(NotificationItem item, int position) {
-                if (item.getRecognitionId() != null) {
-                    repository.rejectRecognition(item.getRecognitionId());
-                    adapter.removeItem(position);
-                    android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         // Setup clear all button
         ImageView btnClear = view.findViewById(R.id.btnClear);
@@ -91,8 +72,7 @@ public class NotificationsFragment extends Fragment {
                             || "ALERT".equalsIgnoreCase(n.getType())
                             || "unknown".equalsIgnoreCase(n.getType())
                             || "cctv".equalsIgnoreCase(n.getType());
-                    boolean requiresConfirmation = "REQUIRE_CONFIRMATION".equalsIgnoreCase(n.getType()) 
-                            || "recognition".equalsIgnoreCase(n.getType());
+                    boolean requiresConfirmation = false;
                     items.add(new NotificationItem(
                             n.getId(),
                             n.getTitle() != null ? n.getTitle() : "Notifikasi Absensi",

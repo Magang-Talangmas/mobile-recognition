@@ -135,6 +135,8 @@ public class HomeFragment extends Fragment {
 
         final boolean[] attendancesLoaded = {false};
         final boolean[] leavesLoaded = {false};
+        final boolean[] recognitionsLoaded = {false};
+        final List<com.example.javatraining.data.remote.response.RecognitionEventData>[] allPendingRecognitions = new List[]{new ArrayList<>()};
 
         // Fetch user logs from API
         repository.getAttendancesApi(1, 10).observe(getViewLifecycleOwner(), new Observer<List<AttendanceData>>() {
@@ -144,7 +146,18 @@ public class HomeFragment extends Fragment {
                     allLogs = attendanceDataList;
                 }
                 attendancesLoaded[0] = true;
-                checkBothLoaded(view, attendancesLoaded, leavesLoaded);
+                checkBothLoaded(view, attendancesLoaded, leavesLoaded, recognitionsLoaded, allPendingRecognitions[0]);
+            }
+        });
+
+        repository.getPendingRecognitions().observe(getViewLifecycleOwner(), new Observer<List<com.example.javatraining.data.remote.response.RecognitionEventData>>() {
+            @Override
+            public void onChanged(List<com.example.javatraining.data.remote.response.RecognitionEventData> recognitionEventData) {
+                if (recognitionEventData != null) {
+                    allPendingRecognitions[0] = recognitionEventData;
+                }
+                recognitionsLoaded[0] = true;
+                checkBothLoaded(view, attendancesLoaded, leavesLoaded, recognitionsLoaded, allPendingRecognitions[0]);
             }
         });
 
@@ -156,7 +169,7 @@ public class HomeFragment extends Fragment {
                     allLeaves = leaveDataList;
                 }
                 leavesLoaded[0] = true;
-                checkBothLoaded(view, attendancesLoaded, leavesLoaded);
+                checkBothLoaded(view, attendancesLoaded, leavesLoaded, recognitionsLoaded, allPendingRecognitions[0]);
             }
         });
 
@@ -223,8 +236,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void checkBothLoaded(View view, boolean[] attendancesLoaded, boolean[] leavesLoaded) {
-        if (attendancesLoaded[0] && leavesLoaded[0]) {
+    private void checkBothLoaded(View view, boolean[] attendancesLoaded, boolean[] leavesLoaded, boolean[] recognitionsLoaded, List<com.example.javatraining.data.remote.response.RecognitionEventData> pendingRecognitions) {
+        if (attendancesLoaded[0] && leavesLoaded[0] && recognitionsLoaded[0]) {
             java.util.Map<String, com.example.javatraining.data.model.DailyAttendance> dailyMap = new java.util.HashMap<>();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
@@ -308,7 +321,7 @@ public class HomeFragment extends Fragment {
             }
             java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
 
-            updateDashboard(view, groupedLogs, flatLogs);
+            updateDashboard(view, groupedLogs, flatLogs, pendingRecognitions);
 
             androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout = view
                     .findViewById(R.id.swipeRefreshLayout);
@@ -319,7 +332,44 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateDashboard(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs,
-            List<AttendanceEvent> flatLogs) {
+            List<AttendanceEvent> flatLogs, List<com.example.javatraining.data.remote.response.RecognitionEventData> pendingRecognitions) {
+        // Confirmation Status Logic
+        View llNormalStatus = view.findViewById(R.id.llNormalStatus);
+        View llConfirmationStatus = view.findViewById(R.id.llConfirmationStatus);
+        
+        if (pendingRecognitions != null && !pendingRecognitions.isEmpty()) {
+            llNormalStatus.setVisibility(View.GONE);
+            llConfirmationStatus.setVisibility(View.VISIBLE);
+            com.example.javatraining.data.remote.response.RecognitionEventData latestPending = pendingRecognitions.get(0);
+            
+            android.widget.ImageView ivConfirmationSnapshot = view.findViewById(R.id.ivConfirmationSnapshot);
+            if (latestPending.getThumbnail() != null && !latestPending.getThumbnail().isEmpty()) {
+                String url = latestPending.getThumbnail();
+                if (url.startsWith("/")) url = com.example.javatraining.BuildConfig.SUPABASE_URL + url;
+                com.bumptech.glide.Glide.with(requireContext()).load(url).centerCrop().into(ivConfirmationSnapshot);
+            }
+            
+            view.findViewById(R.id.btnConfirmAttendance).setOnClickListener(v -> {
+                repository.confirmRecognition(latestPending, () -> {
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Dikonfirmasi", android.widget.Toast.LENGTH_SHORT).show();
+                    loadDataAndRefreshUI(view);
+                });
+            });
+            view.findViewById(R.id.btnRejectAttendance).setOnClickListener(v -> {
+                repository.rejectRecognition(latestPending.getId(), () -> {
+                    android.widget.Toast.makeText(getContext(), "Kehadiran Ditolak", android.widget.Toast.LENGTH_SHORT).show();
+                    loadDataAndRefreshUI(view);
+                });
+            });
+            
+            // Setup Recent Activity RecyclerView
+            setupRecentActivity(view, groupedLogs);
+            return;
+        }
+        
+        llNormalStatus.setVisibility(View.VISIBLE);
+        llConfirmationStatus.setVisibility(View.GONE);
+
         // Live Status Logic
         TextView tvStatusTitle = view.findViewById(R.id.tvStatusTitle);
         TextView tvStatusTime = view.findViewById(R.id.tvStatusTime);
@@ -392,6 +442,10 @@ public class HomeFragment extends Fragment {
             vStatusDot.setVisibility(View.GONE);
         }
 
+        setupRecentActivity(view, groupedLogs);
+    }
+
+    private void setupRecentActivity(View view, List<com.example.javatraining.data.model.DailyAttendance> groupedLogs) {
         // Setup Recent Activity RecyclerView
         RecyclerView rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(getContext()));

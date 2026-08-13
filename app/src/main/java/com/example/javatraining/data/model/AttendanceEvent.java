@@ -56,10 +56,18 @@ public class AttendanceEvent {
 
     private boolean isLate;
     private String confirmationStatus;
+    private String recognitionId;
+    private String thumbnailUrl;
 
     public boolean isLate() { return isLate; }
     public void setLate(boolean late) { isLate = late; }
     
     public String getConfirmationStatus() { return confirmationStatus; }
     public void setConfirmationStatus(String confirmationStatus) { this.confirmationStatus = confirmationStatus; }
+    
+    public String getRecognitionId() { return recognitionId; }
+    public void setRecognitionId(String recognitionId) { this.recognitionId = recognitionId; }
+    
+    public String getThumbnailUrl() { return thumbnailUrl; }
+    public void setThumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
 }

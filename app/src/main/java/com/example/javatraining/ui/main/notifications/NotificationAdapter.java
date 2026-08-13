@@ -77,35 +77,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.tvNotifTime.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.html_primary));
         }
 
-        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
-            holder.ivSnapshot.setVisibility(View.VISIBLE);
-            String url = item.getImageUrl();
-            if (url.startsWith("/")) {
-                url = BuildConfig.SUPABASE_URL + url;
-            }
-            Glide.with(holder.itemView.getContext())
-                    .load(url)
-                    .centerCrop()
-                    .into(holder.ivSnapshot);
-        } else {
-            holder.ivSnapshot.setVisibility(View.GONE);
-        }
-
-        if (item.requiresConfirmation() && item.getRecognitionId() != null) {
-            holder.llActionButtons.setVisibility(View.VISIBLE);
-            holder.btnConfirm.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onConfirm(item, holder.getAdapterPosition());
-                }
-            });
-            holder.btnReject.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onReject(item, holder.getAdapterPosition());
-                }
-            });
-        } else {
-            holder.llActionButtons.setVisibility(View.GONE);
-        }
+        // Snapshot and action buttons have been moved to HomeFragment
     }
 
     @Override
@@ -115,10 +87,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvNotifTitle, tvNotifMessage, tvNotifTime;
-        ImageView ivNotifIcon, ivSnapshot;
         FrameLayout flIconBg;
-        LinearLayout llActionButtons;
-        Button btnConfirm, btnReject;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,10 +96,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             tvNotifTime = itemView.findViewById(R.id.tvNotifTime);
             ivNotifIcon = itemView.findViewById(R.id.ivNotifIcon);
             flIconBg = itemView.findViewById(R.id.flIconBg);
-            ivSnapshot = itemView.findViewById(R.id.ivSnapshot);
-            llActionButtons = itemView.findViewById(R.id.llActionButtons);
-            btnConfirm = itemView.findViewById(R.id.btnConfirm);
-            btnReject = itemView.findViewById(R.id.btnReject);
         }
     }
 }
