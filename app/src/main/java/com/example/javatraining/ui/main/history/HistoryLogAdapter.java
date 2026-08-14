@@ -17,7 +17,7 @@ import com.example.javatraining.R;
 import com.example.javatraining.data.model.Karyawan;
 import com.example.javatraining.data.model.LogType;
 import com.example.javatraining.data.model.DailyAttendance;
-import com.example.javatraining.data.repository.MockDatabase;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

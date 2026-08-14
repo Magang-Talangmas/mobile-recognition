@@ -18,7 +18,7 @@ import android.view.animation.LayoutAnimationController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.javatraining.R;
-import com.example.javatraining.data.repository.MockDatabase;
+
 import com.example.javatraining.data.model.Karyawan;
 import com.example.javatraining.data.model.AttendanceEvent;
 import com.example.javatraining.data.model.LogType;

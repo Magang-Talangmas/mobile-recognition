@@ -22,9 +22,7 @@ import android.widget.Toast;
 import com.example.javatraining.data.local.SessionManager;
 import com.example.javatraining.data.remote.ApiClient;
 import com.example.javatraining.data.remote.ApiService;
-import com.example.javatraining.data.remote.request.ManualAttendanceRequest;
 import com.example.javatraining.data.remote.response.BaseResponse;
-import com.example.javatraining.data.remote.response.PaginatedResponse;
 import com.example.javatraining.data.remote.response.AttendanceData;
 import java.util.List;
 

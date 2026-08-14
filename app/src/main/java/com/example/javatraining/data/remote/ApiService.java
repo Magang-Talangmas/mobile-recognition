@@ -3,7 +3,7 @@ package com.example.javatraining.data.remote;
 import com.example.javatraining.data.remote.request.LoginRequest;
 import com.example.javatraining.data.remote.response.BaseResponse;
 import com.example.javatraining.data.remote.response.LoginData;
-import com.example.javatraining.data.remote.response.PaginatedResponse;
+
 import com.example.javatraining.data.remote.response.EmployeeData;
 import com.example.javatraining.data.remote.response.AttendanceData;
 import com.example.javatraining.data.remote.response.ScheduleData;
@@ -58,31 +58,7 @@ public interface ApiService {
     @POST("rest/v1/attendances")
     Call<Void> submitManualAttendance(@Body java.util.Map<String, Object> request);
 
-    // --- NODEJS BACKEND ENDPOINTS ---
-
-    @GET("mobile/profile")
-    Call<BaseResponse<EmployeeData>> getProfileBackend();
-
-    @GET("mobile/attendance/history")
-    Call<BaseResponse<List<AttendanceData>>> getAttendancesBackend(
-            @Query("page") Integer page,
-            @Query("limit") Integer limit
-    );
-
-    @GET("mobile/schedule/today")
-    Call<BaseResponse<ScheduleData>> getScheduleTodayBackend();
-
-    @GET("mobile/recognitions/pending")
-    Call<BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>> getPendingRecognitionsBackend(
-            @Query("limit") Integer limit
-    );
-
-    @Multipart
-    @POST("mobile/attendance")
-    Call<BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitLivenessAttendance(
-            @Part("eventType") okhttp3.RequestBody eventType,
-            @Part okhttp3.MultipartBody.Part photo
-    );
+    // --- NODEJS BACKEND ENDPOINTS (REMOVED) ---
 
     @POST("rest/v1/attendance_permissions")
     Call<Void> submitLeaveRequest(@Body com.example.javatraining.data.remote.request.LeaveRequest request);

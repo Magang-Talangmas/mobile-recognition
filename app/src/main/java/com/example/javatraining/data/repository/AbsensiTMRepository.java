@@ -19,7 +19,7 @@ import com.example.javatraining.data.local.SessionManager;
 
 import com.example.javatraining.data.remote.response.AttendanceData;
 import com.example.javatraining.data.remote.response.EmployeeData;
-import com.example.javatraining.data.remote.response.PaginatedResponse;
+
 import com.example.javatraining.data.remote.response.BaseResponse;
 
 import java.util.ArrayList;
@@ -435,7 +435,10 @@ public class AbsensiTMRepository {
         request.put("eventType", eventTypeDb);
         request.put("cameraId", "MANUAL");
         request.put("timestamp", timestamp);
-        request.put("status", "PRESENT");
+        String statusValue = "UNKNOWN";
+        if ("IN".equals(eventTypeDb)) statusValue = "CHECKED_IN";
+        else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
+        request.put("status", statusValue);
         request.put("confirmationStatus", "CONFIRMED");
                         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
@@ -500,7 +503,10 @@ public class AbsensiTMRepository {
         request.put("eventType", eventTypeDb);
         request.put("cameraId", "LIVENESS");
         request.put("timestamp", timestamp);
-        request.put("status", "PRESENT");
+        String statusValue = "UNKNOWN";
+        if ("IN".equals(eventTypeDb)) statusValue = "CHECKED_IN";
+        else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
+        request.put("status", statusValue);
         request.put("confirmationStatus", "CONFIRMED");
                         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);

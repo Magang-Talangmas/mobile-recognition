@@ -57,7 +57,7 @@ public class User {
                 + "&background=random&color=fff&size=256";
     }
 
-    // Simple constructor (for MockDatabase internal use)
+    // Simple constructor
     public User(String id, String email, String password, String role) {
         this.id = id;
         this.email = email;
