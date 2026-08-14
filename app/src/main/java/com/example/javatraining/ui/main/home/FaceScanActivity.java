@@ -59,7 +59,7 @@ public class FaceScanActivity extends AppCompatActivity {
     private boolean livenessVerified = false;
     private boolean isProcessing = false;
     private AbsensiTMRepository repository;
-    private ImageView ivVisualGuide;
+    private FaceGuideView ivVisualGuide;
     
     private enum LivenessStep {
         SMILE, BLINK, TURN_LEFT, TURN_RIGHT, DONE
@@ -127,47 +127,22 @@ public class FaceScanActivity extends AppCompatActivity {
         if (currentStepIndex >= steps.length) return;
         LivenessStep step = steps[currentStepIndex];
         
-        ivVisualGuide.clearAnimation();
-        ivVisualGuide.setScaleX(1f);
-        ivVisualGuide.setScaleY(1f);
-        ivVisualGuide.setTranslationX(0f);
-        
         switch (step) {
             case SMILE:
                 tvInstruction.setText("Tantangan 1/4: Tersenyum Lebar!");
-                ivVisualGuide.setImageResource(R.drawable.ic_face_recog);
-                ObjectAnimator smileAnim = ObjectAnimator.ofPropertyValuesHolder(
-                        ivVisualGuide,
-                        PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.2f, 1.0f),
-                        PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.2f, 1.0f));
-                smileAnim.setDuration(1000);
-                smileAnim.setRepeatCount(ValueAnimator.INFINITE);
-                smileAnim.start();
+                ivVisualGuide.animateSmile();
                 break;
             case BLINK:
                 tvInstruction.setText("Tantangan 2/4: Kedipkan Mata!");
-                ivVisualGuide.setImageResource(R.drawable.ic_eye);
-                ObjectAnimator blinkAnim = ObjectAnimator.ofFloat(ivVisualGuide, "scaleY", 1f, 0.1f, 1f);
-                blinkAnim.setDuration(400);
-                blinkAnim.setRepeatCount(ValueAnimator.INFINITE);
-                blinkAnim.setRepeatMode(ValueAnimator.REVERSE);
-                blinkAnim.start();
+                ivVisualGuide.animateBlink();
                 break;
             case TURN_LEFT:
                 tvInstruction.setText("Tantangan 3/4: Toleh Kiri!");
-                ivVisualGuide.setImageResource(R.drawable.ic_arrow_back);
-                ObjectAnimator leftAnim = ObjectAnimator.ofFloat(ivVisualGuide, "translationX", 0f, -50f, 0f);
-                leftAnim.setDuration(1200);
-                leftAnim.setRepeatCount(ValueAnimator.INFINITE);
-                leftAnim.start();
+                ivVisualGuide.animateLookLeft();
                 break;
             case TURN_RIGHT:
                 tvInstruction.setText("Tantangan 4/4: Toleh Kanan!");
-                ivVisualGuide.setImageResource(R.drawable.ic_arrow_forward);
-                ObjectAnimator rightAnim = ObjectAnimator.ofFloat(ivVisualGuide, "translationX", 0f, 50f, 0f);
-                rightAnim.setDuration(1200);
-                rightAnim.setRepeatCount(ValueAnimator.INFINITE);
-                rightAnim.start();
+                ivVisualGuide.animateLookRight();
                 break;
         }
     }
@@ -197,6 +172,8 @@ public class FaceScanActivity extends AppCompatActivity {
         ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
         tvInstruction.setText("Liveness Berhasil! Memotret...");
         tvInstruction.setTextColor(Color.parseColor("#198754"));
+        
+        ivVisualGuide.resetState();
 
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
 
