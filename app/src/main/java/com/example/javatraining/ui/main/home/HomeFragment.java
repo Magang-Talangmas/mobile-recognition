@@ -263,9 +263,9 @@ public class HomeFragment extends Fragment {
                             event.setLate(p.getIsLate());
                             event.setConfirmationStatus(p.getConfirmationStatus());
 
-                            if ("CHECK_IN".equalsIgnoreCase(p.getEventType())) {
+                            if ("CHECK_IN".equalsIgnoreCase(p.getEventType()) || "IN".equalsIgnoreCase(p.getEventType())) {
                                 daily.setCheckInEvent(event);
-                            } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType())) {
+                            } else if ("CHECK_OUT".equalsIgnoreCase(p.getEventType()) || "OUT".equalsIgnoreCase(p.getEventType())) {
                                 daily.setCheckOutEvent(event);
                             }
                         }

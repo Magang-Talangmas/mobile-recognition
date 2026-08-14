@@ -432,7 +432,12 @@ public class AbsensiTMRepository {
         String newId = java.util.UUID.randomUUID().toString();
         request.put("id", newId);
         request.put("employeeId", employeeId);
-        request.put("eventType", eventTypeDb);
+        
+        String evtType = eventTypeDb;
+        if ("IN".equalsIgnoreCase(eventTypeDb)) evtType = "CHECK_IN";
+        else if ("OUT".equalsIgnoreCase(eventTypeDb)) evtType = "CHECK_OUT";
+        request.put("eventType", evtType);
+        
         request.put("cameraId", "MANUAL");
         request.put("timestamp", timestamp);
         String statusValue = "UNKNOWN";
