@@ -189,13 +189,11 @@ public class ManualFragment extends Fragment {
         SessionManager sm = new SessionManager(getContext());
         String empId = sm.getUser() != null ? sm.getUser().getId() : "";
 
-        ApiService backendApiService = ApiClient.getBackendClient(getContext()).create(ApiService.class);
-        
-        backendApiService.getAttendancesBackend(1, 1).enqueue(new Callback<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>>() {
+        apiService.getAttendances("eq." + empId, 1).enqueue(new Callback<List<AttendanceData>>() {
             @Override
-            public void onResponse(Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, Response<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    List<AttendanceData> data = response.body().getData();
+            public void onResponse(Call<List<AttendanceData>> call, Response<List<AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<AttendanceData> data = response.body();
                     if (data != null && !data.isEmpty()) {
                         latestAttendance[0] = data.get(0);
                     }
@@ -204,7 +202,7 @@ public class ManualFragment extends Fragment {
                 checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
             }
             @Override
-            public void onFailure(Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, Throwable t) {
+            public void onFailure(Call<List<AttendanceData>> call, Throwable t) {
                 attendancesLoaded[0] = true;
                 checkStatus(attendancesLoaded, leavesLoaded, latestAttendance[0], latestLeave[0]);
             }
@@ -228,6 +226,7 @@ public class ManualFragment extends Fragment {
     }
 
     private void checkStatus(boolean[] attendancesLoaded, boolean[] leavesLoaded, com.example.javatraining.data.remote.response.AttendanceData latestAtt, com.example.javatraining.data.remote.response.LeaveData latestLeave) {
+        if (!isAdded()) return;
         if (attendancesLoaded[0] && leavesLoaded[0]) {
             boolean hasLeaveToday = false;
             boolean hasAttToday = false;

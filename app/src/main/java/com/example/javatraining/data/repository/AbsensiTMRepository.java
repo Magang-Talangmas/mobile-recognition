@@ -45,14 +45,14 @@ public class AbsensiTMRepository {
     public LiveData<User> login(String email, String password) {
         MutableLiveData<User> result = new MutableLiveData<>();
         
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         LoginRequest request = new LoginRequest(email, password);
         
-        apiService.loginBackend(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>>() {
+        apiService.login(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.LoginData>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    com.example.javatraining.data.remote.response.LoginData data = response.body().getData();
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.LoginData> call, retrofit2.Response<com.example.javatraining.data.remote.response.LoginData> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.javatraining.data.remote.response.LoginData data = response.body();
                     
                     User rawUser = data.getEmployee();
                     String finalId = rawUser.getEmployeeId() != null ? rawUser.getEmployeeId() : rawUser.getId();
@@ -67,32 +67,16 @@ public class AbsensiTMRepository {
                         android.util.Log.e("LOGIN_ERROR", "Code: " + response.code() + ", Body: " + errBody);
                         
                         String displayMsg = "Login Failed: " + response.code();
-                        try {
-                            org.json.JSONObject jObjError = new org.json.JSONObject(errBody);
-                            if (jObjError.has("error_description")) {
-                                displayMsg = jObjError.getString("error_description");
-                            } else if (jObjError.has("message")) {
-                                displayMsg = jObjError.getString("message");
-                            } else if (jObjError.has("error")) {
-                                displayMsg = jObjError.getString("error");
-                            }
-                        } catch (Exception e) {}
-                        
-                        final String finalMsg = displayMsg;
-                        mainThreadHandler.post(() -> {
-                            android.widget.Toast.makeText(application, finalMsg, android.widget.Toast.LENGTH_LONG).show();
-                        });
+                        mainThreadHandler.post(() -> android.widget.Toast.makeText(application, displayMsg, android.widget.Toast.LENGTH_LONG).show());
                     } catch (Exception e) {}
                     result.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, Throwable t) {
-                android.util.Log.e("LOGIN_ERROR", "Exception: " + t.getMessage());
-                mainThreadHandler.post(() -> {
-                    android.widget.Toast.makeText(application, "Kesalahan Jaringan: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show();
-                });
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.LoginData> call, Throwable t) {
+                android.util.Log.e("LOGIN_ERROR", "Failure: " + t.getMessage());
+                mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Connection error: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
                 result.setValue(null);
             }
         });
@@ -172,19 +156,23 @@ public class AbsensiTMRepository {
 
     public LiveData<List<AttendanceData>> getAttendancesApi(int page, int perPage) {
         MutableLiveData<List<AttendanceData>> result = new MutableLiveData<>();
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
-        apiService.getAttendancesBackend(page, perPage).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>>() {
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        String query = employeeId != null ? "eq." + employeeId : null;
+        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getAttendances(query, 50).enqueue(new retrofit2.Callback<List<AttendanceData>>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<AttendanceData>> call, retrofit2.Response<List<AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
                 } else {
                     result.setValue(new ArrayList<>());
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<List<AttendanceData>>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<AttendanceData>> call, Throwable t) {
                 result.setValue(new ArrayList<>());
             }
         });
@@ -199,19 +187,20 @@ public class AbsensiTMRepository {
 
     public LiveData<com.example.javatraining.data.remote.response.ScheduleData> getScheduleTodayApi() {
         MutableLiveData<com.example.javatraining.data.remote.response.ScheduleData> result = new MutableLiveData<>();
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
-        apiService.getScheduleTodayBackend().enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>>() {
+        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getScheduleToday().enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.ScheduleData>>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    result.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.ScheduleData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    result.setValue(response.body().get(0));
                 } else {
                     result.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.ScheduleData>> call, Throwable t) {
                 result.setValue(null);
             }
         });
@@ -220,19 +209,22 @@ public class AbsensiTMRepository {
 
     public LiveData<com.example.javatraining.data.remote.response.EmployeeData> getProfileApi() {
         MutableLiveData<com.example.javatraining.data.remote.response.EmployeeData> data = new MutableLiveData<>();
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
-        apiService.getProfileBackend().enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>>() {
+        SessionManager sm = new SessionManager(application);
+        String email = sm.getUser() != null ? sm.getUser().getEmail() : "";
+
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getProfile("eq." + email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    data.setValue(response.body().getData());
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.EmployeeData>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    data.setValue(response.body().get(0));
                 } else {
                     data.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> call, Throwable t) {
                 data.setValue(null);
             }
         });
@@ -316,25 +308,26 @@ public class AbsensiTMRepository {
 
     public LiveData<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getPendingRecognitions() {
         MutableLiveData<List<com.example.javatraining.data.remote.response.RecognitionEventData>> result = new MutableLiveData<>();
-        
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
-        apiService.getPendingRecognitionsBackend(10).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>>() {
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        if (employeeId == null) {
+            result.setValue(new ArrayList<>());
+            return result;
+        }
+
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getPendingRecognitions("eq." + employeeId, "eq.Unknown").enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.RecognitionEventData>>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    com.example.javatraining.data.remote.response.PendingRecognitionData data = response.body().getData();
-                    if (data != null && data.getItems() != null) {
-                        result.setValue(data.getItems());
-                    } else {
-                        result.setValue(new ArrayList<>());
-                    }
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.RecognitionEventData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
                 } else {
                     result.setValue(new ArrayList<>());
                 }
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.PendingRecognitionData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> call, Throwable t) {
                 result.setValue(new ArrayList<>());
             }
         });
@@ -343,50 +336,40 @@ public class AbsensiTMRepository {
     }
 
     public void confirmRecognition(com.example.javatraining.data.remote.response.RecognitionEventData event, Runnable onSuccess) {
-        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
-        backendService.confirmRecognitionMobile(event.getId()).enqueue(new retrofit2.Callback<Void>() {
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        String json = "{\"status\": \"Verified\"}";
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
+        apiService.updateRecognitionStatus("eq." + event.getId(), body).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
-                    if (onSuccess != null) {
-                        mainThreadHandler.post(onSuccess);
-                    }
+                    if (onSuccess != null) mainThreadHandler.post(onSuccess);
                 } else {
-                    try {
-                        String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
-                        android.util.Log.e("CONFIRM_RECOGNITION", "Error confirming: " + err);
-                        mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal konfirmasi: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
-                    } catch (Exception e) {}
+                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal konfirmasi: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
                 }
             }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
-                android.util.Log.e("CONFIRM_RECOGNITION", "Failure: " + t.getMessage());
                 mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Koneksi gagal: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
             }
         });
     }
 
     public void rejectRecognition(String recognitionId, Runnable onSuccess) {
-        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
-        backendService.rejectRecognitionMobile(recognitionId).enqueue(new retrofit2.Callback<Void>() {
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        String json = "{\"status\": \"Rejected\"}";
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
+        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
-                    if (onSuccess != null) {
-                        mainThreadHandler.post(onSuccess);
-                    }
+                    if (onSuccess != null) mainThreadHandler.post(onSuccess);
                 } else {
-                    try {
-                        String err = response.errorBody() != null ? response.errorBody().string() : "unknown error";
-                        android.util.Log.e("REJECT_RECOGNITION", "Error rejecting: " + err);
-                        mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal menolak: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
-                    } catch (Exception e) {}
+                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal menolak: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
                 }
             }
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
-                android.util.Log.e("REJECT_RECOGNITION", "Failure: " + t.getMessage());
                 mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Koneksi gagal: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
             }
         });
@@ -430,28 +413,27 @@ public class AbsensiTMRepository {
     public LiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitLivenessAttendance(java.io.File photoFile, String eventType) {
         MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result = new MutableLiveData<>();
         
-        okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
-        okhttp3.MultipartBody.Part body = okhttp3.MultipartBody.Part.createFormData("photo", photoFile.getName(), requestFile);
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
+        String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(new java.util.Date());
         
-        okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), eventType);
-
-        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
-        apiService.submitLivenessAttendance(eventTypeBody, body).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>() {
+        com.example.javatraining.data.remote.request.ManualAttendanceRequest manualRequest = 
+                new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
+                        employeeId, "IN", eventType, "Hadir", timestamp, false);
+                        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.submitManualAttendance(manualRequest).enqueue(new retrofit2.Callback<Void>() {
             @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    result.postValue(null);
-                }
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                String mockJson = "{\"success\":true,\"message\":\"Mock attendance successful\",\"data\":{\"id\":\"mock-id\",\"status\":\"Hadir\",\"timestamp\":\"" + timestamp + "\"}}";
+                java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>(){}.getType();
+                com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData> mockResponse = new com.google.gson.Gson().fromJson(mockJson, type);
+                result.postValue(mockResponse);
             }
 
             @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
                 result.postValue(null);
-                mainThreadHandler.post(() -> {
-                    Toast.makeText(application, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                });
             }
         });
         

@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey;
 public class AttendanceEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    
+
     public String date; // Format: YYYY-MM-DD
     public String checkInTime; // Format: HH:MM:SS
     public String checkOutTime; // Format: HH:MM:SS
     public String status; // Present, Late, Absent, Leave
     public String snapshotUrl;
-    
+
     public AttendanceEntity(String date, String checkInTime, String checkOutTime, String status, String snapshotUrl) {
         this.date = date;
         this.checkInTime = checkInTime;
