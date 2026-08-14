@@ -59,6 +59,14 @@ public class FaceScanActivity extends AppCompatActivity {
     private boolean livenessVerified = false;
     private boolean isProcessing = false;
     private AbsensiTMRepository repository;
+    private ImageView ivVisualGuide;
+    
+    private enum LivenessStep {
+        SMILE, BLINK, TURN_LEFT, TURN_RIGHT, DONE
+    }
+    
+    private LivenessStep[] steps = {LivenessStep.SMILE, LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT};
+    private int currentStepIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +77,7 @@ public class FaceScanActivity extends AppCompatActivity {
         vScanningLine = findViewById(R.id.vScanningLine);
         ivFaceBracket = findViewById(R.id.ivFaceBracket);
         tvInstruction = findViewById(R.id.tvInstruction);
+        ivVisualGuide = findViewById(R.id.ivVisualGuide);
         
         repository = new AbsensiTMRepository(getApplication());
         cameraExecutor = Executors.newSingleThreadExecutor();
@@ -83,7 +92,9 @@ public class FaceScanActivity extends AppCompatActivity {
         findViewById(R.id.btnSimulateFail).setVisibility(View.GONE);
         findViewById(R.id.btnSimulateSuccess).setVisibility(View.GONE);
 
-        tvInstruction.setText("Tantangan: Silakan Tersenyum Lebar!");
+        findViewById(R.id.btnSimulateSuccess).setVisibility(View.GONE);
+
+        updateStepUI();
 
         startCamera();
         setupAnimations();
@@ -108,7 +119,74 @@ public class FaceScanActivity extends AppCompatActivity {
         breathingAnimator.setDuration(2000);
         breathingAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         breathingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        breathingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         breathingAnimator.start();
+    }
+
+    private void updateStepUI() {
+        if (currentStepIndex >= steps.length) return;
+        LivenessStep step = steps[currentStepIndex];
+        
+        ivVisualGuide.clearAnimation();
+        ivVisualGuide.setScaleX(1f);
+        ivVisualGuide.setScaleY(1f);
+        ivVisualGuide.setTranslationX(0f);
+        
+        switch (step) {
+            case SMILE:
+                tvInstruction.setText("Tantangan 1/4: Tersenyum Lebar!");
+                ivVisualGuide.setImageResource(R.drawable.ic_face_recog);
+                ObjectAnimator smileAnim = ObjectAnimator.ofPropertyValuesHolder(
+                        ivVisualGuide,
+                        PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.2f, 1.0f),
+                        PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.2f, 1.0f));
+                smileAnim.setDuration(1000);
+                smileAnim.setRepeatCount(ValueAnimator.INFINITE);
+                smileAnim.start();
+                break;
+            case BLINK:
+                tvInstruction.setText("Tantangan 2/4: Kedipkan Mata!");
+                ivVisualGuide.setImageResource(R.drawable.ic_eye);
+                ObjectAnimator blinkAnim = ObjectAnimator.ofFloat(ivVisualGuide, "scaleY", 1f, 0.1f, 1f);
+                blinkAnim.setDuration(400);
+                blinkAnim.setRepeatCount(ValueAnimator.INFINITE);
+                blinkAnim.setRepeatMode(ValueAnimator.REVERSE);
+                blinkAnim.start();
+                break;
+            case TURN_LEFT:
+                tvInstruction.setText("Tantangan 3/4: Toleh Kiri!");
+                ivVisualGuide.setImageResource(R.drawable.ic_arrow_back);
+                ObjectAnimator leftAnim = ObjectAnimator.ofFloat(ivVisualGuide, "translationX", 0f, -50f, 0f);
+                leftAnim.setDuration(1200);
+                leftAnim.setRepeatCount(ValueAnimator.INFINITE);
+                leftAnim.start();
+                break;
+            case TURN_RIGHT:
+                tvInstruction.setText("Tantangan 4/4: Toleh Kanan!");
+                ivVisualGuide.setImageResource(R.drawable.ic_arrow_forward);
+                ObjectAnimator rightAnim = ObjectAnimator.ofFloat(ivVisualGuide, "translationX", 0f, 50f, 0f);
+                rightAnim.setDuration(1200);
+                rightAnim.setRepeatCount(ValueAnimator.INFINITE);
+                rightAnim.start();
+                break;
+        }
+    }
+
+    private void advanceStep() {
+        if (isProcessing) return;
+        currentStepIndex++;
+        if (currentStepIndex >= steps.length) {
+            livenessVerified = true;
+            runOnUiThread(() -> triggerSuccessState());
+        } else {
+            runOnUiThread(() -> {
+                ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                updateStepUI();
+            });
+            // debounce processing
+            isProcessing = true;
+            new Handler(Looper.getMainLooper()).postDelayed(() -> isProcessing = false, 1500);
+        }
     }
 
     private void triggerSuccessState() {
@@ -143,8 +221,9 @@ public class FaceScanActivity extends AppCompatActivity {
 
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ivFaceBracket.clearColorFilter();
-                tvInstruction.setText("Tantangan: Silakan Tersenyum Lebar!");
                 tvInstruction.setTextColor(Color.WHITE);
+                currentStepIndex = 0;
+                updateStepUI();
                 livenessVerified = false;
                 isProcessing = false;
             }, 2000);
@@ -184,9 +263,30 @@ public class FaceScanActivity extends AppCompatActivity {
                             faceDetector.process(image)
                                     .addOnSuccessListener(faces -> {
                                         for (Face face : faces) {
-                                            if (face.getSmilingProbability() != null && face.getSmilingProbability() > 0.7f) {
-                                                livenessVerified = true;
-                                                runOnUiThread(() -> triggerSuccessState());
+                                            if (currentStepIndex >= steps.length) break;
+                                            LivenessStep current = steps[currentStepIndex];
+                                            
+                                            boolean stepPassed = false;
+                                            switch (current) {
+                                                case SMILE:
+                                                    if (face.getSmilingProbability() != null && face.getSmilingProbability() > 0.7f) stepPassed = true;
+                                                    break;
+                                                case BLINK:
+                                                    if (face.getLeftEyeOpenProbability() != null && face.getRightEyeOpenProbability() != null &&
+                                                        face.getLeftEyeOpenProbability() < 0.2f && face.getRightEyeOpenProbability() < 0.2f) {
+                                                        stepPassed = true;
+                                                    }
+                                                    break;
+                                                case TURN_LEFT:
+                                                    if (face.getHeadEulerAngleY() > 25f) stepPassed = true;
+                                                    break;
+                                                case TURN_RIGHT:
+                                                    if (face.getHeadEulerAngleY() < -25f) stepPassed = true;
+                                                    break;
+                                            }
+                                            
+                                            if (stepPassed) {
+                                                advanceStep();
                                                 break;
                                             }
                                         }

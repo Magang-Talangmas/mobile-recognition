@@ -96,6 +96,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Visual Guide Animation / Icon -->
+    <ImageView
+        android:id="@+id/ivVisualGuide"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_face_recog"
+        app:tint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tvInstruction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Simulate Buttons (Subtle Developer Chips) -->
     <LinearLayout
         android:layout_width="wrap_content"
