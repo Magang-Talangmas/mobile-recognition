@@ -55,12 +55,37 @@ public class AbsensiTMRepository {
                     com.example.javatraining.data.remote.response.LoginData data = response.body();
                     
                     User rawUser = data.getEmployee();
-                    String finalId = rawUser.getEmployeeId() != null ? rawUser.getEmployeeId() : rawUser.getId();
-                    User realUser = new User(finalId, rawUser.getName(), rawUser.getEmail(), "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
+                    String email = rawUser.getEmail();
                     
-                    SessionManager sessionManager = new SessionManager(application);
-                    sessionManager.saveSession(data.getToken(), realUser);
-                    result.setValue(realUser);
+                    // Fetch full profile from employees table to get the true employeeId and name
+                    apiService.getProfile("eq." + email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> profileCall, retrofit2.Response<List<com.example.javatraining.data.remote.response.EmployeeData>> profileResponse) {
+                            User realUser;
+                            if (profileResponse.isSuccessful() && profileResponse.body() != null && !profileResponse.body().isEmpty()) {
+                                com.example.javatraining.data.remote.response.EmployeeData profile = profileResponse.body().get(0);
+                                String finalId = profile.getEmployeeId() != null ? profile.getEmployeeId() : rawUser.getId();
+                                realUser = new User(finalId, profile.getName(), email, "EMPLOYEE", profile.getEmployeeId(), profile.getDepartment(), profile.getPosition());
+                            } else {
+                                String finalId = rawUser.getEmployeeId() != null ? rawUser.getEmployeeId() : rawUser.getId();
+                                realUser = new User(finalId, rawUser.getName(), email, "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
+                            }
+                            
+                            SessionManager sessionManager = new SessionManager(application);
+                            sessionManager.saveSession(data.getToken(), realUser);
+                            result.setValue(realUser);
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.EmployeeData>> profileCall, Throwable t) {
+                            String finalId = rawUser.getEmployeeId() != null ? rawUser.getEmployeeId() : rawUser.getId();
+                            User realUser = new User(finalId, rawUser.getName(), email, "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
+                            
+                            SessionManager sessionManager = new SessionManager(application);
+                            sessionManager.saveSession(data.getToken(), realUser);
+                            result.setValue(realUser);
+                        }
+                    });
                 } else {
                     try {
                         String errBody = response.errorBody() != null ? response.errorBody().string() : "null";
