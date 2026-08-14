@@ -423,7 +423,10 @@ public class AbsensiTMRepository {
         
         SessionManager sm = new SessionManager(application);
         String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
-        String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(new java.util.Date());
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        String timestamp = sdf.format(new java.util.Date());
+        
         String eventTypeDb = eventType;
         if ("CHECK_IN".equals(eventTypeDb)) eventTypeDb = "IN";
         else if ("CHECK_OUT".equals(eventTypeDb)) eventTypeDb = "OUT";
@@ -444,6 +447,11 @@ public class AbsensiTMRepository {
         if ("IN".equals(eventTypeDb)) statusValue = "CHECKED_IN";
         else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
         request.put("status", statusValue);
+        
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        boolean isLate = (cal.get(java.util.Calendar.HOUR_OF_DAY) > 9) || (cal.get(java.util.Calendar.HOUR_OF_DAY) == 9 && cal.get(java.util.Calendar.MINUTE) > 0);
+        request.put("isLate", "IN".equals(eventTypeDb) ? isLate : false);
+        
         request.put("confirmationStatus", "CONFIRMED");
         request.put("createdAt", timestamp);
         request.put("updatedAt", timestamp);
@@ -498,7 +506,10 @@ public class AbsensiTMRepository {
         
         SessionManager sm = new SessionManager(application);
         String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
-        String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(new java.util.Date());
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        String timestamp = sdf.format(new java.util.Date());
+        
         String eventTypeDb = eventType;
         if ("CHECK_IN".equals(eventTypeDb)) eventTypeDb = "IN";
         else if ("CHECK_OUT".equals(eventTypeDb)) eventTypeDb = "OUT";
@@ -519,6 +530,11 @@ public class AbsensiTMRepository {
         if ("IN".equals(eventTypeDb)) statusValue = "CHECKED_IN";
         else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
         request.put("status", statusValue);
+        
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        boolean isLate = (cal.get(java.util.Calendar.HOUR_OF_DAY) > 9) || (cal.get(java.util.Calendar.HOUR_OF_DAY) == 9 && cal.get(java.util.Calendar.MINUTE) > 0);
+        request.put("isLate", "IN".equals(eventTypeDb) ? isLate : false);
+        
         request.put("confirmationStatus", "CONFIRMED");
         request.put("createdAt", timestamp);
         request.put("updatedAt", timestamp);
