@@ -101,6 +101,14 @@ public class HomeFragment extends Fragment {
         loadDataAndRefreshUI(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getView() != null) {
+            loadDataAndRefreshUI(getView());
+        }
+    }
+
     private void loadDataAndRefreshUI(View view) {
         // Initialize Data
         com.example.javatraining.data.local.SessionManager sessionManager = new com.example.javatraining.data.local.SessionManager(
