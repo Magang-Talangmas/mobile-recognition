@@ -538,8 +538,35 @@ public class AbsensiTMRepository {
         request.put("confirmationStatus", "CONFIRMED");
         request.put("createdAt", timestamp);
         request.put("updatedAt", timestamp);
-                        
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        
+        if (photoFile != null && photoFile.exists()) {
+            String fileName = employeeId + "_" + System.currentTimeMillis() + ".jpg";
+            String path = "checkins/" + employeeId + "/" + fileName;
+            okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
+            
+            apiService.uploadStorageObject("recognition", path, requestBody).enqueue(new retrofit2.Callback<okhttp3.ResponseBody>() {
+                @Override
+                public void onResponse(retrofit2.Call<okhttp3.ResponseBody> call, retrofit2.Response<okhttp3.ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        String photoUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "/storage/v1/object/public/recognition/" + path;
+                        request.put("photoUrl", photoUrl);
+                    }
+                    submitLivenessDataOnly(request, result, newId, timestamp, apiService);
+                }
+                @Override
+                public void onFailure(retrofit2.Call<okhttp3.ResponseBody> call, Throwable t) {
+                    submitLivenessDataOnly(request, result, newId, timestamp, apiService);
+                }
+            });
+        } else {
+            submitLivenessDataOnly(request, result, newId, timestamp, apiService);
+        }
+        
+        return result;
+    }
+
+    private void submitLivenessDataOnly(java.util.Map<String, Object> request, MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result, String newId, String timestamp, ApiService apiService) {
         apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
@@ -562,7 +589,5 @@ public class AbsensiTMRepository {
                 result.postValue(null);
             }
         });
-        
-        return result;
     }
 }
