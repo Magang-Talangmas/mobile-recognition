@@ -57,6 +57,10 @@ public class AbsensiTMRepository {
                     User rawUser = data.getEmployee();
                     String email = rawUser.getEmail();
                     
+                    // SAVE TEMPORARY SESSION WITH TOKEN SO GETPROFILE CAN BE AUTHENTICATED
+                    SessionManager sessionManager = new SessionManager(application);
+                    sessionManager.saveSession(data.getToken(), rawUser);
+                    
                     // Fetch full profile from employees table to get the true employeeId and name
                     apiService.getProfile("eq." + email).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.EmployeeData>>() {
                         @Override
@@ -71,7 +75,6 @@ public class AbsensiTMRepository {
                                 realUser = new User(finalId, rawUser.getName(), email, "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
                             }
                             
-                            SessionManager sessionManager = new SessionManager(application);
                             sessionManager.saveSession(data.getToken(), realUser);
                             result.setValue(realUser);
                         }
@@ -81,7 +84,6 @@ public class AbsensiTMRepository {
                             String finalId = rawUser.getEmployeeId() != null ? rawUser.getEmployeeId() : rawUser.getId();
                             User realUser = new User(finalId, rawUser.getName(), email, "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
                             
-                            SessionManager sessionManager = new SessionManager(application);
                             sessionManager.saveSession(data.getToken(), realUser);
                             result.setValue(realUser);
                         }
