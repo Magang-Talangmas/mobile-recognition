@@ -418,6 +418,52 @@ public class AbsensiTMRepository {
         });
     }
 
+    public LiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitManualAttendance(String eventType) {
+        MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result = new MutableLiveData<>();
+        
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
+        String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(new java.util.Date());
+        String eventTypeDb = eventType;
+        if ("CHECK_IN".equals(eventTypeDb)) eventTypeDb = "IN";
+        else if ("CHECK_OUT".equals(eventTypeDb)) eventTypeDb = "OUT";
+        
+        java.util.Map<String, Object> request = new java.util.HashMap<>();
+        String newId = java.util.UUID.randomUUID().toString();
+        request.put("id", newId);
+        request.put("employeeId", employeeId);
+        request.put("eventType", eventTypeDb);
+        request.put("cameraId", "MANUAL");
+        request.put("timestamp", timestamp);
+        request.put("status", "PRESENT");
+        request.put("confirmationStatus", "CONFIRMED");
+                        
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    String mockJson = "{\"success\":true,\"message\":\"Attendance successful\",\"data\":{\"id\":\"" + newId + "\",\"status\":\"PRESENT\",\"timestamp\":\"" + timestamp + "\"}}";
+                    java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>(){}.getType();
+                    com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData> mockResponse = new com.google.gson.Gson().fromJson(mockJson, type);
+                    result.postValue(mockResponse);
+                } else {
+                    try {
+                        android.util.Log.e("MANUAL_ATT", "Failed submit: " + response.code() + ", body: " + response.errorBody().string());
+                    } catch (Exception e) {}
+                    result.postValue(null);
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                android.util.Log.e("MANUAL_ATT", "Error submit: " + t.getMessage());
+                result.postValue(null);
+            }
+        });
+        
+        return result;
+    }
+
     public void deleteOldNotifications() {
         SessionManager sm = new SessionManager(application);
         String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
@@ -443,23 +489,40 @@ public class AbsensiTMRepository {
         SessionManager sm = new SessionManager(application);
         String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
         String timestamp = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(new java.util.Date());
+        String eventTypeDb = eventType;
+        if ("CHECK_IN".equals(eventTypeDb)) eventTypeDb = "IN";
+        else if ("CHECK_OUT".equals(eventTypeDb)) eventTypeDb = "OUT";
         
-        com.example.javatraining.data.remote.request.ManualAttendanceRequest manualRequest = 
-                new com.example.javatraining.data.remote.request.ManualAttendanceRequest(
-                        employeeId, "IN", eventType, "Hadir", timestamp, false);
+        java.util.Map<String, Object> request = new java.util.HashMap<>();
+        String newId = java.util.UUID.randomUUID().toString();
+        request.put("id", newId);
+        request.put("employeeId", employeeId);
+        request.put("eventType", eventTypeDb);
+        request.put("cameraId", "LIVENESS");
+        request.put("timestamp", timestamp);
+        request.put("status", "PRESENT");
+        request.put("confirmationStatus", "CONFIRMED");
                         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        apiService.submitManualAttendance(manualRequest).enqueue(new retrofit2.Callback<Void>() {
+        apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
-                String mockJson = "{\"success\":true,\"message\":\"Mock attendance successful\",\"data\":{\"id\":\"mock-id\",\"status\":\"Hadir\",\"timestamp\":\"" + timestamp + "\"}}";
-                java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>(){}.getType();
-                com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData> mockResponse = new com.google.gson.Gson().fromJson(mockJson, type);
-                result.postValue(mockResponse);
+                if (response.isSuccessful()) {
+                    String mockJson = "{\"success\":true,\"message\":\"Attendance successful\",\"data\":{\"id\":\"" + newId + "\",\"status\":\"PRESENT\",\"timestamp\":\"" + timestamp + "\"}}";
+                    java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>(){}.getType();
+                    com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData> mockResponse = new com.google.gson.Gson().fromJson(mockJson, type);
+                    result.postValue(mockResponse);
+                } else {
+                    try {
+                        android.util.Log.e("LIVENESS_ATT", "Failed submit: " + response.code() + ", body: " + response.errorBody().string());
+                    } catch (Exception e) {}
+                    result.postValue(null);
+                }
             }
 
             @Override
             public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                android.util.Log.e("LIVENESS_ATT", "Error submit: " + t.getMessage());
                 result.postValue(null);
             }
         });

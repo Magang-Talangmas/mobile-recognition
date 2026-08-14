@@ -56,7 +56,7 @@ public interface ApiService {
     );
 
     @POST("rest/v1/attendances")
-    Call<Void> submitManualAttendance(@Body com.example.javatraining.data.remote.request.ManualAttendanceRequest request);
+    Call<Void> submitManualAttendance(@Body java.util.Map<String, Object> request);
 
     // --- NODEJS BACKEND ENDPOINTS ---
 
