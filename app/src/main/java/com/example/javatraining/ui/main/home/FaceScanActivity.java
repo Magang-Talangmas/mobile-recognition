@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.CountDownTimer;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.graphics.Color;
@@ -148,7 +149,7 @@ public class FaceScanActivity extends AppCompatActivity {
         currentStepIndex++;
         if (currentStepIndex >= steps.length) {
             livenessVerified = true;
-            runOnUiThread(() -> triggerSuccessState());
+            runOnUiThread(this::startCountdown);
         } else {
             runOnUiThread(() -> {
                 ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
@@ -160,16 +161,29 @@ public class FaceScanActivity extends AppCompatActivity {
         }
     }
 
+    private void startCountdown() {
+        ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
+        tvInstruction.setTextColor(Color.parseColor("#198754"));
+        ivVisualGuide.resetState();
+
+        new CountDownTimer(3000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tvInstruction.setText("Tahan posisi! Memotret dalam " + (millisUntilFinished / 1000 + 1) + "...");
+                ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            }
+
+            public void onFinish() {
+                triggerSuccessState();
+            }
+        }.start();
+    }
+
     private void triggerSuccessState() {
         if (scanningAnimator != null) scanningAnimator.cancel();
         if (breathingAnimator != null) breathingAnimator.cancel();
 
         vScanningLine.setVisibility(View.GONE);
-        ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
-        tvInstruction.setText("Liveness Berhasil! Memotret...");
-        tvInstruction.setTextColor(Color.parseColor("#198754"));
-        
-        ivVisualGuide.resetState();
+        tvInstruction.setText("Memotret...");
 
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
 
