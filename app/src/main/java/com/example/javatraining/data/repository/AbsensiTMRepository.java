@@ -440,6 +440,8 @@ public class AbsensiTMRepository {
         else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
         request.put("status", statusValue);
         request.put("confirmationStatus", "CONFIRMED");
+        request.put("createdAt", timestamp);
+        request.put("updatedAt", timestamp);
                         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {
@@ -508,6 +510,8 @@ public class AbsensiTMRepository {
         else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
         request.put("status", statusValue);
         request.put("confirmationStatus", "CONFIRMED");
+        request.put("createdAt", timestamp);
+        request.put("updatedAt", timestamp);
                         
         ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
         apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.javatraining.data.local.SessionManager;
 import com.example.javatraining.data.remote.ApiClient;
 import com.example.javatraining.data.remote.ApiService;
+import com.example.javatraining.data.repository.AbsensiTMRepository;
 import com.example.javatraining.data.remote.response.BaseResponse;
 import com.example.javatraining.data.remote.response.AttendanceData;
 import java.util.List;
@@ -134,7 +135,19 @@ public class ManualFragment extends Fragment {
                 new android.app.AlertDialog.Builder(getContext())
                         .setTitle("Konfirmasi Check-Out")
                         .setMessage("Apakah Anda yakin ingin melakukan Check-Out sekarang?")
-                        .setPositiveButton("Ya, Check-Out", (dialog, which) -> launchFaceScan(eventType))
+                        .setPositiveButton("Ya, Check-Out", (dialog, which) -> {
+                            btnSubmit.setEnabled(false);
+                            AbsensiTMRepository repository = new AbsensiTMRepository(requireActivity().getApplication());
+                            repository.submitManualAttendance(eventType).observe(getViewLifecycleOwner(), response -> {
+                                btnSubmit.setEnabled(true);
+                                if (response != null && response.isSuccess()) {
+                                    android.widget.Toast.makeText(getContext(), "Check-Out berhasil!", android.widget.Toast.LENGTH_SHORT).show();
+                                    fetchAttendanceStatus();
+                                } else {
+                                    android.widget.Toast.makeText(getContext(), "Check-Out gagal. Silakan coba lagi.", android.widget.Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        })
                         .setNegativeButton("Batal", null)
                         .show();
             } else {
