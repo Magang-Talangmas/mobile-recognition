@@ -112,14 +112,10 @@ public class FaceScanActivity extends AppCompatActivity {
         });
         scanningAnimator.start();
 
-        breathingAnimator = ObjectAnimator.ofPropertyValuesHolder(
-                ivFaceBracket,
-                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.05f, 1.0f),
-                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.05f, 1.0f));
-        breathingAnimator.setDuration(2000);
+        breathingAnimator = ObjectAnimator.ofFloat(ivFaceBracket, View.ROTATION, 0f, 360f);
+        breathingAnimator.setDuration(4000);
         breathingAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-        breathingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        breathingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        breathingAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
         breathingAnimator.start();
     }
 
@@ -239,7 +235,39 @@ public class FaceScanActivity extends AppCompatActivity {
                             InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
                             faceDetector.process(image)
                                     .addOnSuccessListener(faces -> {
+                                        if (faces.isEmpty()) {
+                                            runOnUiThread(() -> tvInstruction.setText("Wajah tidak terdeteksi"));
+                                            return;
+                                        }
+                                        
                                         for (Face face : faces) {
+                                            android.graphics.Rect box = face.getBoundingBox();
+                                            int imgW = image.getWidth();
+                                            int imgH = image.getHeight();
+                                            
+                                            float centerX = box.exactCenterX();
+                                            float centerY = box.exactCenterY();
+                                            
+                                            float diffX = Math.abs(centerX - imgW / 2f);
+                                            float diffY = Math.abs(centerY - imgH / 2f);
+                                            
+                                            // Constraint checks
+                                            if (diffX > imgW * 0.2f || diffY > imgH * 0.2f) {
+                                                runOnUiThread(() -> tvInstruction.setText("Posisikan wajah di tengah lingkaran"));
+                                                break;
+                                            }
+                                            
+                                            if (box.width() < imgW * 0.35f) {
+                                                runOnUiThread(() -> tvInstruction.setText("Wajah terlalu jauh"));
+                                                break;
+                                            }
+                                            
+                                            if (box.width() > imgW * 0.75f) {
+                                                runOnUiThread(() -> tvInstruction.setText("Wajah terlalu dekat"));
+                                                break;
+                                            }
+
+                                            // If constraints passed, evaluate steps
                                             if (currentStepIndex >= steps.length) break;
                                             LivenessStep current = steps[currentStepIndex];
                                             
