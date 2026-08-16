@@ -39,7 +39,7 @@ public class ApiClient {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            AuthInterceptor authInterceptor = new AuthInterceptor(context);
+            BackendAuthInterceptor authInterceptor = new BackendAuthInterceptor(context);
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)

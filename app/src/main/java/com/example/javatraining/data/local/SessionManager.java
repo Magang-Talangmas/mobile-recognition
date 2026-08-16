@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 public class SessionManager {
     private static final String PREF_NAME = "AbsensioSession";
     private static final String KEY_TOKEN = "jwt_token";
+    private static final String KEY_BACKEND_TOKEN = "backend_jwt_token";
     private static final String KEY_USER = "user_data";
     private static final String KEY_REMEMBER_ME = "is_remember_me";
 
@@ -39,6 +40,15 @@ public class SessionManager {
 
     public String getToken() {
         return prefs.getString(KEY_TOKEN, null);
+    }
+
+    public void saveBackendToken(String token) {
+        editor.putString(KEY_BACKEND_TOKEN, token);
+        editor.apply();
+    }
+
+    public String getBackendToken() {
+        return prefs.getString(KEY_BACKEND_TOKEN, null);
     }
 
     public User getUser() {

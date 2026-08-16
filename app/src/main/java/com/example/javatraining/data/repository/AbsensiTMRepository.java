@@ -76,7 +76,7 @@ public class AbsensiTMRepository {
                             }
                             
                             sessionManager.saveSession(data.getToken(), realUser);
-                            result.setValue(realUser);
+                            loginToBackendAndFinish(request, sessionManager, realUser, result);
                         }
 
                         @Override
@@ -85,7 +85,7 @@ public class AbsensiTMRepository {
                             User realUser = new User(finalId, rawUser.getName(), email, "EMPLOYEE", rawUser.getEmployeeId(), rawUser.getDepartment(), rawUser.getPosition());
                             
                             sessionManager.saveSession(data.getToken(), realUser);
-                            result.setValue(realUser);
+                            loginToBackendAndFinish(request, sessionManager, realUser, result);
                         }
                     });
                 } else {
@@ -109,6 +109,23 @@ public class AbsensiTMRepository {
         });
         
         return result;
+    }
+
+    private void loginToBackendAndFinish(LoginRequest request, SessionManager sessionManager, User realUser, MutableLiveData<User> result) {
+        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
+        backendService.loginBackend(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    sessionManager.saveBackendToken(response.body().getData().getToken());
+                }
+                result.setValue(realUser);
+            }
+            @Override
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.LoginData>> call, Throwable t) {
+                result.setValue(realUser);
+            }
+        });
     }
 
     public LiveData<List<AttendanceEntity>> getAttendanceHistory() {
