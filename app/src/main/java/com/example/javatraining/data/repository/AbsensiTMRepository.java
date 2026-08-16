@@ -539,7 +539,9 @@ public class AbsensiTMRepository {
                         result.postValue(response.body());
                     } else {
                         try {
-                            android.util.Log.e("LIVENESS_ATT", "Failed submit to Node.js: " + response.code() + ", body: " + response.errorBody().string());
+                            String err = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                            android.util.Log.e("LIVENESS_ATT", "Failed submit to Node.js: " + response.code() + ", body: " + err);
+                            mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Error " + response.code() + ": " + err, android.widget.Toast.LENGTH_LONG).show());
                         } catch (Exception e) {}
                         result.postValue(null);
                     }
@@ -547,6 +549,7 @@ public class AbsensiTMRepository {
                 @Override
                 public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
                     android.util.Log.e("LIVENESS_ATT", "Error submit to Node.js: " + t.getMessage());
+                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Koneksi ke server gagal: " + t.getMessage(), android.widget.Toast.LENGTH_LONG).show());
                     result.postValue(null);
                 }
             });
