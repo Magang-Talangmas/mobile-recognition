@@ -95,7 +95,7 @@ public interface ApiService {
     @PATCH("mobile/recognition/{id}/reject")
     Call<Void> rejectRecognitionMobile(@Path("id") String id);
 
-    @GET("rest/v1/recognition_events?select=*&order=createdAt.desc")
+    @GET("rest/v1/recognition_events?select=*&isConfirm=eq.PENDING&order=createdAt.desc")
     Call<List<com.example.javatraining.data.remote.response.RecognitionEventData>> getPendingRecognitions(
             @Query("employeeId") String employeeIdEq,
             @Query("status") String statusEq
