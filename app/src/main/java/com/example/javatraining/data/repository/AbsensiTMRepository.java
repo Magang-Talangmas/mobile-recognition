@@ -504,88 +504,43 @@ public class AbsensiTMRepository {
     public LiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> submitLivenessAttendance(java.io.File photoFile, String eventType) {
         MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result = new MutableLiveData<>();
         
-        SessionManager sm = new SessionManager(application);
-        String employeeId = sm.getUser() != null ? sm.getUser().getId() : "unknown";
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault());
-        sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-        String timestamp = sdf.format(new java.util.Date());
-        
         String eventTypeDb = eventType;
         if ("CHECK_IN".equals(eventTypeDb)) eventTypeDb = "IN";
         else if ("CHECK_OUT".equals(eventTypeDb)) eventTypeDb = "OUT";
         
-        java.util.Map<String, Object> request = new java.util.HashMap<>();
-        String newId = java.util.UUID.randomUUID().toString();
-        request.put("id", newId);
-        request.put("employeeId", employeeId);
-        
         String evtType = eventTypeDb;
         if ("IN".equalsIgnoreCase(eventTypeDb)) evtType = "CHECK_IN";
         else if ("OUT".equalsIgnoreCase(eventTypeDb)) evtType = "CHECK_OUT";
-        request.put("eventType", evtType);
-        
-        request.put("cameraId", "LIVENESS");
-        request.put("timestamp", timestamp);
-        String statusValue = "UNKNOWN";
-        if ("IN".equals(eventTypeDb)) statusValue = "CHECKED_IN";
-        else if ("OUT".equals(eventTypeDb)) statusValue = "CHECKED_OUT";
-        request.put("status", statusValue);
-        
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        boolean isLate = (cal.get(java.util.Calendar.HOUR_OF_DAY) > 9) || (cal.get(java.util.Calendar.HOUR_OF_DAY) == 9 && cal.get(java.util.Calendar.MINUTE) > 0);
-        request.put("isLate", "IN".equals(eventTypeDb) ? isLate : false);
-        
-        request.put("confirmationStatus", "CONFIRMED");
-        request.put("createdAt", timestamp);
-        request.put("updatedAt", timestamp);
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+
+        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
         
         if (photoFile != null && photoFile.exists()) {
-            String fileName = employeeId + "_" + System.currentTimeMillis() + ".jpg";
-            String path = "checkins/" + employeeId + "/" + fileName;
-            okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
+            okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
+            okhttp3.MultipartBody.Part photoPart = okhttp3.MultipartBody.Part.createFormData("photo", photoFile.getName(), requestFile);
+            okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), evtType);
             
-            apiService.uploadStorageObject("recognition", path, requestBody).enqueue(new retrofit2.Callback<okhttp3.ResponseBody>() {
+            backendService.submitCheckInBackend(photoPart, eventTypeBody).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>() {
                 @Override
-                public void onResponse(retrofit2.Call<okhttp3.ResponseBody> call, retrofit2.Response<okhttp3.ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        String photoUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "/storage/v1/object/public/recognition/" + path;
-                        request.put("photoURL", photoUrl);
+                public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        result.postValue(response.body());
+                    } else {
+                        try {
+                            android.util.Log.e("LIVENESS_ATT", "Failed submit to Node.js: " + response.code() + ", body: " + response.errorBody().string());
+                        } catch (Exception e) {}
+                        result.postValue(null);
                     }
-                    submitLivenessDataOnly(request, result, newId, timestamp, apiService);
                 }
                 @Override
-                public void onFailure(retrofit2.Call<okhttp3.ResponseBody> call, Throwable t) {
-                    submitLivenessDataOnly(request, result, newId, timestamp, apiService);
+                public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
+                    android.util.Log.e("LIVENESS_ATT", "Error submit to Node.js: " + t.getMessage());
+                    result.postValue(null);
                 }
             });
         } else {
-            submitLivenessDataOnly(request, result, newId, timestamp, apiService);
+            result.postValue(null);
         }
         
         return result;
-    }
-
-    private void submitLivenessDataOnly(java.util.Map<String, Object> request, MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result, String newId, String timestamp, ApiService apiService) {
-        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
-        backendService.submitCheckInBackend(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>() {
-            @Override
-            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    try {
-                        android.util.Log.e("LIVENESS_ATT", "Failed submit: " + response.code() + ", body: " + response.errorBody().string());
-                    } catch (Exception e) {}
-                    result.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
-                android.util.Log.e("LIVENESS_ATT", "Error submit: " + t.getMessage());
-                result.postValue(null);
-            }
-        });
     }
 }

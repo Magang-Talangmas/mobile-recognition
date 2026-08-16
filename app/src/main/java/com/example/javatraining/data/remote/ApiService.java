@@ -31,8 +31,12 @@ public interface ApiService {
     @POST("mobile/auth/login")
     Call<BaseResponse<LoginData>> loginBackend(@Body LoginRequest request);
 
-    @POST("mobile/check-in")
-    Call<BaseResponse<AttendanceData>> submitCheckInBackend(@Body java.util.Map<String, Object> request);
+    @Multipart
+    @POST("mobile/attendance")
+    Call<BaseResponse<AttendanceData>> submitCheckInBackend(
+        @Part MultipartBody.Part photo,
+        @Part("eventType") RequestBody eventType
+    );
 
     @GET("rest/v1/employees?select=*")
     Call<List<EmployeeData>> getProfile(@Query("email") String email);
