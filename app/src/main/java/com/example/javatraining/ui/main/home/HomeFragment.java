@@ -393,7 +393,7 @@ public class HomeFragment extends Fragment {
 
         boolean hasActivityToday = hasLeaveToday || hasAttendanceToday;
 
-        if (pendingRecognitions != null && !pendingRecognitions.isEmpty()) {
+        if (pendingRecognitions != null && !pendingRecognitions.isEmpty() && !hasAttendanceToday) {
             llNormalStatus.setVisibility(View.GONE);
             llConfirmationStatus.setVisibility(View.VISIBLE);
             com.example.javatraining.data.remote.response.RecognitionEventData latestPending = pendingRecognitions.get(0);

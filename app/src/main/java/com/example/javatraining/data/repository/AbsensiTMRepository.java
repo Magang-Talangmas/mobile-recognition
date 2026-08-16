@@ -363,10 +363,8 @@ public class AbsensiTMRepository {
     }
 
     public void confirmRecognition(com.example.javatraining.data.remote.response.RecognitionEventData event, Runnable onSuccess) {
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        String json = "{\"status\": \"Verified\"}";
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
-        apiService.updateRecognitionStatus("eq." + event.getId(), body).enqueue(new retrofit2.Callback<Void>() {
+        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
+        apiService.confirmRecognitionMobile(event.getId()).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -383,10 +381,8 @@ public class AbsensiTMRepository {
     }
 
     public void rejectRecognition(String recognitionId, Runnable onSuccess) {
-        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
-        String json = "{\"status\": \"Rejected\"}";
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), json);
-        apiService.updateRecognitionStatus("eq." + recognitionId, body).enqueue(new retrofit2.Callback<Void>() {
+        ApiService apiService = ApiClient.getBackendClient(application).create(ApiService.class);
+        apiService.rejectRecognitionMobile(recognitionId).enqueue(new retrofit2.Callback<Void>() {
             @Override
             public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
