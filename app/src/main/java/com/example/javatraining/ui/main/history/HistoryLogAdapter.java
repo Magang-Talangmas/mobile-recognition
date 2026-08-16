@@ -180,9 +180,13 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
 
             // Accuracy
             if (inTime != null && p.getCheckInEvent() != null) {
-                double acc = p.getCheckInEvent().getSimilarity() * 100;
-                holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.0f%%", acc));
-                holder.tvAccuracy.setVisibility(View.VISIBLE);
+                Double acc = p.getCheckInEvent().getSimilarity();
+                if (acc != null) {
+                    holder.tvAccuracy.setText(String.format(Locale.getDefault(), "Acc: %.2f%%", acc));
+                    holder.tvAccuracy.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tvAccuracy.setVisibility(View.GONE);
+                }
             } else {
                 holder.tvAccuracy.setVisibility(View.GONE);
             }
