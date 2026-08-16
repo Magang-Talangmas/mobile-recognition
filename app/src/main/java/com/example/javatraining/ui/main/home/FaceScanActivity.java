@@ -284,6 +284,12 @@ public class FaceScanActivity extends AppCompatActivity {
                                                 break;
                                             }
 
+                                            // Mask / Occlusion Check Heuristic
+                                            if (face.getSmilingProbability() == null || face.getLeftEyeOpenProbability() == null) {
+                                                runOnUiThread(() -> tvInstruction.setText("Wajah tertutup (Lepas masker/kacamata)"));
+                                                break;
+                                            }
+
                                             // If constraints passed, evaluate steps
                                             if (currentStepIndex >= steps.length) break;
                                             LivenessStep current = steps[currentStepIndex];
