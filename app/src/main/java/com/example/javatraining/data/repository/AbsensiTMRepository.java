@@ -550,7 +550,7 @@ public class AbsensiTMRepository {
                 public void onResponse(retrofit2.Call<okhttp3.ResponseBody> call, retrofit2.Response<okhttp3.ResponseBody> response) {
                     if (response.isSuccessful()) {
                         String photoUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "/storage/v1/object/public/recognition/" + path;
-                        request.put("photoUrl", photoUrl);
+                        request.put("photoURL", photoUrl);
                     }
                     submitLivenessDataOnly(request, result, newId, timestamp, apiService);
                 }
@@ -567,14 +567,12 @@ public class AbsensiTMRepository {
     }
 
     private void submitLivenessDataOnly(java.util.Map<String, Object> request, MutableLiveData<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> result, String newId, String timestamp, ApiService apiService) {
-        apiService.submitManualAttendance(request).enqueue(new retrofit2.Callback<Void>() {
+        ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
+        backendService.submitCheckInBackend(request).enqueue(new retrofit2.Callback<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>() {
             @Override
-            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
-                if (response.isSuccessful()) {
-                    String mockJson = "{\"success\":true,\"message\":\"Attendance successful\",\"data\":{\"id\":\"" + newId + "\",\"status\":\"PRESENT\",\"timestamp\":\"" + timestamp + "\"}}";
-                    java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>>(){}.getType();
-                    com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData> mockResponse = new com.google.gson.Gson().fromJson(mockJson, type);
-                    result.postValue(mockResponse);
+            public void onResponse(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, retrofit2.Response<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
                 } else {
                     try {
                         android.util.Log.e("LIVENESS_ATT", "Failed submit: " + response.code() + ", body: " + response.errorBody().string());
@@ -584,7 +582,7 @@ public class AbsensiTMRepository {
             }
 
             @Override
-            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+            public void onFailure(retrofit2.Call<com.example.javatraining.data.remote.response.BaseResponse<com.example.javatraining.data.remote.response.AttendanceData>> call, Throwable t) {
                 android.util.Log.e("LIVENESS_ATT", "Error submit: " + t.getMessage());
                 result.postValue(null);
             }

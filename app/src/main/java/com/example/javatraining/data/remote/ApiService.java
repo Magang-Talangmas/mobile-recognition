@@ -31,6 +31,9 @@ public interface ApiService {
     @POST("mobile/auth/login")
     Call<BaseResponse<LoginData>> loginBackend(@Body LoginRequest request);
 
+    @POST("mobile/check-in")
+    Call<BaseResponse<AttendanceData>> submitCheckInBackend(@Body java.util.Map<String, Object> request);
+
     @GET("rest/v1/employees?select=*")
     Call<List<EmployeeData>> getProfile(@Query("email") String email);
 
