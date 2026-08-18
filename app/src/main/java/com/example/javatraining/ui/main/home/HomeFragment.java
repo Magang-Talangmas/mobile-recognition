@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
             name = name.substring(0, name.indexOf(" "));
         }
         if (name != null)
-            tvGreeting.setText("Good morning, " + name + ".");
+            tvGreeting.setText(getGreeting() + ", " + name + ".");
 
         repository = new AbsensiTMRepository(requireActivity().getApplication());
 
@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
                     if (updatedName.contains(" ")) {
                         updatedName = updatedName.substring(0, updatedName.indexOf(" "));
                     }
-                    tvGreeting.setText("Good morning, " + updatedName + ".");
+                    tvGreeting.setText(getGreeting() + ", " + updatedName + ".");
                 }
             }
         });
@@ -521,5 +521,19 @@ public class HomeFragment extends Fragment {
             }
         }
         return null; // Return null instead of new Date() to avoid fake current time logs
+    }
+
+    private String getGreeting() {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        int timeOfDay = c.get(java.util.Calendar.HOUR_OF_DAY);
+        if(timeOfDay >= 0 && timeOfDay < 11){
+            return "Selamat pagi";
+        } else if(timeOfDay >= 11 && timeOfDay < 15){
+            return "Selamat siang";
+        } else if(timeOfDay >= 15 && timeOfDay < 18){
+            return "Selamat sore";
+        } else {
+            return "Selamat malam";
+        }
     }
 }

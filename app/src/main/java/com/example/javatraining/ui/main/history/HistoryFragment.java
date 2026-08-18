@@ -42,8 +42,8 @@ public class HistoryFragment extends Fragment {
     private Date selectedDate = new Date();
     private TextView tvSelectedDate;
     private TextView tvActivityLogTitle;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
-    private SimpleDateFormat titleDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", new Locale("id", "ID"));
+    private SimpleDateFormat titleDateFormat = new SimpleDateFormat("dd MMM yyyy", new Locale("id", "ID"));
 
     @Nullable
     @Override

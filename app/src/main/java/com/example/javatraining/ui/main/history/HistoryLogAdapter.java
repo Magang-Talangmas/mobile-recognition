@@ -33,8 +33,8 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
 
     private List<DailyAttendance> logs;
     private OnItemClickListener listener;
-    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd", Locale.getDefault());
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", new Locale("id", "ID"));
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM", new Locale("id", "ID"));
 
     public HistoryLogAdapter(List<DailyAttendance> logs) {
         this.logs = logs;
@@ -71,13 +71,12 @@ public class HistoryLogAdapter extends RecyclerView.Adapter<HistoryLogAdapter.Vi
             long diffInMillis = today.getTimeInMillis() - cal.getTimeInMillis();
             long diffDays = diffInMillis / (24 * 60 * 60 * 1000);
 
-            if (today.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
-                    && today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
-                holder.tvRelativeDate.setText("Today");
+            if (diffDays == 0 && today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) {
+                holder.tvRelativeDate.setText("Hari ini");
             } else if (diffDays == 1 || (today.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR) == 1)) {
-                holder.tvRelativeDate.setText("Yesterday");
+                holder.tvRelativeDate.setText("Kemarin");
             } else {
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.getDefault());
+                SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", new Locale("id", "ID"));
                 holder.tvRelativeDate.setText(dayFormat.format(p.getDate()));
             }
         }
