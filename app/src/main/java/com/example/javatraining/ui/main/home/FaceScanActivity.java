@@ -61,6 +61,7 @@ public class FaceScanActivity extends AppCompatActivity {
     private boolean isProcessing = false;
     private AbsensiTMRepository repository;
     private FaceGuideView ivVisualGuide;
+    private android.graphics.Bitmap cachedFaceBitmap = null;
     
     private Handler stepTimeoutHandler = new Handler(Looper.getMainLooper());
     private Runnable stepTimeoutRunnable = () -> {
@@ -324,6 +325,12 @@ public class FaceScanActivity extends AppCompatActivity {
                                             }
                                             
                                             if (stepPassed) {
+                                                try {
+                                                    android.graphics.Bitmap rawBitmap = imageProxy.toBitmap();
+                                                    android.graphics.Matrix matrix = new android.graphics.Matrix();
+                                                    matrix.postRotate(imageProxy.getImageInfo().getRotationDegrees());
+                                                    cachedFaceBitmap = android.graphics.Bitmap.createBitmap(rawBitmap, 0, 0, rawBitmap.getWidth(), rawBitmap.getHeight(), matrix, true);
+                                                } catch (Exception e) {}
                                                 advanceStep();
                                                 break;
                                             }
@@ -352,36 +359,35 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void takePhoto() {
-        if (imageCapture == null) return;
+        if (cachedFaceBitmap == null) {
+            triggerFailureState("Gagal memproses foto");
+            return;
+        }
         isProcessing = true;
 
         File photoFile = new File(getExternalFilesDir(null), 
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
 
-        ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-
-        imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
-            @Override
-            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                runOnUiThread(() -> tvInstruction.setText("Mengirim data ke server..."));
-                String eventType = getIntent().getStringExtra("eventType");
-                if (eventType == null) eventType = "CHECK_IN";
-                repository.submitLivenessAttendance(photoFile, eventType).observe(FaceScanActivity.this, response -> {
-                    if (response != null && response.isSuccess()) {
-                        Toast.makeText(FaceScanActivity.this, "Absen Liveness Berhasil!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        triggerFailureState("Gagal mengirim absensi");
-                    }
-                });
-            }
-
-            @Override
-            public void onError(@NonNull ImageCaptureException exception) {
-                android.util.Log.e("FaceScanActivity", "Photo capture failed: " + exception.getMessage(), exception);
-                triggerFailureState("Gagal mengambil foto");
-            }
-        });
+        try {
+            java.io.FileOutputStream out = new java.io.FileOutputStream(photoFile);
+            cachedFaceBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+            
+            runOnUiThread(() -> tvInstruction.setText("Mengirim data ke server..."));
+            String eventType = getIntent().getStringExtra("eventType");
+            if (eventType == null) eventType = "CHECK_IN";
+            repository.submitLivenessAttendance(photoFile, eventType).observe(FaceScanActivity.this, response -> {
+                if (response != null && response.isSuccess()) {
+                    Toast.makeText(this, "Absensi berhasil disimpan!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    triggerFailureState("Gagal mengirim absensi");
+                }
+            });
+        } catch (Exception e) {
+            triggerFailureState("Gagal menyimpan foto");
+        }
     }
 
     @Override
