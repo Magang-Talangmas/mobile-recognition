@@ -528,6 +528,34 @@ public class AbsensiTMRepository {
         ApiService backendService = ApiClient.getBackendClient(application).create(ApiService.class);
         
         if (photoFile != null && photoFile.exists()) {
+            try {
+                android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                android.graphics.BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
+                
+                int height = options.outHeight;
+                int width = options.outWidth;
+                int inSampleSize = 1;
+                if (height > 800 || width > 800) {
+                    final int halfHeight = height / 2;
+                    final int halfWidth = width / 2;
+                    while ((halfHeight / inSampleSize) >= 800 && (halfWidth / inSampleSize) >= 800) {
+                        inSampleSize *= 2;
+                    }
+                }
+                options.inSampleSize = inSampleSize;
+                
+                options.inJustDecodeBounds = false;
+                
+                android.graphics.Bitmap bitmap = android.graphics.BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
+                java.io.FileOutputStream out = new java.io.FileOutputStream(photoFile);
+                bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 70, out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                android.util.Log.e("AbsensiTMRepository", "Error compressing photo", e);
+            }
+
             okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), photoFile);
             okhttp3.MultipartBody.Part photoPart = okhttp3.MultipartBody.Part.createFormData("photo", photoFile.getName(), requestFile);
             okhttp3.RequestBody eventTypeBody = okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain"), evtType);
