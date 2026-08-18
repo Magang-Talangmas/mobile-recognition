@@ -225,7 +225,26 @@ public class AbsensiTMRepository {
 
     public LiveData<List<com.example.javatraining.data.remote.response.LeaveData>> getLeavesApi(int page, int perPage) {
         MutableLiveData<List<com.example.javatraining.data.remote.response.LeaveData>> result = new MutableLiveData<>();
-        result.setValue(new ArrayList<>());
+        SessionManager sm = new SessionManager(application);
+        String employeeId = sm.getUser() != null ? sm.getUser().getId() : null;
+        String query = employeeId != null ? "eq." + employeeId : null;
+
+        ApiService apiService = ApiClient.getClient(application).create(ApiService.class);
+        apiService.getLeaveRequests(query, perPage).enqueue(new retrofit2.Callback<List<com.example.javatraining.data.remote.response.LeaveData>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<com.example.javatraining.data.remote.response.LeaveData>> call, retrofit2.Response<List<com.example.javatraining.data.remote.response.LeaveData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
+                } else {
+                    result.setValue(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<List<com.example.javatraining.data.remote.response.LeaveData>> call, Throwable t) {
+                result.setValue(new ArrayList<>());
+            }
+        });
         return result;
     }
 

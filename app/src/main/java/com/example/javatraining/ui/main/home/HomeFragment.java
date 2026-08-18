@@ -381,6 +381,7 @@ public class HomeFragment extends Fragment {
         }
 
         boolean hasAttendanceToday = false;
+        boolean hasConfirmedAttendanceToday = false;
         if (!flatLogs.isEmpty()) {
             AttendanceEvent latestLog = flatLogs.get(0);
             java.util.Calendar calEvent = java.util.Calendar.getInstance();
@@ -388,12 +389,15 @@ public class HomeFragment extends Fragment {
             if (calEvent.get(java.util.Calendar.YEAR) == calToday.get(java.util.Calendar.YEAR) &&
                 calEvent.get(java.util.Calendar.DAY_OF_YEAR) == calToday.get(java.util.Calendar.DAY_OF_YEAR)) {
                 hasAttendanceToday = true;
+                if (!"PENDING".equalsIgnoreCase(latestLog.getConfirmationStatus()) && !"REJECTED".equalsIgnoreCase(latestLog.getConfirmationStatus())) {
+                    hasConfirmedAttendanceToday = true;
+                }
             }
         }
 
         boolean hasActivityToday = hasLeaveToday || hasAttendanceToday;
 
-        if (pendingRecognitions != null && !pendingRecognitions.isEmpty() && !hasAttendanceToday) {
+        if (pendingRecognitions != null && !pendingRecognitions.isEmpty() && !hasConfirmedAttendanceToday) {
             llNormalStatus.setVisibility(View.GONE);
             llConfirmationStatus.setVisibility(View.VISIBLE);
             com.example.javatraining.data.remote.response.RecognitionEventData latestPending = pendingRecognitions.get(0);
@@ -436,16 +440,31 @@ public class HomeFragment extends Fragment {
             vStatusDot.setVisibility(View.GONE);
         } else if (hasAttendanceToday) {
             AttendanceEvent latestLog = flatLogs.get(0);
-            if (latestLog.getEventType() == LogType.CHECK_OUT) {
+            if ("REJECTED".equalsIgnoreCase(latestLog.getConfirmationStatus())) {
                 isCheckedIn = false;
-                tvStatusTitle.setText("Sudah Check-Out");
-                tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
+                tvStatusTitle.setText("Absen Ditolak");
+                tvStatusTime.setText("Silakan absen ulang");
                 vStatusDot.setVisibility(View.GONE);
+            } else if (latestLog.getEventType() == LogType.CHECK_OUT) {
+                isCheckedIn = false;
+                if ("PENDING".equalsIgnoreCase(latestLog.getConfirmationStatus())) {
+                    tvStatusTitle.setText("Menunggu Konfirmasi");
+                    vStatusDot.setVisibility(View.GONE);
+                } else {
+                    tvStatusTitle.setText("Sudah Check-Out");
+                    vStatusDot.setVisibility(View.VISIBLE);
+                }
+                tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
             } else {
                 isCheckedIn = true;
-                tvStatusTitle.setText("Sudah Check-In");
+                if ("PENDING".equalsIgnoreCase(latestLog.getConfirmationStatus())) {
+                    tvStatusTitle.setText("Menunggu Konfirmasi");
+                    vStatusDot.setVisibility(View.GONE);
+                } else {
+                    tvStatusTitle.setText("Sudah Check-In");
+                    vStatusDot.setVisibility(View.VISIBLE);
+                }
                 tvStatusTime.setText("Sejak " + sdf.format(latestLog.getDetectedAt()));
-                vStatusDot.setVisibility(View.VISIBLE);
             }
         } else {
             isCheckedIn = false;

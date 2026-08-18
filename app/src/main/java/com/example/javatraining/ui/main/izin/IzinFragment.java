@@ -199,27 +199,67 @@ public class IzinFragment extends Fragment {
             String employeeId = sessionManager.getUser() != null ? sessionManager.getUser().getId() : "";
 
             if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                String filename = "izin/" + employeeId + "/selfie_" + System.currentTimeMillis() + ".webp";
-                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(currentPhotoFile, okhttp3.MediaType.parse("image/webp"));
-                ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
-                apiService.uploadStorageObject("recognition", filename, requestFile).enqueue(new Callback<okhttp3.ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<okhttp3.ResponseBody> call, Response<okhttp3.ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "storage/v1/object/public/recognition/" + filename;
-                            submitIzinWithUrl(employeeId, date, type, reason, publicUrl, progress);
+                java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    try {
+                        android.graphics.Bitmap bitmap = android.graphics.BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath());
+                        if (bitmap == null) throw new Exception("Gagal membaca foto");
+                        int maxWidth = 800;
+                        int maxHeight = 800;
+                        float ratioBitmap = (float) bitmap.getWidth() / (float) bitmap.getHeight();
+                        float ratioMax = (float) maxWidth / (float) maxHeight;
+                        int finalWidth = maxWidth;
+                        int finalHeight = maxHeight;
+                        if (ratioMax > ratioBitmap) {
+                            finalWidth = (int) ((float) maxHeight * ratioBitmap);
                         } else {
-                            progress.dismiss();
-                            Toast.makeText(requireContext(), "Gagal upload foto", Toast.LENGTH_SHORT).show();
+                            finalHeight = (int) ((float) maxWidth / ratioBitmap);
+                        }
+                        android.graphics.Bitmap resized = android.graphics.Bitmap.createScaledBitmap(bitmap, finalWidth, finalHeight, true);
+                        java.io.File compressedFile = new java.io.File(requireContext().getCacheDir(), "compressed_izin_" + System.currentTimeMillis() + ".webp");
+                        java.io.FileOutputStream out = new java.io.FileOutputStream(compressedFile);
+                        resized.compress(android.graphics.Bitmap.CompressFormat.WEBP, 80, out);
+                        out.flush();
+                        out.close();
+                        bitmap.recycle();
+                        resized.recycle();
+
+                        if (getActivity() != null) {
+                            requireActivity().runOnUiThread(() -> {
+                                String filename = "izin/" + employeeId + "/selfie_" + System.currentTimeMillis() + ".webp";
+                                okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(compressedFile, okhttp3.MediaType.parse("image/webp"));
+                                ApiService apiService = ApiClient.getClient(requireContext()).create(ApiService.class);
+                                apiService.uploadStorageObject("recognition", filename, requestFile).enqueue(new Callback<okhttp3.ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<okhttp3.ResponseBody> call, Response<okhttp3.ResponseBody> response) {
+                                        if (response.isSuccessful()) {
+                                            String publicUrl = com.example.javatraining.BuildConfig.SUPABASE_URL + "storage/v1/object/public/recognition/" + filename;
+                                            submitIzinWithUrl(employeeId, date, type, reason, publicUrl, progress);
+                                        } else {
+                                            progress.dismiss();
+                                            Toast.makeText(requireContext(), "Gagal upload foto", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
+                                        progress.dismiss();
+                                        Toast.makeText(requireContext(), "Error upload foto: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null) {
+                            requireActivity().runOnUiThread(() -> {
+                                progress.dismiss();
+                                Toast.makeText(requireContext(), "Error kompresi foto: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                         }
                     }
-
-                    @Override
-                    public void onFailure(Call<okhttp3.ResponseBody> call, Throwable t) {
-                        progress.dismiss();
-                        Toast.makeText(requireContext(), "Error upload foto: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
                 });
+                executor.shutdown();
             } else {
                 submitIzinWithUrl(employeeId, date, type, reason, null, progress);
             }
