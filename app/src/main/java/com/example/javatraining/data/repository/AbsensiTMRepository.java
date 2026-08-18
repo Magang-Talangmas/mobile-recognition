@@ -585,8 +585,19 @@ public class AbsensiTMRepository {
                     } else {
                         try {
                             String err = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                            String cleanMessage = "Gagal mengirim absensi";
+                            try {
+                                org.json.JSONObject errJson = new org.json.JSONObject(err);
+                                if (errJson.has("message")) {
+                                    cleanMessage = errJson.getString("message");
+                                } else if (errJson.has("error")) {
+                                    cleanMessage = errJson.getString("error");
+                                }
+                            } catch (Exception e) {}
+                            
                             android.util.Log.e("LIVENESS_ATT", "Failed submit to Node.js: " + response.code() + ", body: " + err);
-                            mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Error " + response.code() + ": " + err, android.widget.Toast.LENGTH_LONG).show());
+                            final String finalMsg = cleanMessage;
+                            mainThreadHandler.post(() -> android.widget.Toast.makeText(application, finalMsg, android.widget.Toast.LENGTH_LONG).show());
                         } catch (Exception e) {}
                         result.postValue(null);
                     }
