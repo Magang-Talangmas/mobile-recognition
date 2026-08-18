@@ -247,33 +247,7 @@ public class FaceScanActivity extends AppCompatActivity {
                                         
                                         for (Face face : faces) {
                                             android.graphics.Rect box = face.getBoundingBox();
-                                            int imgW = image.getWidth();
-                                            int imgH = image.getHeight();
-                                            
-                                            float centerX = box.exactCenterX();
-                                            float centerY = box.exactCenterY();
-                                            
-                                            float diffX = Math.abs(centerX - imgW / 2f);
-                                            float diffY = Math.abs(centerY - imgH / 2f);
-                                            
-                                            float maxFaceSize = Math.max(box.width(), box.height());
-                                            float minImgDim = Math.min(imgW, imgH);
-                                            
-                                            // Constraint checks (Relaxed)
-                                            if (diffX > imgW * 0.45f || diffY > imgH * 0.45f) {
-                                                runOnUiThread(() -> tvInstruction.setText("Posisikan wajah di tengah lingkaran"));
-                                                break;
-                                            }
-                                            
-                                            if (maxFaceSize < minImgDim * 0.15f) {
-                                                runOnUiThread(() -> tvInstruction.setText("Wajah terlalu jauh"));
-                                                break;
-                                            }
-                                            
-                                            if (maxFaceSize > minImgDim * 0.95f) {
-                                                runOnUiThread(() -> tvInstruction.setText("Wajah terlalu dekat"));
-                                                break;
-                                            }
+                                            // Removed size and position constraints for better UX
 
                                             // Mask / Occlusion Check Heuristic
                                             if (face.getSmilingProbability() == null || face.getLeftEyeOpenProbability() == null) {
