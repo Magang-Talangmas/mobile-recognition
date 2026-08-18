@@ -260,17 +260,17 @@ public class FaceScanActivity extends AppCompatActivity {
                                             float minImgDim = Math.min(imgW, imgH);
                                             
                                             // Constraint checks (Relaxed)
-                                            if (diffX > imgW * 0.3f || diffY > imgH * 0.3f) {
+                                            if (diffX > imgW * 0.45f || diffY > imgH * 0.45f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Posisikan wajah di tengah lingkaran"));
                                                 break;
                                             }
                                             
-                                            if (maxFaceSize < minImgDim * 0.25f) {
+                                            if (maxFaceSize < minImgDim * 0.15f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu jauh"));
                                                 break;
                                             }
                                             
-                                            if (maxFaceSize > minImgDim * 0.85f) {
+                                            if (maxFaceSize > minImgDim * 0.95f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu dekat"));
                                                 break;
                                             }
