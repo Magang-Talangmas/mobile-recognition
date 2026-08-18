@@ -125,18 +125,22 @@ public class FaceScanActivity extends AppCompatActivity {
         LivenessStep step = steps[currentStepIndex];
         switch (step) {
             case BLINK:
+                ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); // Red
                 tvInstruction.setText("Tantangan 1/4: Kedipkan Mata!");
                 ivVisualGuide.animateBlink();
                 break;
             case TURN_LEFT:
+                ivFaceBracket.setColorFilter(Color.parseColor("#FD8A14")); // Orange
                 tvInstruction.setText("Tantangan 2/4: Toleh Kiri!");
                 ivVisualGuide.animateLookLeft();
                 break;
             case TURN_RIGHT:
+                ivFaceBracket.setColorFilter(Color.parseColor("#FDE047")); // Yellow
                 tvInstruction.setText("Tantangan 3/4: Toleh Kanan!");
                 ivVisualGuide.animateLookRight();
                 break;
             case SMILE:
+                ivFaceBracket.setColorFilter(Color.parseColor("#86EFAC")); // Light Green
                 tvInstruction.setText("Tantangan 4/4: Senyum & Tahan!");
                 ivVisualGuide.animateSmile();
                 break;

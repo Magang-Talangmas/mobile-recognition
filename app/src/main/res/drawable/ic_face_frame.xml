@@ -1,10 +1,12 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <stroke 
-        android:width="4dp" 
-        android:color="#10B981" 
-        android:dashWidth="175dp" 
-        android:dashGap="60dp" />
-    <solid android:color="#00000000" />
-    <size android:width="300dp" android:height="300dp" />
-</shape>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:inset="4dp">
+    <shape android:shape="oval">
+        <stroke 
+            android:width="4dp" 
+            android:color="#FFFFFF" 
+            android:dashWidth="175dp" 
+            android:dashGap="60dp" />
+        <solid android:color="#00000000" />
+        <size android:width="292dp" android:height="292dp" />
+    </shape>
+</inset>
