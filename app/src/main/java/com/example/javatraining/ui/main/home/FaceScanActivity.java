@@ -53,7 +53,6 @@ public class FaceScanActivity extends AppCompatActivity {
     private TextView tvInstruction;
     private ValueAnimator scanningAnimator;
 
-    
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private FaceDetector faceDetector;
@@ -62,19 +61,20 @@ public class FaceScanActivity extends AppCompatActivity {
     private AbsensiTMRepository repository;
     private FaceGuideView ivVisualGuide;
     private android.graphics.Bitmap cachedFaceBitmap = null;
-    
+
     private Handler stepTimeoutHandler = new Handler(Looper.getMainLooper());
     private Runnable stepTimeoutRunnable = () -> {
         if (!livenessVerified && !isProcessing) {
             triggerFailureState("Waktu habis! Ulangi dari awal");
         }
     };
-    
+
     private enum LivenessStep {
         BLINK, TURN_LEFT, TURN_RIGHT, SMILE, DONE
     }
-    
-    private LivenessStep[] steps = {LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT, LivenessStep.SMILE};
+
+    private LivenessStep[] steps = { LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT,
+            LivenessStep.SMILE };
     private int currentStepIndex = 0;
 
     @Override
@@ -87,7 +87,7 @@ public class FaceScanActivity extends AppCompatActivity {
         ivFaceBracket = findViewById(R.id.ivFaceBracket);
         tvInstruction = findViewById(R.id.tvInstruction);
         ivVisualGuide = findViewById(R.id.ivVisualGuide);
-        
+
         repository = new AbsensiTMRepository(getApplication());
         cameraExecutor = Executors.newSingleThreadExecutor();
 
@@ -125,8 +125,9 @@ public class FaceScanActivity extends AppCompatActivity {
     private void updateStepUI() {
         stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
         stepTimeoutHandler.postDelayed(stepTimeoutRunnable, 5000);
-        
-        if (currentStepIndex >= steps.length) return;
+
+        if (currentStepIndex >= steps.length)
+            return;
         LivenessStep step = steps[currentStepIndex];
         switch (step) {
             case BLINK:
@@ -153,12 +154,13 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void advanceStep() {
-        if (isProcessing) return;
+        if (isProcessing)
+            return;
         currentStepIndex++;
         if (currentStepIndex >= steps.length) {
             livenessVerified = true;
             runOnUiThread(() -> {
-                ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
+                ivFaceBracket.setColorFilter(Color.parseColor("#198754"));
                 tvInstruction.setTextColor(Color.parseColor("#198754"));
                 ivVisualGuide.resetState();
                 triggerSuccessState();
@@ -176,7 +178,8 @@ public class FaceScanActivity extends AppCompatActivity {
 
     private void triggerSuccessState() {
         stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
-        if (scanningAnimator != null) scanningAnimator.cancel();
+        if (scanningAnimator != null)
+            scanningAnimator.cancel();
 
         vScanningLine.setVisibility(View.GONE);
         tvInstruction.setText("Memotret...");
@@ -194,13 +197,14 @@ public class FaceScanActivity extends AppCompatActivity {
         stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
         isProcessing = true;
         runOnUiThread(() -> {
-            ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); 
+            ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A"));
             tvInstruction.setText(errorMsg);
             tvInstruction.setTextColor(Color.parseColor("#BA1A1A"));
 
             ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
-            ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
+            ObjectAnimator shake = ObjectAnimator.ofFloat(ivFaceBracket, "translationX", 0, 25, -25, 25, -25, 15, -15,
+                    6, -6, 0);
             shake.setDuration(400);
             shake.start();
 
@@ -241,96 +245,113 @@ public class FaceScanActivity extends AppCompatActivity {
                             imageProxy.close();
                             return;
                         }
-                        
+
                         Image mediaImage = imageProxy.getImage();
                         if (mediaImage != null) {
-                            InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                            InputImage image = InputImage.fromMediaImage(mediaImage,
+                                    imageProxy.getImageInfo().getRotationDegrees());
                             faceDetector.process(image)
                                     .addOnSuccessListener(faces -> {
                                         if (faces.isEmpty()) {
                                             runOnUiThread(() -> tvInstruction.setText("Wajah tidak terdeteksi"));
                                             return;
                                         }
-                                        
+
                                         for (Face face : faces) {
                                             android.graphics.Rect box = face.getBoundingBox();
                                             int rotation = imageProxy.getImageInfo().getRotationDegrees();
-                                            int imgW = (rotation == 90 || rotation == 270) ? image.getHeight() : image.getWidth();
-                                            int imgH = (rotation == 90 || rotation == 270) ? image.getWidth() : image.getHeight();
-                                            
+                                            int imgW = (rotation == 90 || rotation == 270) ? image.getHeight()
+                                                    : image.getWidth();
+                                            int imgH = (rotation == 90 || rotation == 270) ? image.getWidth()
+                                                    : image.getHeight();
+
                                             float centerX = box.exactCenterX();
                                             float centerY = box.exactCenterY();
-                                            
+
                                             float diffX = Math.abs(centerX - imgW / 2f);
                                             float diffY = Math.abs(centerY - imgH / 2f);
-                                            
+
                                             float maxFaceSize = Math.max(box.width(), box.height());
-                                            
+
                                             // Map to screen coordinates
                                             int screenW = getResources().getDisplayMetrics().widthPixels;
                                             int screenH = getResources().getDisplayMetrics().heightPixels;
                                             float scale = Math.max((float) screenW / imgW, (float) screenH / imgH);
-                                            
+
                                             float diffX_screen = diffX * scale;
                                             float diffY_screen = diffY * scale;
                                             float faceSizeScreen = maxFaceSize * scale;
-                                            
+
                                             float density = getResources().getDisplayMetrics().density;
                                             float circleRadius = 150 * density; // 150dp circle
-                                            double distCenter = Math.sqrt(diffX_screen * diffX_screen + diffY_screen * diffY_screen);
-                                            
+                                            double distCenter = Math
+                                                    .sqrt(diffX_screen * diffX_screen + diffY_screen * diffY_screen);
+
                                             // Constraint checks
                                             if (distCenter > circleRadius * 0.45f) {
-                                                runOnUiThread(() -> tvInstruction.setText("Posisikan wajah di tengah lingkaran"));
+                                                runOnUiThread(() -> tvInstruction
+                                                        .setText("Posisikan wajah di tengah lingkaran"));
                                                 break;
                                             }
-                                            
+
                                             if (faceSizeScreen < circleRadius * 1.3f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu jauh"));
                                                 break;
                                             }
-                                            
+
                                             if (faceSizeScreen > circleRadius * 2.2f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu dekat"));
                                                 break;
                                             }
 
                                             // Mask / Occlusion Check Heuristic
-                                            if (face.getSmilingProbability() == null || face.getLeftEyeOpenProbability() == null) {
-                                                runOnUiThread(() -> tvInstruction.setText("Wajah tertutup (Lepas masker/kacamata)"));
+                                            if (face.getSmilingProbability() == null
+                                                    || face.getLeftEyeOpenProbability() == null) {
+                                                runOnUiThread(() -> tvInstruction
+                                                        .setText("Wajah tertutup (Lepas masker/kacamata)"));
                                                 break;
                                             }
 
                                             // If constraints passed, evaluate steps
-                                            if (currentStepIndex >= steps.length) break;
+                                            if (currentStepIndex >= steps.length)
+                                                break;
                                             LivenessStep current = steps[currentStepIndex];
-                                            
+
                                             boolean stepPassed = false;
                                             switch (current) {
                                                 case SMILE:
-                                                    if (face.getSmilingProbability() != null && face.getSmilingProbability() > 0.7f) stepPassed = true;
+                                                    if (face.getSmilingProbability() != null
+                                                            && face.getSmilingProbability() > 0.7f)
+                                                        stepPassed = true;
                                                     break;
                                                 case BLINK:
-                                                    if (face.getLeftEyeOpenProbability() != null && face.getRightEyeOpenProbability() != null &&
-                                                        face.getLeftEyeOpenProbability() < 0.2f && face.getRightEyeOpenProbability() < 0.2f) {
+                                                    if (face.getLeftEyeOpenProbability() != null
+                                                            && face.getRightEyeOpenProbability() != null &&
+                                                            face.getLeftEyeOpenProbability() < 0.2f
+                                                            && face.getRightEyeOpenProbability() < 0.2f) {
                                                         stepPassed = true;
                                                     }
                                                     break;
                                                 case TURN_LEFT:
-                                                    if (face.getHeadEulerAngleY() > 25f) stepPassed = true;
+                                                    if (face.getHeadEulerAngleY() > 25f)
+                                                        stepPassed = true;
                                                     break;
                                                 case TURN_RIGHT:
-                                                    if (face.getHeadEulerAngleY() < -25f) stepPassed = true;
+                                                    if (face.getHeadEulerAngleY() < -25f)
+                                                        stepPassed = true;
                                                     break;
                                             }
-                                            
+
                                             if (stepPassed) {
                                                 try {
                                                     android.graphics.Bitmap rawBitmap = imageProxy.toBitmap();
                                                     android.graphics.Matrix matrix = new android.graphics.Matrix();
                                                     matrix.postRotate(imageProxy.getImageInfo().getRotationDegrees());
-                                                    cachedFaceBitmap = android.graphics.Bitmap.createBitmap(rawBitmap, 0, 0, rawBitmap.getWidth(), rawBitmap.getHeight(), matrix, true);
-                                                } catch (Exception e) {}
+                                                    cachedFaceBitmap = android.graphics.Bitmap.createBitmap(rawBitmap,
+                                                            0, 0, rawBitmap.getWidth(), rawBitmap.getHeight(), matrix,
+                                                            true);
+                                                } catch (Exception e) {
+                                                }
                                                 advanceStep();
                                                 break;
                                             }
@@ -365,7 +386,7 @@ public class FaceScanActivity extends AppCompatActivity {
         }
         isProcessing = true;
 
-        File photoFile = new File(getExternalFilesDir(null), 
+        File photoFile = new File(getExternalFilesDir(null),
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
 
         try {
@@ -373,10 +394,11 @@ public class FaceScanActivity extends AppCompatActivity {
             cachedFaceBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, out);
             out.flush();
             out.close();
-            
+
             runOnUiThread(() -> tvInstruction.setText("Mengirim data ke server..."));
             String eventType = getIntent().getStringExtra("eventType");
-            if (eventType == null) eventType = "CHECK_IN";
+            if (eventType == null)
+                eventType = "CHECK_IN";
             repository.submitLivenessAttendance(photoFile, eventType).observe(FaceScanActivity.this, response -> {
                 if (response != null && response.isSuccess()) {
                     Toast.makeText(this, "Absensi berhasil disimpan!", Toast.LENGTH_SHORT).show();
@@ -395,6 +417,7 @@ public class FaceScanActivity extends AppCompatActivity {
         super.onDestroy();
         stepTimeoutHandler.removeCallbacksAndMessages(null);
         cameraExecutor.shutdown();
-        if (faceDetector != null) faceDetector.close();
+        if (faceDetector != null)
+            faceDetector.close();
     }
 }

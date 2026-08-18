@@ -54,6 +54,7 @@ public class ManualFragment extends Fragment {
     private boolean hasPhoto = false;
     private boolean isCheckIn = true;
     private com.example.javatraining.data.remote.response.ScheduleData todaySchedule = null;
+    private boolean hasPendingRecognitions = false;
 
     private android.os.Handler timerHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable timerRunnable;
@@ -118,6 +119,15 @@ public class ManualFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fetchAttendanceStatus();
+        fetchSchedule();
+        checkPendingRecognitions();
+    }
+
+    private void checkPendingRecognitions() {
+        AbsensiTMRepository repository = new AbsensiTMRepository(requireActivity().getApplication());
+        repository.getPendingRecognitions().observe(getViewLifecycleOwner(), pendingRecognitions -> {
+            hasPendingRecognitions = pendingRecognitions != null && !pendingRecognitions.isEmpty();
+        });
     }
 
     @Override
@@ -157,6 +167,15 @@ public class ManualFragment extends Fragment {
     }
 
     private void launchFaceScan(String eventType) {
+        if (hasPendingRecognitions) {
+            new android.app.AlertDialog.Builder(getContext())
+                    .setTitle("Perhatian")
+                    .setMessage("Anda memiliki deteksi wajah dari CCTV yang belum dikonfirmasi.\n\nHarap buka menu Beranda dan konfirmasi/tolak data tersebut terlebih dahulu sebelum menggunakan absensi manual.")
+                    .setPositiveButton("Mengerti", null)
+                    .show();
+            return;
+        }
+
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(getActivity(), com.example.javatraining.ui.main.home.FaceScanActivity.class);
             intent.putExtra("eventType", eventType);
