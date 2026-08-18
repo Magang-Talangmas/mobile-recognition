@@ -62,6 +62,13 @@ public class FaceScanActivity extends AppCompatActivity {
     private AbsensiTMRepository repository;
     private FaceGuideView ivVisualGuide;
     
+    private Handler stepTimeoutHandler = new Handler(Looper.getMainLooper());
+    private Runnable stepTimeoutRunnable = () -> {
+        if (!livenessVerified && !isProcessing) {
+            triggerFailureState("Waktu habis! Ulangi dari awal");
+        }
+    };
+    
     private enum LivenessStep {
         BLINK, TURN_LEFT, TURN_RIGHT, SMILE, DONE
     }
@@ -115,6 +122,9 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void updateStepUI() {
+        stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
+        stepTimeoutHandler.postDelayed(stepTimeoutRunnable, 5000);
+        
         if (currentStepIndex >= steps.length) return;
         LivenessStep step = steps[currentStepIndex];
         switch (step) {
@@ -164,6 +174,7 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void triggerSuccessState() {
+        stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
         if (scanningAnimator != null) scanningAnimator.cancel();
 
         vScanningLine.setVisibility(View.GONE);
@@ -179,6 +190,8 @@ public class FaceScanActivity extends AppCompatActivity {
     }
 
     private void triggerFailureState(String errorMsg) {
+        stepTimeoutHandler.removeCallbacks(stepTimeoutRunnable);
+        isProcessing = true;
         runOnUiThread(() -> {
             ivFaceBracket.setColorFilter(Color.parseColor("#BA1A1A")); 
             tvInstruction.setText(errorMsg);
@@ -374,6 +387,7 @@ public class FaceScanActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stepTimeoutHandler.removeCallbacksAndMessages(null);
         cameraExecutor.shutdown();
         if (faceDetector != null) faceDetector.close();
     }
