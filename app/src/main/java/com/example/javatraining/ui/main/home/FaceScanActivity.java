@@ -63,10 +63,10 @@ public class FaceScanActivity extends AppCompatActivity {
     private FaceGuideView ivVisualGuide;
     
     private enum LivenessStep {
-        SMILE, BLINK, TURN_LEFT, TURN_RIGHT, DONE
+        BLINK, TURN_LEFT, TURN_RIGHT, SMILE, DONE
     }
     
-    private LivenessStep[] steps = {LivenessStep.SMILE, LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT};
+    private LivenessStep[] steps = {LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT, LivenessStep.SMILE};
     private int currentStepIndex = 0;
 
     @Override
@@ -123,23 +123,22 @@ public class FaceScanActivity extends AppCompatActivity {
     private void updateStepUI() {
         if (currentStepIndex >= steps.length) return;
         LivenessStep step = steps[currentStepIndex];
-        
         switch (step) {
-            case SMILE:
-                tvInstruction.setText("Tantangan 1/4: Tersenyum Lebar!");
-                ivVisualGuide.animateSmile();
-                break;
             case BLINK:
-                tvInstruction.setText("Tantangan 2/4: Kedipkan Mata!");
+                tvInstruction.setText("Tantangan 1/4: Kedipkan Mata!");
                 ivVisualGuide.animateBlink();
                 break;
             case TURN_LEFT:
-                tvInstruction.setText("Tantangan 3/4: Toleh Kiri!");
+                tvInstruction.setText("Tantangan 2/4: Toleh Kiri!");
                 ivVisualGuide.animateLookLeft();
                 break;
             case TURN_RIGHT:
-                tvInstruction.setText("Tantangan 4/4: Toleh Kanan!");
+                tvInstruction.setText("Tantangan 3/4: Toleh Kanan!");
                 ivVisualGuide.animateLookRight();
+                break;
+            case SMILE:
+                tvInstruction.setText("Tantangan 4/4: Senyum & Tahan!");
+                ivVisualGuide.animateSmile();
                 break;
         }
     }
@@ -149,7 +148,12 @@ public class FaceScanActivity extends AppCompatActivity {
         currentStepIndex++;
         if (currentStepIndex >= steps.length) {
             livenessVerified = true;
-            runOnUiThread(this::startCountdown);
+            runOnUiThread(() -> {
+                ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
+                tvInstruction.setTextColor(Color.parseColor("#198754"));
+                ivVisualGuide.resetState();
+                triggerSuccessState();
+            });
         } else {
             runOnUiThread(() -> {
                 ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
@@ -159,23 +163,6 @@ public class FaceScanActivity extends AppCompatActivity {
             isProcessing = true;
             new Handler(Looper.getMainLooper()).postDelayed(() -> isProcessing = false, 1500);
         }
-    }
-
-    private void startCountdown() {
-        ivFaceBracket.setColorFilter(Color.parseColor("#198754")); 
-        tvInstruction.setTextColor(Color.parseColor("#198754"));
-        ivVisualGuide.resetState();
-
-        new CountDownTimer(3000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                tvInstruction.setText("Tahan posisi! Memotret dalam " + (millisUntilFinished / 1000 + 1) + "...");
-                ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
-            }
-
-            public void onFinish() {
-                triggerSuccessState();
-            }
-        }.start();
     }
 
     private void triggerSuccessState() {
