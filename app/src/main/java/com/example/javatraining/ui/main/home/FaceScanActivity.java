@@ -179,7 +179,7 @@ public class FaceScanActivity extends AppCompatActivity {
         ivFaceBracket.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
 
         ivFaceBracket.animate()
-                .scaleX(1.1f).scaleY(1.1f)
+                .scaleX(0.9f).scaleY(0.9f)
                 .setDuration(200)
                 .setInterpolator(new OvershootInterpolator())
                 .withEndAction(this::takePhoto).start();
