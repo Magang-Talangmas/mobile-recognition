@@ -548,6 +548,23 @@ public class AbsensiTMRepository {
                 options.inJustDecodeBounds = false;
                 
                 android.graphics.Bitmap bitmap = android.graphics.BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
+                
+                android.media.ExifInterface exif = new android.media.ExifInterface(photoFile.getAbsolutePath());
+                int orientation = exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, android.media.ExifInterface.ORIENTATION_NORMAL);
+                
+                android.graphics.Matrix matrix = new android.graphics.Matrix();
+                if (orientation == android.media.ExifInterface.ORIENTATION_ROTATE_90) {
+                    matrix.postRotate(90);
+                } else if (orientation == android.media.ExifInterface.ORIENTATION_ROTATE_180) {
+                    matrix.postRotate(180);
+                } else if (orientation == android.media.ExifInterface.ORIENTATION_ROTATE_270) {
+                    matrix.postRotate(270);
+                }
+                
+                if (orientation != android.media.ExifInterface.ORIENTATION_NORMAL && orientation != android.media.ExifInterface.ORIENTATION_UNDEFINED) {
+                    bitmap = android.graphics.Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                }
+                
                 java.io.FileOutputStream out = new java.io.FileOutputStream(photoFile);
                 bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 70, out);
                 out.flush();
