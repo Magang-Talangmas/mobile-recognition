@@ -240,8 +240,9 @@ public class FaceScanActivity extends AppCompatActivity {
                                         
                                         for (Face face : faces) {
                                             android.graphics.Rect box = face.getBoundingBox();
-                                            int imgW = image.getWidth();
-                                            int imgH = image.getHeight();
+                                            int rotation = imageProxy.getImageInfo().getRotationDegrees();
+                                            int imgW = (rotation == 90 || rotation == 270) ? image.getHeight() : image.getWidth();
+                                            int imgH = (rotation == 90 || rotation == 270) ? image.getWidth() : image.getHeight();
                                             
                                             float centerX = box.exactCenterX();
                                             float centerY = box.exactCenterY();
@@ -250,20 +251,32 @@ public class FaceScanActivity extends AppCompatActivity {
                                             float diffY = Math.abs(centerY - imgH / 2f);
                                             
                                             float maxFaceSize = Math.max(box.width(), box.height());
-                                            float minImgDim = Math.min(imgW, imgH);
                                             
-                                            // Constraint checks (Relaxed)
-                                            if (diffX > imgW * 0.45f || diffY > imgH * 0.45f) {
+                                            // Map to screen coordinates
+                                            int screenW = getResources().getDisplayMetrics().widthPixels;
+                                            int screenH = getResources().getDisplayMetrics().heightPixels;
+                                            float scale = Math.max((float) screenW / imgW, (float) screenH / imgH);
+                                            
+                                            float diffX_screen = diffX * scale;
+                                            float diffY_screen = diffY * scale;
+                                            float faceSizeScreen = maxFaceSize * scale;
+                                            
+                                            float density = getResources().getDisplayMetrics().density;
+                                            float circleRadius = 150 * density; // 150dp circle
+                                            double distCenter = Math.sqrt(diffX_screen * diffX_screen + diffY_screen * diffY_screen);
+                                            
+                                            // Constraint checks
+                                            if (distCenter > circleRadius * 0.45f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Posisikan wajah di tengah lingkaran"));
                                                 break;
                                             }
                                             
-                                            if (maxFaceSize < minImgDim * 0.15f) {
+                                            if (faceSizeScreen < circleRadius * 1.3f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu jauh"));
                                                 break;
                                             }
                                             
-                                            if (maxFaceSize > minImgDim * 0.95f) {
+                                            if (faceSizeScreen > circleRadius * 2.2f) {
                                                 runOnUiThread(() -> tvInstruction.setText("Wajah terlalu dekat"));
                                                 break;
                                             }
