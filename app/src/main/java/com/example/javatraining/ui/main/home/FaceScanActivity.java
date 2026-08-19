@@ -220,6 +220,7 @@ public class FaceScanActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ivFaceBracket.clearColorFilter();
                 tvInstruction.setTextColor(Color.WHITE);
+                randomizeSteps();
                 currentStepIndex = 0;
                 updateStepUI();
                 livenessVerified = false;
