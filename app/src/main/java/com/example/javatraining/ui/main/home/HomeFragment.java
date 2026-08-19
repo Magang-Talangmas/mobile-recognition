@@ -324,10 +324,13 @@ public class HomeFragment extends Fragment {
                     LogType type = ("CHECK_IN".equalsIgnoreCase(evtType) || "IN".equalsIgnoreCase(evtType))
                             ? LogType.CHECK_IN
                             : LogType.CHECK_OUT;
-                    flatLogs.add(new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
+                    AttendanceEvent event = new AttendanceEvent(0, data.getCameraId(), 0, data.getEmployeeId(), null, null,
                             type,
                             data.getSimilarity() != null ? data.getSimilarity() : 0.0, null, null, detectedAt,
-                            detectedAt, null));
+                            detectedAt, null);
+                    event.setLate(data.getIsLate());
+                    event.setConfirmationStatus(data.getConfirmationStatus());
+                    flatLogs.add(event);
                 }
             }
             java.util.Collections.sort(flatLogs, (e1, e2) -> e2.getDetectedAt().compareTo(e1.getDetectedAt()));
