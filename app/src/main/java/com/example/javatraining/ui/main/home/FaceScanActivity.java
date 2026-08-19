@@ -73,14 +73,23 @@ public class FaceScanActivity extends AppCompatActivity {
         BLINK, TURN_LEFT, TURN_RIGHT, SMILE, DONE
     }
 
-    private LivenessStep[] steps = { LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT,
-            LivenessStep.SMILE };
+    private LivenessStep[] steps = new LivenessStep[2];
+
+    private void randomizeSteps() {
+        LivenessStep[] allSteps = { LivenessStep.BLINK, LivenessStep.TURN_LEFT, LivenessStep.TURN_RIGHT, LivenessStep.SMILE };
+        java.util.List<LivenessStep> list = new java.util.ArrayList<>(java.util.Arrays.asList(allSteps));
+        java.util.Collections.shuffle(list);
+        steps[0] = list.get(0);
+        steps[1] = list.get(1);
+    }
     private int currentStepIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_scan);
+
+        randomizeSteps();
 
         viewFinder = findViewById(R.id.viewFinder);
         vScanningLine = findViewById(R.id.vScanningLine);

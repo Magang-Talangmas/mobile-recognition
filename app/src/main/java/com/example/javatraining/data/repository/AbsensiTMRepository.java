@@ -406,7 +406,17 @@ public class AbsensiTMRepository {
                 if (response.isSuccessful()) {
                     if (onSuccess != null) mainThreadHandler.post(onSuccess);
                 } else {
-                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal konfirmasi: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
+                    String cleanMessage = "Gagal konfirmasi (Error " + response.code() + ")";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errString = response.errorBody().string();
+                            org.json.JSONObject errJson = new org.json.JSONObject(errString);
+                            if (errJson.has("message")) cleanMessage = errJson.getString("message");
+                            else if (errJson.has("error")) cleanMessage = errJson.getString("error");
+                        }
+                    } catch (Exception e) {}
+                    final String finalMsg = cleanMessage;
+                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, finalMsg, android.widget.Toast.LENGTH_LONG).show());
                 }
             }
             @Override
@@ -424,7 +434,17 @@ public class AbsensiTMRepository {
                 if (response.isSuccessful()) {
                     if (onSuccess != null) mainThreadHandler.post(onSuccess);
                 } else {
-                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, "Gagal menolak: " + response.code(), android.widget.Toast.LENGTH_LONG).show());
+                    String cleanMessage = "Gagal menolak (Error " + response.code() + ")";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errString = response.errorBody().string();
+                            org.json.JSONObject errJson = new org.json.JSONObject(errString);
+                            if (errJson.has("message")) cleanMessage = errJson.getString("message");
+                            else if (errJson.has("error")) cleanMessage = errJson.getString("error");
+                        }
+                    } catch (Exception e) {}
+                    final String finalMsg = cleanMessage;
+                    mainThreadHandler.post(() -> android.widget.Toast.makeText(application, finalMsg, android.widget.Toast.LENGTH_LONG).show());
                 }
             }
             @Override
